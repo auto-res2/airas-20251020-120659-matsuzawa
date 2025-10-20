@@ -37,3 +37,4 @@ Generating corrupted CIFAR-10 data (severity=5)...
    /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
 === [TRIAL RUN] Start for (severity at Mon Oct 20 04:05:16 PM UTC 2025 ===
 === [TRIAL RUN] PASSED for severity at Mon Oct 20 04:07:10 PM UTC 2025 ===
+=== [TRIAL RUN] Start for 5) at Mon Oct 20 04:08:20 PM UTC 2025 ===
