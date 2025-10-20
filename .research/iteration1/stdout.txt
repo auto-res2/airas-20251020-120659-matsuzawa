@@ -93,3 +93,25 @@ Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
 Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
 === [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:30:22 PM UTC 2025 ===
 
+=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:31:49 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:32:37 PM UTC 2025 ===
+[2025-10-20 17:33:15,297][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:33:15,576][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:35:26 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:35:46 PM UTC 2025 ===
+[2025-10-20 17:35:55,814][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:35:56,065][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:37:48 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:37:54 PM UTC 2025 ===
+[2025-10-20 17:38:02,912][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:38:03,159][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:39:55 PM UTC 2025 ===
+
