@@ -58,3 +58,38 @@ Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
 Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
 === [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:20:17 PM UTC 2025 ===
 
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:20:47 PM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:21:40 PM UTC 2025 ===
+[2025-10-20 17:22:00,736][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:22:01,291][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:23:50 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:23:54 PM UTC 2025 ===
+[2025-10-20 17:24:01,208][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:24:01,477][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:25:47 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:25:52 PM UTC 2025 ===
+[2025-10-20 17:25:59,027][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:25:59,267][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 17:26:11,652][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 27751f76-d3c9-47c0-ac6b-6f8182b1286b)')' thrown while requesting HEAD https://huggingface.co/datasets/robro/cifar10-c-parquet/resolve/19c813b71fc13aa6cb76e97cb036c768df69cf3e/.huggingface.yaml
+[2025-10-20 17:26:11,653][huggingface_hub.utils._http][WARNING] - Retrying in 1s [Retry 1/5].
+Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:27:58 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:28:04 PM UTC 2025 ===
+[2025-10-20 17:28:10,604][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 17:28:10,847][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 17:28:24,264][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 5398de5f-c3cf-4e63-99ce-970a17bf7fba)')' thrown while requesting HEAD https://huggingface.co/datasets/robro/cifar10-c-parquet/resolve/19c813b71fc13aa6cb76e97cb036c768df69cf3e/dataset_infos.json
+[2025-10-20 17:28:24,265][huggingface_hub.utils._http][WARNING] - Retrying in 1s [Retry 1/5].
+[2025-10-20 17:28:35,347][huggingface_hub.utils._http][WARNING] - '(ReadTimeoutError("HTTPSConnectionPool(host='huggingface.co', port=443): Read timed out. (read timeout=10)"), '(Request ID: 3355b181-8cab-4742-9ee0-2d2a27f8e70f)')' thrown while requesting HEAD https://huggingface.co/datasets/robro/cifar10-c-parquet/resolve/19c813b71fc13aa6cb76e97cb036c768df69cf3e/dataset_infos.json
+[2025-10-20 17:28:35,347][huggingface_hub.utils._http][WARNING] - Retrying in 2s [Retry 2/5].
+Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0039
+Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration1 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Mon Oct 20 05:30:22 PM UTC 2025 ===
+
