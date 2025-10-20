@@ -1,303 +1,250 @@
 # src/train.py
-"""Single-run executor with Hydra, Optuna & WandB integration.
-
-Key fix vs. previous revision
------------------------------
-Hydra composes run–specific YAML files under the ``run`` group, therefore
-all *experiment–dependent* keys live under ``cfg.run``.  This revision
-*flattens* them back to the root namespace so that the rest of the code
-can keep referencing ``cfg.training.*``, ``cfg.dataset.*`` … consistently.
+"""Training script executed as a subprocess by main.py.
+Implements baseline TENT and the proposed CW-TENT for CIFAR-10-C.
+Everything (models, datasets) is cached in .cache/ so that CI stays fast.
 """
+
 from __future__ import annotations
 
-import sys
+import os
 from pathlib import Path
-from typing import Dict, List
+from typing import Any, Dict, List
+
+# -----------------------------------------------------------------------------
+# Force local cache BEFORE heavy imports --------------------------------------
+# -----------------------------------------------------------------------------
+os.environ.setdefault("TORCH_HOME", ".cache/torch")
 
 import hydra
-import numpy as np
+import optuna
 import torch
-import torch.nn.functional as F  # noqa: F401 – kept for extensibility
-from hydra.utils import to_absolute_path
-from omegaconf import DictConfig, OmegaConf
-from sklearn.metrics import accuracy_score, confusion_matrix
+import torch.nn.functional as F  # noqa: F401  (used implicitly by losses)
+import wandb
+from omegaconf import OmegaConf
 
-from .model import create_model, enable_bn_adaptation_params
-from .preprocess import build_dataloader
+from src.model import (
+    ConfidenceWeightedEntropyLoss,
+    EntropyLoss,
+    build_model,
+    freeze_non_bn_parameters,
+    initialize_bn_adaptation,
+)
+from src.preprocess import build_dataloader
 
-# -----------------------------------------------------------------------------
-# Optional deps (imported lazily)
-# -----------------------------------------------------------------------------
-try:
-    import wandb
-except ImportError:  # pragma: no cover
-    wandb = None  # type: ignore
+###############################################################################
+# Utility functions -----------------------------------------------------------
+###############################################################################
 
-try:
-    import optuna
-except ImportError:  # pragma: no cover
-    optuna = None  # type: ignore
+def topk_acc(output: torch.Tensor, target: torch.Tensor, k: int = 1) -> float:
+    """Return top-k accuracy (percentage) for a single batch."""
+    with torch.no_grad():
+        maxk = k
+        batch_size = target.size(0)
+        _, pred = output.topk(maxk, 1, True, True)
+        pred = pred.t()
+        correct = pred.eq(target.view(1, -1).expand_as(pred))
+        correct_k = correct.reshape(-1)[: k * batch_size].float().sum(0)
+        return float(correct_k.item()) * 100.0 / batch_size
 
-# -----------------------------------------------------------------------------
-# Utilities
-# -----------------------------------------------------------------------------
+###############################################################################
+# Core routine ----------------------------------------------------------------
+###############################################################################
 
-def _flatten_run_cfg(cfg: DictConfig) -> None:
-    """Copy keys from *cfg.run* to the root level (model, dataset, training …).
+def run_single(cfg, *, enable_wandb: bool = True) -> float:
+    """Run adaptation with the parameters in ``cfg`` and return final accuracy."""
 
-    This makes the rest of the code agnostic to where these parameters were
-    originally defined.
-    """
-    if "run" not in cfg:
-        return
+    run_cfg = getattr(cfg, "run", cfg)  # support both flattened & nested
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    OmegaConf.set_struct(cfg, False)  # allow dynamic writes
-    for k in ["model", "dataset", "training", "optuna", "seed", "hardware"]:
-        if k in cfg.run:
-            cfg[k] = cfg.run[k]
+    # ---------------------------------------------------------------------
+    # WandB initialisation -------------------------------------------------
+    # ---------------------------------------------------------------------
+    if enable_wandb and cfg.wandb.mode != "disabled":
+        wandb_run = wandb.init(
+            entity=cfg.wandb.entity,
+            project=cfg.wandb.project,
+            id=run_cfg.run_id,
+            resume="allow",
+            config=OmegaConf.to_container(cfg, resolve=True),
+            reinit=True,
+        )
+        print(f"[WandB] Run URL: {wandb_run.url}")
+    else:
+        os.environ["WANDB_MODE"] = "disabled"
+        wandb_run = None
 
+    # ---------------------------------------------------------------------
+    # Data ----------------------------------------------------------------
+    # ---------------------------------------------------------------------
+    dataloader = build_dataloader(run_cfg.dataset, split="test", cache_dir=".cache/")
 
-def _set_deterministic(seed: int) -> None:
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    np.random.seed(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-
-
-def _entropy_from_logits(logits: torch.Tensor) -> torch.Tensor:
-    probs = logits.softmax(1).clamp_min(1e-12)
-    return -(probs * probs.log()).sum(1)
-
-
-def _adapt_step(
-    model: torch.nn.Module,
-    x: torch.Tensor,
-    objective: str,
-    inner_steps: int,
-    optimizer: torch.optim.Optimizer,
-) -> None:
-    model.train()
-    for _ in range(inner_steps):
-        optimizer.zero_grad(set_to_none=True)
-        logits = model(x)
-        H = _entropy_from_logits(logits)
-        if objective == "entropy":
-            loss = H.mean()
-        elif objective == "confidence_weighted_entropy":
-            C = logits.size(1)
-            with torch.no_grad():
-                w = 1.0 - H / np.log(C)
-            loss = (w * H).sum() / w.sum()
-        else:
-            raise ValueError(f"Unknown adaptation objective: {objective}")
-        loss.backward()
-        optimizer.step()
+    # ---------------------------------------------------------------------
+    # Model & optimiser ---------------------------------------------------
+    # ---------------------------------------------------------------------
+    model = build_model(run_cfg.model).to(device)
     model.eval()
 
+    freeze_non_bn_parameters(model)
+    initialize_bn_adaptation(model)
 
-def _stream_run(
-    cfg: DictConfig,
-    hyperparams: Dict[str, float],
-    device: torch.device,
-    loader: torch.utils.data.DataLoader,
-    n_classes: int,
-    wb_run=None,
-    max_steps_override: int | None = None,
-) -> Dict[str, float]:
-    """Evaluates the data *stream* once (with optional adaptation)."""
-    model = create_model(cfg.model, n_classes)
-    enable_bn_adaptation_params(model)
-    model.to(device)
+    params_to_update = filter(lambda p: p.requires_grad, model.parameters())
 
-    bn_params = [p for p in model.parameters() if p.requires_grad]
-    optimizer = torch.optim.SGD(
-        bn_params,
-        lr=float(hyperparams["learning_rate"]),
-        momentum=float(hyperparams["momentum"]),
-        weight_decay=float(hyperparams["weight_decay"]),
-    )
-    inner_steps = int(hyperparams.get("inner_steps", cfg.training.inner_steps))
-    objective = cfg.training.objective
+    opt_name = run_cfg.training.optimizer.lower()
+    if opt_name == "sgd":
+        optimizer = torch.optim.SGD(
+            params_to_update,
+            lr=run_cfg.training.learning_rate,
+            momentum=run_cfg.training.momentum,
+            weight_decay=run_cfg.training.weight_decay,
+        )
+    elif opt_name == "adam":
+        optimizer = torch.optim.Adam(
+            params_to_update,
+            lr=run_cfg.training.learning_rate,
+            weight_decay=run_cfg.training.weight_decay,
+        )
+    else:
+        raise ValueError(f"Unsupported optimizer {opt_name}")
 
+    if run_cfg.training.loss == "entropy":
+        criterion = EntropyLoss()
+    elif run_cfg.training.loss == "confidence_weighted_entropy":
+        criterion = ConfidenceWeightedEntropyLoss()
+    else:
+        raise ValueError(f"Unsupported loss {run_cfg.training.loss}")
+
+    # ---------------------------------------------------------------------
+    # Adaptation loop (TENT-style) ----------------------------------------
+    # ---------------------------------------------------------------------
+    global_step = 0
     all_preds: List[int] = []
     all_targets: List[int] = []
 
-    max_steps = max_steps_override or len(loader)
+    trial_mode: bool = bool(cfg.get("trial_mode", False))
 
-    for step, (imgs, targets) in enumerate(loader, 1):
-        if step > max_steps:
-            break
-        imgs = imgs.to(device, non_blocking=True)
-        targets = targets.to(device, non_blocking=True)
+    for epoch in range(run_cfg.training.epochs):
+        for batch_idx, (images, targets) in enumerate(dataloader):
+            # In trial-mode process only a few batches to keep CI fast
+            if trial_mode and batch_idx >= 2:
+                break
 
-        # Predict BEFORE adaptation
-        with torch.no_grad():
-            logits = model(imgs)
-            preds = logits.argmax(1)
-        all_preds.extend(preds.cpu().tolist())
-        all_targets.extend(targets.cpu().tolist())
+            images = images.to(device, non_blocking=True)
+            targets = targets.to(device, non_blocking=True)
 
-        # Adapt AFTER prediction (when enabled)
-        if cfg.training.adaptation and cfg.run.method in {"tent", "cw-tent"}:
-            _adapt_step(model, imgs, objective, inner_steps, optimizer)
+            # ----- Inner update(s) ---------------------------------------
+            model.train()
+            for _ in range(run_cfg.training.inner_steps):
+                optimizer.zero_grad(set_to_none=True)
+                logits_in = model(images)
+                loss = criterion(logits_in)
+                loss.backward()
+                optimizer.step()
+            model.eval()
 
-        # Live logging --------------------------------------------------
-        if wb_run is not None and (
-            step % int(cfg.training.log_interval) == 0 or step == max_steps
-        ):
-            acc = accuracy_score(all_targets, all_preds) * 100.0
-            wb_run.log({"top1_accuracy": acc, "step": step})
+            # ----- Metrics ----------------------------------------------
+            with torch.no_grad():
+                logits_out = model(images)
+            preds = logits_out.argmax(dim=1)
+            acc1 = topk_acc(logits_out, targets, k=1)
 
-    final_acc = accuracy_score(all_targets, all_preds) * 100.0
-    cm = confusion_matrix(all_targets, all_preds)
+            all_preds.extend(preds.cpu().tolist())
+            all_targets.extend(targets.cpu().tolist())
 
-    if wb_run is not None:
-        wb_run.log({"final_top1_accuracy": final_acc, "conf_mat": cm.tolist()})
+            if wandb_run is not None:
+                wandb.log(
+                    {
+                        "train_loss": float(loss.item()),
+                        "val_acc_batch": float(acc1),
+                        "epoch": epoch,
+                    },
+                    step=global_step,
+                )
+            global_step += 1
 
-    return {"final_top1_accuracy": final_acc, "confusion_matrix": cm}
+    # ---------------------------------------------------------------------
+    # Final accuracy & WandB summary --------------------------------------
+    # ---------------------------------------------------------------------
+    all_preds_t = torch.tensor(all_preds)
+    all_targets_t = torch.tensor(all_targets)
+    final_acc = 100.0 * (all_preds_t == all_targets_t).float().mean().item()
+    print(f"[RESULT] {run_cfg.run_id} – Final Top-1 Acc: {final_acc:.2f}%")
 
+    if wandb_run is not None:
+        wandb_run.summary["top1_accuracy"] = float(final_acc)
+        wandb_run.summary["y_true"] = all_targets  # for later evaluation
+        wandb_run.summary["y_pred"] = all_preds
+        wandb_run.finish()
 
-def _suggest_from_space(trial: "optuna.trial.Trial", search_space: Dict) -> Dict[str, float]:
-    sampled = {}
-    for name, p in search_space.items():
-        p_type = p["type"]
-        if p_type == "loguniform":
-            sampled[name] = trial.suggest_float(name, p["low"], p["high"], log=True)
-        elif p_type == "uniform":
-            sampled[name] = trial.suggest_float(name, p["low"], p["high"], log=False)
-        elif p_type == "categorical":
-            sampled[name] = trial.suggest_categorical(name, p["choices"])
+    return float(final_acc)
+
+###############################################################################
+# Optuna helpers --------------------------------------------------------------
+###############################################################################
+
+def _suggest_from_space(trial: optuna.Trial, space: Dict[str, Dict[str, Any]]):
+    """Sample parameters from an Optuna search-space description."""
+    params: Dict[str, Any] = {}
+    for name, spec in space.items():
+        typ = spec["type"]
+        if typ == "loguniform":
+            params[name] = trial.suggest_float(name, spec["low"], spec["high"], log=True)
+        elif typ == "uniform":
+            params[name] = trial.suggest_float(name, spec["low"], spec["high"], log=False)
+        elif typ == "categorical":
+            params[name] = trial.suggest_categorical(name, spec["choices"])
         else:
-            raise ValueError(f"Unsupported parameter type: {p_type}")
-    return sampled
+            raise ValueError(f"Unknown Optuna param type {typ}")
+    return params
 
 
-# -----------------------------------------------------------------------------
-# HYDRA entry-point
-# -----------------------------------------------------------------------------
+def _apply_trial_params(cfg, params: Dict[str, Any]):
+    """Write Optuna-suggested parameters back into ``cfg`` (in-place)."""
+    run_cfg = getattr(cfg, "run", cfg)
+    for k, v in params.items():
+        if hasattr(run_cfg.training, k):
+            setattr(run_cfg.training, k, v)
+        elif hasattr(run_cfg.dataset, k):
+            setattr(run_cfg.dataset, k, v)
+        elif hasattr(run_cfg.model, k):
+            setattr(run_cfg.model, k, v)
 
-@hydra.main(version_base=None, config_path="../config", config_name="config")
-def main(cfg: DictConfig):  # noqa: C901
-    _flatten_run_cfg(cfg)  # align hierarchy (critical fix)
+###############################################################################
+# Hydra entry-point -----------------------------------------------------------
+###############################################################################
 
-    results_dir = Path(to_absolute_path(cfg.results_dir)).expanduser().resolve()
-    results_dir.mkdir(parents=True, exist_ok=True)
+@hydra.main(config_path="../config", config_name="config", version_base="1.3")
+def main(cfg):  # noqa: C901  (complex but clear)
+    # ---------------- Trial-mode tweaks ----------------------------------
+    if bool(cfg.get("trial_mode", False)):
+        cfg.wandb.mode = "disabled"
+        cfg.optuna.n_trials = 0
+        cfg.run.training.epochs = 1
 
-    _set_deterministic(int(cfg.seed))
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # Ensure cache directories exist
+    Path(".cache/torch").mkdir(parents=True, exist_ok=True)
+    Path(".cache/datasets").mkdir(parents=True, exist_ok=True)
 
-    # ------------------------------------------------------------------
-    # Data loader (shared across all trials)
-    # ------------------------------------------------------------------
-    loader, n_classes = build_dataloader(cfg.dataset, cache_dir=Path(".cache"))
+    # ---------------- Hyper-parameter optimisation ----------------------
+    if cfg.optuna.n_trials > 0:
+        print(f"[Optuna] Running {cfg.optuna.n_trials} trials …")
 
-    # ------------------------------------------------------------------
-    # WandB setup -------------------------------------------------------
-    # ------------------------------------------------------------------
-    wb_run = None
-    if cfg.wandb.mode != "disabled":
-        assert wandb is not None, "wandb is required but not installed"
-        wb_run = wandb.init(
-            entity=cfg.wandb.entity,
-            project=cfg.wandb.project,
-            id=cfg.run.run_id,
-            resume="allow",
-            mode=cfg.wandb.mode,
-            config=OmegaConf.to_container(cfg, resolve=True),
+        def objective(trial: optuna.Trial) -> float:
+            cfg_trial = OmegaConf.create(OmegaConf.to_container(cfg, resolve=True))
+            params = _suggest_from_space(trial, cfg_trial.optuna.search_space)
+            _apply_trial_params(cfg_trial, params)
+            cfg_trial.wandb.mode = "disabled"  # disable logging during search
+            return run_single(cfg_trial, enable_wandb=False)
+
+        study = optuna.create_study(direction=cfg.optuna.direction)
+        study.optimize(objective, n_trials=cfg.optuna.n_trials)
+        print(
+            f"[Optuna] Best value = {study.best_value:.4f}\n[Optuna] Best params = {study.best_params}"
         )
-        print(f"[WandB] {wb_run.get_url()}")
+        _apply_trial_params(cfg, study.best_params)
 
-    # ------------------------------------------------------------------
-    # Optuna branch (only if enabled & n_trials > 1 & not trial_mode)
-    # ------------------------------------------------------------------
-    optuna_cfg = cfg.optuna
-    if (
-        bool(optuna_cfg.enabled)
-        and int(optuna_cfg.n_trials) > 1
-        and not cfg.trial_mode
-    ):
-        assert optuna is not None, "optuna is required but not installed"
-
-        search_space = OmegaConf.to_container(optuna_cfg.search_space, resolve=True)
-        direction = optuna_cfg.direction
-        n_trials = int(optuna_cfg.n_trials)
-        metric_name = optuna_cfg.metric
-
-        print(f"[Optuna] {n_trials} trials | optimising '{metric_name}' ({direction})")
-
-        def _objective(trial):
-            params = _suggest_from_space(trial, search_space)
-            merged = {
-                "learning_rate": cfg.training.learning_rate,
-                "momentum": cfg.training.momentum,
-                "weight_decay": cfg.training.weight_decay,
-                "inner_steps": cfg.training.inner_steps,
-            }
-            merged.update(params)
-            m = _stream_run(
-                cfg,
-                merged,
-                device,
-                loader,
-                n_classes,
-                wb_run=None,  # suppress logging during tuning
-            )
-            return m[metric_name]
-
-        study = optuna.create_study(direction=direction)
-        study.optimize(_objective, n_trials=n_trials, show_progress_bar=True)
-        best_params = study.best_params
-        print("[Optuna] Best params:", best_params)
-
-        if wb_run is not None:
-            wb_run.config.update({"optuna_best_params": best_params}, allow_val_change=True)
-
-        final_params = {
-            "learning_rate": cfg.training.learning_rate,
-            "momentum": cfg.training.momentum,
-            "weight_decay": cfg.training.weight_decay,
-            "inner_steps": cfg.training.inner_steps,
-        }
-        final_params.update(best_params)
-
-        metrics = _stream_run(
-            cfg,
-            final_params,
-            device,
-            loader,
-            n_classes,
-            wb_run=wb_run,
-        )
-    else:  # ▸ single run (no Optuna)
-        hp = {
-            "learning_rate": cfg.training.learning_rate,
-            "momentum": cfg.training.momentum,
-            "weight_decay": cfg.training.weight_decay,
-            "inner_steps": cfg.training.inner_steps,
-        }
-        max_steps = 2 if cfg.trial_mode else None  # quick pass in trial-mode
-        metrics = _stream_run(
-            cfg,
-            hp,
-            device,
-            loader,
-            n_classes,
-            wb_run=wb_run,
-            max_steps_override=max_steps,
-        )
-
-    # ------------------------------------------------------------------
-    # Save confusion matrix locally (allowed artefact)
-    # ------------------------------------------------------------------
-    (results_dir / "confusion_matrix.npy").write_bytes(
-        metrics["confusion_matrix"].astype(np.int32).tobytes()
-    )
-
-    if wb_run is not None:
-        wb_run.finish()
+    # ---------------- Final (potentially best) run ----------------------
+    run_single(cfg, enable_wandb=(cfg.wandb.mode != "disabled"))
 
 
 if __name__ == "__main__":
-    sys.argv[0] = "train.py"
     main()

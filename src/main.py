@@ -1,73 +1,58 @@
 # src/main.py
-"""Hydra orchestrator – spawns `src.train` as a *sub-process*."""
+"""Main orchestrator – launches a single experiment run as a subprocess."""
+
 from __future__ import annotations
 
 import os
+import shlex
 import subprocess
 import sys
 from pathlib import Path
 from typing import List
 
 import hydra
-from hydra.utils import to_absolute_path
+from hydra.core.hydra_config import HydraConfig
+from hydra.utils import get_original_cwd
 from omegaconf import OmegaConf
 
+###############################################################################
+# Hydra entry-point -----------------------------------------------------------
+###############################################################################
 
-def _flatten_run(cfg):
-    """Same flattening as in train.py to access root-level keys."""
-    from omegaconf import OmegaConf as _OC
-
-    if "run" not in cfg:
-        return
-    _OC.set_struct(cfg, False)
-    for k in ["model", "dataset", "training", "optuna", "seed", "hardware"]:
-        if k in cfg.run:
-            cfg[k] = cfg.run[k]
-
-
-def _serialize_cfg(cfg, results_dir: Path):
-    OmegaConf.save(cfg, str(results_dir / "config.yaml"))
-
-
-def _build_overrides(cfg) -> List[str]:
-    o: List[str] = [f"run={cfg.run.run_id}", f"results_dir={cfg.results_dir}", f"trial_mode={str(cfg.trial_mode).lower()}"]
-
-    # Quick-run overrides in trial-mode
-    if cfg.trial_mode:
-        o += [
-            "wandb.mode=disabled",
-            "optuna.n_trials=0",
-            "training.epochs=1",
-            "training.inner_steps=1",
-            "dataset.batch_size=8",
-        ]
-    return o
-
-
-# -----------------------------------------------------------------------------
-# HYDRA entry-point
-# -----------------------------------------------------------------------------
-
-@hydra.main(version_base=None, config_path="../config", config_name="config")
+@hydra.main(config_path="../config", config_name="config", version_base="1.3")
 def main(cfg):
-    _flatten_run(cfg)  # ensure root paths exist for overrides
+    original_cwd = Path(get_original_cwd())
 
-    results_dir = Path(to_absolute_path(cfg.results_dir)).expanduser().resolve()
+    # Persist full configuration (for evaluate.py)
+    results_dir = Path(cfg.results_dir)
     results_dir.mkdir(parents=True, exist_ok=True)
+    cfg_path = results_dir / "config.yaml"
+    if not cfg_path.exists():
+        OmegaConf.save(config=cfg, f=str(cfg_path))
 
-    _serialize_cfg(cfg, results_dir)
+    task_overrides: List[str] = list(HydraConfig.get().overrides.task)
 
-    cmd = [sys.executable, "-u", "-m", "src.train"] + _build_overrides(cfg)
-    print("[Main] Launching:\n  ", " ".join(cmd))
+    # Trial-mode convenience overrides -----------------------------------
+    if cfg.get("trial_mode", False):
+        if "wandb.mode=disabled" not in task_overrides:
+            task_overrides.append("wandb.mode=disabled")
+        if "optuna.n_trials=0" not in task_overrides:
+            task_overrides.append("optuna.n_trials=0")
+        # Make only one epoch during trial-mode
+        if "run.training.epochs=1" not in task_overrides:
+            task_overrides.append("run.training.epochs=1")
+
+    # Ensure results_dir propagates
+    if f"results_dir={cfg.results_dir}" not in task_overrides:
+        task_overrides.append(f"results_dir={cfg.results_dir}")
+
+    launch_cmd = [sys.executable, "-u", "-m", "src.train", *task_overrides]
 
     env = os.environ.copy()
-    env.setdefault("CUBLAS_WORKSPACE_CONFIG", ":4096:8")
+    env["PYTHONPATH"] = f"{original_cwd}:{env.get('PYTHONPATH', '')}"
 
-    ret = subprocess.call(cmd, env=env)
-    if ret != 0:
-        raise RuntimeError(f"Training failed (exit {ret})")
-
-    print("[Main] Completed – artefacts in", results_dir)
+    print("\n[Launcher] Executing:\n  ", " ".join(map(shlex.quote, launch_cmd)))
+    subprocess.check_call(launch_cmd, env=env)
 
 
 if __name__ == "__main__":

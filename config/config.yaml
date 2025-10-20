@@ -1,50 +1,20 @@
-# config/config.yaml
-# ==============================================================================
-# Global Hydra configuration shared by *all* runs.
-# ==============================================================================
-
 defaults:
   - _self_
-  - run: null          # injected via CLI, e.g.  run=proposed-ResNet-18
+  - run: ???
 
-# ------------------------------------------------------------------------------
-# Global toggles
-# ------------------------------------------------------------------------------
+# Global switches -------------------------------------------------------------
+trial_mode: false            # set to true via CLI for lightweight CI validation
+results_dir: ./results       # can be overridden from CLI
 
-trial_mode: false
-results_dir: ./results
-seed: 42
-
-# ------------------------------------------------------------------------------
-# WandB (auto-disabled in trial-mode by main.py)
-# ------------------------------------------------------------------------------
-
+# WandB configuration ---------------------------------------------------------
 wandb:
   entity: gengaru617-personal
   project: 251020-test
-  mode: online
+  mode: online               # automatically switched to "disabled" in trial_mode
 
-# ------------------------------------------------------------------------------
-# Place-holders (overwritten by flattening helper)
-# ------------------------------------------------------------------------------
-
-model: {}
-dataset: {}
-training: {}
-optuna: {}
-
-# ------------------------------------------------------------------------------
-# Hydra runtime dirs & logging
-# ------------------------------------------------------------------------------
-
-hydra:
-  run:
-    dir: ./outputs/${now:%Y-%m-%d}_${now:%H-%M-%S}_${run.run_id}
-  job_logging:
-    version: 1
-    root:
-      level: INFO
-  hydra_logging:
-    version: 1
-    root:
-      level: INFO
+# Optuna (overwritten by run configs) -----------------------------------------
+optuna:
+  n_trials: 0
+  direction: maximize
+  metric: top1_accuracy
+  search_space: {}
