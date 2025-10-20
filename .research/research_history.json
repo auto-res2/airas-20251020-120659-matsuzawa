@@ -8,7 +8,18 @@
       "title": "Test Time Adaptation With Regularized Loss for Weakly Supervised Salient Object Detection"
     },
     {
-      "title": "DELTA: DEGRADATION-FREE FULLY TEST-TIME ADAPTATION"
+      "title": "DELTA: DEGRADATION-FREE FULLY TEST-TIME ADAPTATION",
+      "abstract": "Fully test-time adaptation aims at adapting a pre-trained model to the test\nstream during real-time inference, which is urgently required when the test\ndistribution differs from the training distribution. Several efforts have been\ndevoted to improving adaptation performance. However, we find that two\nunfavorable defects are concealed in the prevalent adaptation methodologies\nlike test-time batch normalization (BN) and self-learning. First, we reveal\nthat the normalization statistics in test-time BN are completely affected by\nthe currently received test samples, resulting in inaccurate estimates. Second,\nwe show that during test-time adaptation, the parameter update is biased\ntowards some dominant classes. In addition to the extensively studied test\nstream with independent and class-balanced samples, we further observe that the\ndefects can be exacerbated in more complicated test environments, such as\n(time) dependent or class-imbalanced data. We observe that previous approaches\nwork well in certain scenarios while show performance degradation in others due\nto their faults. In this paper, we provide a plug-in solution called DELTA for\nDegradation-freE fuLly Test-time Adaptation, which consists of two components:\n(i) Test-time Batch Renormalization (TBR), introduced to improve the estimated\nnormalization statistics. (ii) Dynamic Online re-weighTing (DOT), designed to\naddress the class bias within optimization. We investigate various test-time\nadaptation methods on three commonly used datasets with four scenarios, and a\nnewly introduced real-world dataset. DELTA can help them deal with all\nscenarios simultaneously, leading to SOTA performance.",
+      "meta_data": {
+        "arxiv_id": "2301.13018v1",
+        "authors": [
+          "Bowen Zhao",
+          "Chen Chen",
+          "Shu-Tao Xia"
+        ],
+        "published_date": "2023-01-30T15:54:00Z",
+        "pdf_url": "https://arxiv.org/pdf/2301.13018v1.pdf"
+      }
     }
   ]
 }
