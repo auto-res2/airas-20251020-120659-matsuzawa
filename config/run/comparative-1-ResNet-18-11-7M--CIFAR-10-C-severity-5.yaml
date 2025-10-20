@@ -1,0 +1,53 @@
+run_id: comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5
+method: comparative-1
+model:
+  name: resnet18.a1_in1k
+  architecture: ResNet-18
+  num_parameters: 11.7M
+  pretrained: true
+  checkpoint: timm/resnet18.a1_in1k
+  trainable_parameters: batchnorm_affine
+
+dataset:
+  name: cifar10-c
+  corruption_severity: 5
+  corruption_types: all
+  split: test
+  image_size: 32
+  normalization: cifar
+
+training:
+  adaptation_algorithm: tent
+  objective: entropy_minimization
+  batch_size: 128    # default, will be tuned by Optuna
+  learning_rate: 0.001  # default, will be tuned by Optuna
+  optimizer: sgd
+  momentum: 0.9
+  inner_steps: 10  # standard TENT
+  weight_decay: 0.0
+  epochs: 1
+  shuffle_stream: false
+
+optuna:
+  n_trials: 40
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 5e-4
+      high: 1e-2
+    momentum:
+      type: categorical
+      choices: [0.0, 0.5, 0.9]
+    batch_size:
+      type: categorical
+      choices: [64, 128, 256]
+    inner_steps:
+      type: int
+      low: 3
+      high: 10
+
+other:
+  seed: 42
+  device: cuda
+  num_workers: 8

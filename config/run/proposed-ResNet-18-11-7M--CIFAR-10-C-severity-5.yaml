@@ -1,0 +1,54 @@
+run_id: proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5
+method: proposed
+model:
+  name: resnet18.a1_in1k
+  architecture: ResNet-18
+  num_parameters: 11.7M
+  pretrained: true
+  checkpoint: timm/resnet18.a1_in1k
+  trainable_parameters: batchnorm_affine
+
+dataset:
+  name: cifar10-c
+  corruption_severity: 5
+  corruption_types: all
+  split: test
+  image_size: 32
+  normalization: cifar
+
+training:
+  adaptation_algorithm: cw-tent
+  objective: confidence_weighted_entropy
+  batch_size: 128    # default, will be tuned by Optuna
+  learning_rate: 0.001  # default, will be tuned by Optuna
+  optimizer: sgd
+  momentum: 0.9
+  weight_temperature: 1.0
+  inner_steps: 1  # single gradient step per batch
+  weight_decay: 0.0
+  epochs: 1  # single pass over the streaming test set
+  shuffle_stream: false
+
+optuna:
+  n_trials: 40
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 5e-4
+      high: 1e-2
+    momentum:
+      type: categorical
+      choices: [0.0, 0.5, 0.9]
+    batch_size:
+      type: categorical
+      choices: [64, 128, 256]
+    weight_temperature:
+      type: uniform
+      low: 0.8
+      high: 1.2
+
+other:
+  seed: 42
+  device: cuda
+  num_workers: 8

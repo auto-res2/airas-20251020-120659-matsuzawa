@@ -1,0 +1,15 @@
+defaults:
+  # Select run config group – overridden from CLI with run=<run_id>
+  - run: proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5
+  - _self_
+
+# -----------------------------------------------------------------------------
+# Generic experiment-level settings (shared across runs)
+# -----------------------------------------------------------------------------
+results_dir: outputs
+trial_mode: false
+
+wandb:
+  entity: gengaru617-personal
+  project: 251020-test
+  mode: online  # automatically set to "disabled" in trial_mode
