@@ -1,232 +1,19 @@
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:04:58 PM UTC 2025 ===
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:05:25 PM UTC 2025 ===
-Downloading CIFAR-10-C …
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:06:27 PM UTC 2025 ===
-Downloading CIFAR-10-C …
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:16:56 PM UTC 2025 ===
-Extracting CIFAR-10-C …
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:17:27 PM UTC 2025 ===
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:17:51 PM UTC 2025 ===
-Downloading CIFAR-10-C …
-=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:29:17 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:29:43,287][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:29:44,409][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:29:44,861][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 13.28%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for proposed-ResNet-18 at Mon Oct 20 03:29:53 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:30:12 PM UTC 2025 ===
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:30:48 PM UTC 2025 ===
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:30:55 PM UTC 2025 ===
-Error parsing override 'run=(11M)-CIFAR-10-C'
-extraneous input '(' expecting {<EOF>, ':', BRACKET_OPEN, BRACE_OPEN, FLOAT, INT, BOOL, NULL, UNQUOTED_CHAR, ID, ESC, WS, QUOTED_VALUE, INTERPOLATION}
-See https://hydra.cc/docs/1.2/advanced/override_grammar/basic for details
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-=== [TRIAL RUN] Start for proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) at Mon Oct 20 03:31:15 PM UTC 2025 ===
-mismatched input '-' expecting <EOF>
-See https://hydra.cc/docs/1.2/advanced/override_grammar/basic for details
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-=== [TRIAL RUN] Start at Mon Oct 20 03:31:22 PM UTC 2025 ===
-mismatched input '-' expecting <EOF>
-See https://hydra.cc/docs/1.2/advanced/override_grammar/basic for details
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-=== [TRIAL RUN] Start at Mon Oct 20 03:31:33 PM UTC 2025 ===
+=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 04:00:14 PM UTC 2025 ===
 /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
   warnings.warn(
 /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
   warnings.warn(
 Generating corrupted CIFAR-10 data (severity=5)...
-Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   6%|▋         | 644/10000 [00:00<00:01, 6430.07it/s]Applying gaussian_noise:  13%|█▎        | 1307/10000 [00:00<00:01, 6546.04it/s]Applying gaussian_noise:  20%|█▉        | 1971/10000 [00:00<00:01, 6584.98it/s]Applying gaussian_noise:  26%|██▋       | 2630/10000 [00:00<00:01, 6570.14it/s]Applying gaussian_noise:  33%|███▎      | 3296/10000 [00:00<00:01, 6600.70it/s]Applying gaussian_noise:  40%|███▉      | 3963/10000 [00:00<00:00, 6621.71it/s]Applying gaussian_noise:  46%|████▋     | 4631/10000 [00:00<00:00, 6639.94it/s]Applying gaussian_noise:  53%|█████▎    | 5296/10000 [00:00<00:00, 6639.38it/s]Applying gaussian_noise:  60%|█████▉    | 5961/10000 [00:00<00:00, 6639.69it/s]Applying gaussian_noise:  66%|██████▋   | 6630/10000 [00:01<00:00, 6653.44it/s]Applying gaussian_noise:  73%|███████▎  | 7300/10000 [00:01<00:00, 6666.14it/s]Applying gaussian_noise:  80%|███████▉  | 7970/10000 [00:01<00:00, 6673.99it/s]Applying gaussian_noise:  86%|████████▋ | 8641/10000 [00:01<00:00, 6684.86it/s]Applying gaussian_noise:  93%|█████████▎| 9311/10000 [00:01<00:00, 6688.80it/s]Applying gaussian_noise: 100%|█████████▉| 9980/10000 [00:01<00:00, 6687.80it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6643.14it/s]
-Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  19%|█▉        | 1938/10000 [00:00<00:00, 18731.09it/s]Applying brightness:  38%|███▊      | 3812/10000 [00:00<00:00, 18538.48it/s]Applying brightness:  57%|█████▋    | 5669/10000 [00:00<00:00, 18551.71it/s]Applying brightness:  75%|███████▌  | 7537/10000 [00:00<00:00, 18601.24it/s]Applying brightness:  94%|█████████▍| 9414/10000 [00:00<00:00, 18661.04it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 18590.11it/s]
-Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  11%|█         | 1056/10000 [00:00<00:00, 10557.34it/s]Applying contrast:  21%|██▏       | 2130/10000 [00:00<00:00, 10664.68it/s]Applying contrast:  32%|███▏      | 3225/10000 [00:00<00:00, 10794.42it/s]Applying contrast:  43%|████▎     | 4320/10000 [00:00<00:00, 10853.82it/s]Applying contrast:  54%|█████▍    | 5413/10000 [00:00<00:00, 10879.40it/s]Applying contrast:  65%|██████▌   | 6506/10000 [00:00<00:00, 10894.96it/s]Applying contrast:  76%|███████▌  | 7598/10000 [00:00<00:00, 10902.13it/s]Applying contrast:  87%|████████▋ | 8695/10000 [00:00<00:00, 10922.56it/s]Applying contrast:  98%|█████████▊| 9792/10000 [00:00<00:00, 10934.86it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10873.02it/s]
-Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  12%|█▏        | 1152/10000 [00:00<00:00, 11511.37it/s]Applying defocus_blur:  24%|██▎       | 2357/10000 [00:00<00:00, 11822.88it/s]Applying defocus_blur:  36%|███▌      | 3572/10000 [00:00<00:00, 11968.29it/s]Applying defocus_blur:  48%|████▊     | 4782/10000 [00:00<00:00, 12018.27it/s]Applying defocus_blur:  60%|█████▉    | 5998/10000 [00:00<00:00, 12067.18it/s]Applying defocus_blur:  72%|███████▏  | 7217/10000 [00:00<00:00, 12107.75it/s]Applying defocus_blur:  84%|████████▍ | 8432/10000 [00:00<00:00, 12119.28it/s]Applying defocus_blur:  97%|█████████▋| 9657/10000 [00:00<00:00, 12160.77it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 12067.56it/s]
-Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1776/10000 [00:00<00:00, 17752.23it/s]Applying motion_blur:  36%|███▌      | 3568/10000 [00:00<00:00, 17847.13it/s]Applying motion_blur:  54%|█████▎    | 5353/10000 [00:00<00:00, 17826.54it/s]Applying motion_blur:  71%|███████▏  | 7137/10000 [00:00<00:00, 17827.85it/s]Applying motion_blur:  89%|████████▉ | 8920/10000 [00:00<00:00, 17824.86it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 17806.00it/s]
-[2025-10-20 15:31:44,538][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:31:44,789][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:31:45,032][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 11.72%
+Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   7%|▋         | 654/10000 [00:00<00:01, 6535.10it/s]Applying gaussian_noise:  13%|█▎        | 1329/10000 [00:00<00:01, 6656.80it/s]Applying gaussian_noise:  20%|██        | 2006/10000 [00:00<00:01, 6707.57it/s]Applying gaussian_noise:  27%|██▋       | 2686/10000 [00:00<00:01, 6740.68it/s]Applying gaussian_noise:  34%|███▎      | 3365/10000 [00:00<00:00, 6756.23it/s]Applying gaussian_noise:  40%|████      | 4044/10000 [00:00<00:00, 6767.31it/s]Applying gaussian_noise:  47%|████▋     | 4726/10000 [00:00<00:00, 6781.84it/s]Applying gaussian_noise:  54%|█████▍    | 5405/10000 [00:00<00:00, 6777.41it/s]Applying gaussian_noise:  61%|██████    | 6083/10000 [00:00<00:00, 6775.85it/s]Applying gaussian_noise:  68%|██████▊   | 6761/10000 [00:01<00:00, 6770.68it/s]Applying gaussian_noise:  74%|███████▍  | 7443/10000 [00:01<00:00, 6782.98it/s]Applying gaussian_noise:  81%|████████  | 8122/10000 [00:01<00:00, 6778.02it/s]Applying gaussian_noise:  88%|████████▊ | 8801/10000 [00:01<00:00, 6779.73it/s]Applying gaussian_noise:  95%|█████████▍| 9480/10000 [00:01<00:00, 6782.61it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6753.31it/s]
+Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  20%|█▉        | 1977/10000 [00:00<00:00, 19768.65it/s]Applying brightness:  40%|███▉      | 3979/10000 [00:00<00:00, 19912.74it/s]Applying brightness:  60%|█████▉    | 5971/10000 [00:00<00:00, 19861.54it/s]Applying brightness:  80%|███████▉  | 7961/10000 [00:00<00:00, 19875.28it/s]Applying brightness:  99%|█████████▉| 9949/10000 [00:00<00:00, 19781.50it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 19804.53it/s]
+Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  11%|█         | 1086/10000 [00:00<00:00, 10856.44it/s]Applying contrast:  22%|██▏       | 2182/10000 [00:00<00:00, 10912.23it/s]Applying contrast:  33%|███▎      | 3281/10000 [00:00<00:00, 10945.36it/s]Applying contrast:  44%|████▍     | 4376/10000 [00:00<00:00, 10938.58it/s]Applying contrast:  55%|█████▍    | 5470/10000 [00:00<00:00, 10932.52it/s]Applying contrast:  66%|██████▌   | 6564/10000 [00:00<00:00, 10926.16it/s]Applying contrast:  77%|███████▋  | 7664/10000 [00:00<00:00, 10947.89it/s]Applying contrast:  88%|████████▊ | 8759/10000 [00:00<00:00, 10615.63it/s]Applying contrast:  98%|█████████▊| 9823/10000 [00:00<00:00, 10539.41it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10749.16it/s]
+Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  12%|█▏        | 1171/10000 [00:00<00:00, 11701.67it/s]Applying defocus_blur:  24%|██▎       | 2357/10000 [00:00<00:00, 11794.16it/s]Applying defocus_blur:  35%|███▌      | 3540/10000 [00:00<00:00, 11807.26it/s]Applying defocus_blur:  47%|████▋     | 4724/10000 [00:00<00:00, 11819.86it/s]Applying defocus_blur:  59%|█████▉    | 5906/10000 [00:00<00:00, 11819.39it/s]Applying defocus_blur:  71%|███████   | 7092/10000 [00:00<00:00, 11831.09it/s]Applying defocus_blur:  83%|████████▎ | 8295/10000 [00:00<00:00, 11892.73it/s]Applying defocus_blur:  95%|█████████▌| 9510/10000 [00:00<00:00, 11972.88it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 11894.74it/s]
+Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1786/10000 [00:00<00:00, 17854.02it/s]Applying motion_blur:  36%|███▌      | 3572/10000 [00:00<00:00, 17385.94it/s]Applying motion_blur:  54%|█████▎    | 5362/10000 [00:00<00:00, 17612.91it/s]Applying motion_blur:  72%|███████▏  | 7159/10000 [00:00<00:00, 17750.41it/s]Applying motion_blur:  89%|████████▉ | 8946/10000 [00:00<00:00, 17792.94it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 17731.14it/s]
+[2025-10-20 16:00:24,310][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 16:00:24,577][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 16:00:24,816][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 9.38%
 
 [Launcher] Executing:
    /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] Start at Mon Oct 20 03:31:54 PM UTC 2025 ===
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-Generating corrupted CIFAR-10 data (severity=5)...
-Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   6%|▋         | 637/10000 [00:00<00:01, 6368.06it/s]Applying gaussian_noise:  13%|█▎        | 1294/10000 [00:00<00:01, 6483.37it/s]Applying gaussian_noise:  20%|█▉        | 1952/10000 [00:00<00:01, 6525.67it/s]Applying gaussian_noise:  26%|██▌       | 2605/10000 [00:00<00:01, 6496.16it/s]Applying gaussian_noise:  33%|███▎      | 3264/10000 [00:00<00:01, 6529.03it/s]Applying gaussian_noise:  39%|███▉      | 3924/10000 [00:00<00:00, 6549.73it/s]Applying gaussian_noise:  46%|████▌     | 4584/10000 [00:00<00:00, 6565.59it/s]Applying gaussian_noise:  52%|█████▏    | 5244/10000 [00:00<00:00, 6575.87it/s]Applying gaussian_noise:  59%|█████▉    | 5902/10000 [00:00<00:00, 6573.47it/s]Applying gaussian_noise:  66%|██████▌   | 6561/10000 [00:01<00:00, 6577.56it/s]Applying gaussian_noise:  72%|███████▏  | 7221/10000 [00:01<00:00, 6583.38it/s]Applying gaussian_noise:  79%|███████▉  | 7880/10000 [00:01<00:00, 6578.65it/s]Applying gaussian_noise:  85%|████████▌ | 8538/10000 [00:01<00:00, 6572.23it/s]Applying gaussian_noise:  92%|█████████▏| 9197/10000 [00:01<00:00, 6577.35it/s]Applying gaussian_noise:  99%|█████████▊| 9855/10000 [00:01<00:00, 6573.93it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6556.27it/s]
-Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  19%|█▉        | 1909/10000 [00:00<00:00, 19086.47it/s]Applying brightness:  38%|███▊      | 3818/10000 [00:00<00:00, 18134.61it/s]Applying brightness:  56%|█████▋    | 5639/10000 [00:00<00:00, 18165.70it/s]Applying brightness:  75%|███████▍  | 7471/10000 [00:00<00:00, 18222.85it/s]Applying brightness:  93%|█████████▎| 9298/10000 [00:00<00:00, 18238.66it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 18216.56it/s]
-Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  10%|█         | 1050/10000 [00:00<00:00, 10491.91it/s]Applying contrast:  21%|██        | 2104/10000 [00:00<00:00, 10519.77it/s]Applying contrast:  32%|███▏      | 3183/10000 [00:00<00:00, 10639.24it/s]Applying contrast:  43%|████▎     | 4278/10000 [00:00<00:00, 10759.95it/s]Applying contrast:  54%|█████▎    | 5371/10000 [00:00<00:00, 10820.30it/s]Applying contrast:  65%|██████▍   | 6463/10000 [00:00<00:00, 10853.53it/s]Applying contrast:  75%|███████▌  | 7549/10000 [00:00<00:00, 10843.66it/s]Applying contrast:  86%|████████▋ | 8637/10000 [00:00<00:00, 10853.80it/s]Applying contrast:  97%|█████████▋| 9723/10000 [00:00<00:00, 10855.63it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10786.75it/s]
-Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  11%|█▏        | 1141/10000 [00:00<00:00, 11401.18it/s]Applying defocus_blur:  23%|██▎       | 2329/10000 [00:00<00:00, 11680.30it/s]Applying defocus_blur:  35%|███▌      | 3523/10000 [00:00<00:00, 11796.34it/s]Applying defocus_blur:  47%|████▋     | 4725/10000 [00:00<00:00, 11883.55it/s]Applying defocus_blur:  59%|█████▉    | 5922/10000 [00:00<00:00, 11912.33it/s]Applying defocus_blur:  71%|███████   | 7117/10000 [00:00<00:00, 11923.50it/s]Applying defocus_blur:  83%|████████▎ | 8319/10000 [00:00<00:00, 11954.16it/s]Applying defocus_blur:  95%|█████████▌| 9523/10000 [00:00<00:00, 11980.34it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 11897.32it/s]
-Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1757/10000 [00:00<00:00, 17560.76it/s]Applying motion_blur:  35%|███▌      | 3536/10000 [00:00<00:00, 17691.42it/s]Applying motion_blur:  53%|█████▎    | 5307/10000 [00:00<00:00, 17697.68it/s]Applying motion_blur:  71%|███████   | 7080/10000 [00:00<00:00, 17707.79it/s]Applying motion_blur:  89%|████████▊ | 8855/10000 [00:00<00:00, 17721.57it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 17703.77it/s]
-[2025-10-20 15:32:05,314][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:32:05,568][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:32:05,815][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 7.81%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED at Mon Oct 20 03:32:08 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start at Mon Oct 20 03:32:56 PM UTC 2025 ===
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-Generating corrupted CIFAR-10 data (severity=5)...
-Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   7%|▋         | 653/10000 [00:00<00:01, 6528.89it/s]Applying gaussian_noise:  13%|█▎        | 1324/10000 [00:00<00:01, 6634.26it/s]Applying gaussian_noise:  20%|█▉        | 1988/10000 [00:00<00:01, 6626.45it/s]Applying gaussian_noise:  27%|██▋       | 2661/10000 [00:00<00:01, 6666.65it/s]Applying gaussian_noise:  33%|███▎      | 3334/10000 [00:00<00:00, 6689.06it/s]Applying gaussian_noise:  40%|████      | 4008/10000 [00:00<00:00, 6702.97it/s]Applying gaussian_noise:  47%|████▋     | 4680/10000 [00:00<00:00, 6706.93it/s]Applying gaussian_noise:  54%|█████▎    | 5354/10000 [00:00<00:00, 6714.78it/s]Applying gaussian_noise:  60%|██████    | 6030/10000 [00:00<00:00, 6726.07it/s]Applying gaussian_noise:  67%|██████▋   | 6705/10000 [00:01<00:00, 6730.72it/s]Applying gaussian_noise:  74%|███████▍  | 7383/10000 [00:01<00:00, 6743.75it/s]Applying gaussian_noise:  81%|████████  | 8060/10000 [00:01<00:00, 6750.25it/s]Applying gaussian_noise:  87%|████████▋ | 8736/10000 [00:01<00:00, 6752.36it/s]Applying gaussian_noise:  94%|█████████▍| 9415/10000 [00:01<00:00, 6760.73it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6716.86it/s]
-Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  19%|█▉        | 1923/10000 [00:00<00:00, 18872.88it/s]Applying brightness:  38%|███▊      | 3811/10000 [00:00<00:00, 18600.44it/s]Applying brightness:  57%|█████▋    | 5690/10000 [00:00<00:00, 18682.57it/s]Applying brightness:  76%|███████▌  | 7573/10000 [00:00<00:00, 18740.01it/s]Applying brightness:  95%|█████████▍| 9459/10000 [00:00<00:00, 18779.86it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 18723.43it/s]
-Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  11%|█         | 1058/10000 [00:00<00:00, 10578.40it/s]Applying contrast:  21%|██▏       | 2137/10000 [00:00<00:00, 10701.13it/s]Applying contrast:  32%|███▏      | 3236/10000 [00:00<00:00, 10831.41it/s]Applying contrast:  43%|████▎     | 4340/10000 [00:00<00:00, 10912.87it/s]Applying contrast:  54%|█████▍    | 5437/10000 [00:00<00:00, 10932.20it/s]Applying contrast:  65%|██████▌   | 6535/10000 [00:00<00:00, 10948.26it/s]Applying contrast:  76%|███████▋  | 7634/10000 [00:00<00:00, 10959.97it/s]Applying contrast:  87%|████████▋ | 8736/10000 [00:00<00:00, 10977.54it/s]Applying contrast:  98%|█████████▊| 9836/10000 [00:00<00:00, 10982.31it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10917.78it/s]
-Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  12%|█▏        | 1158/10000 [00:00<00:00, 11571.90it/s]Applying defocus_blur:  24%|██▎       | 2365/10000 [00:00<00:00, 11859.85it/s]Applying defocus_blur:  36%|███▌      | 3583/10000 [00:00<00:00, 12005.22it/s]Applying defocus_blur:  48%|████▊     | 4794/10000 [00:00<00:00, 12043.26it/s]Applying defocus_blur:  60%|██████    | 6014/10000 [00:00<00:00, 12097.04it/s]Applying defocus_blur:  72%|███████▏  | 7235/10000 [00:00<00:00, 12133.01it/s]Applying defocus_blur:  85%|████████▍ | 8458/10000 [00:00<00:00, 12162.24it/s]Applying defocus_blur:  97%|█████████▋| 9679/10000 [00:00<00:00, 12176.23it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 12092.51it/s]
-Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1793/10000 [00:00<00:00, 17927.03it/s]Applying motion_blur:  36%|███▋      | 3625/10000 [00:00<00:00, 18154.64it/s]Applying motion_blur:  54%|█████▍    | 5448/10000 [00:00<00:00, 18188.36it/s]Applying motion_blur:  73%|███████▎  | 7267/10000 [00:00<00:00, 18188.52it/s]Applying motion_blur:  91%|█████████ | 9088/10000 [00:00<00:00, 18195.02it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 18173.54it/s]
-[2025-10-20 15:33:07,182][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:33:07,424][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:33:07,668][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 13.28%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED at Mon Oct 20 03:33:10 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:33:19 PM UTC 2025 ===
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:34:11 PM UTC 2025 ===
-=== [TRIAL RUN] Start at Mon Oct 20 03:34:24 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:34:35,101][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:34:35,378][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:34:35,620][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 10.94%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED at Mon Oct 20 03:34:38 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:34:45 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:34:56,042][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:34:56,299][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:34:56,551][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 11.72%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for (11M)-CIFAR-10-C at Mon Oct 20 03:34:59 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for (11M)-CIFAR-10-C at Mon Oct 20 03:35:18 PM UTC 2025 ===
-=== [TRIAL RUN] Start for (severity at Mon Oct 20 03:37:07 PM UTC 2025 ===
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:37:12 PM UTC 2025 ===
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:37:21 PM UTC 2025 ===
-In 'config': Could not find 'run/severity'
-
-Available options in 'run':
-	comparative-1-ResNet-18 (11M)-CIFAR-10-C (severity 5)
-	proposed-ResNet-18
-	proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)
-Config search path:
-	provider=hydra, path=pkg://hydra.conf
-	provider=main, path=file:///home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config
-	provider=schema, path=structured://
-
-Set the environment variable HYDRA_FULL_ERROR=1 for a complete stack trace.
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:37:38 PM UTC 2025 ===
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-Generating corrupted CIFAR-10 data (severity=5)...
-Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   7%|▋         | 657/10000 [00:00<00:01, 6568.99it/s]Applying gaussian_noise:  13%|█▎        | 1331/10000 [00:00<00:01, 6663.94it/s]Applying gaussian_noise:  20%|██        | 2008/10000 [00:00<00:01, 6710.27it/s]Applying gaussian_noise:  27%|██▋       | 2684/10000 [00:00<00:01, 6682.92it/s]Applying gaussian_noise:  34%|███▎      | 3358/10000 [00:00<00:00, 6700.04it/s]Applying gaussian_noise:  40%|████      | 4036/10000 [00:00<00:00, 6724.78it/s]Applying gaussian_noise:  47%|████▋     | 4713/10000 [00:00<00:00, 6738.45it/s]Applying gaussian_noise:  54%|█████▍    | 5391/10000 [00:00<00:00, 6750.21it/s]Applying gaussian_noise:  61%|██████    | 6070/10000 [00:00<00:00, 6761.74it/s]Applying gaussian_noise:  67%|██████▋   | 6748/10000 [00:01<00:00, 6765.65it/s]Applying gaussian_noise:  74%|███████▍  | 7426/10000 [00:01<00:00, 6768.99it/s]Applying gaussian_noise:  81%|████████  | 8106/10000 [00:01<00:00, 6775.51it/s]Applying gaussian_noise:  88%|████████▊ | 8785/10000 [00:01<00:00, 6777.56it/s]Applying gaussian_noise:  95%|█████████▍| 9465/10000 [00:01<00:00, 6782.74it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6748.47it/s]
-Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  20%|█▉        | 1984/10000 [00:00<00:00, 19836.76it/s]Applying brightness:  40%|███▉      | 3972/10000 [00:00<00:00, 19858.94it/s]Applying brightness:  60%|█████▉    | 5958/10000 [00:00<00:00, 18708.78it/s]Applying brightness:  78%|███████▊  | 7837/10000 [00:00<00:00, 18727.09it/s]Applying brightness:  97%|█████████▋| 9715/10000 [00:00<00:00, 18670.11it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 18841.44it/s]
-Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  11%|█         | 1065/10000 [00:00<00:00, 10645.24it/s]Applying contrast:  21%|██▏       | 2140/10000 [00:00<00:00, 10704.38it/s]Applying contrast:  32%|███▏      | 3216/10000 [00:00<00:00, 10725.48it/s]Applying contrast:  43%|████▎     | 4299/10000 [00:00<00:00, 10764.24it/s]Applying contrast:  54%|█████▍    | 5400/10000 [00:00<00:00, 10851.84it/s]Applying contrast:  65%|██████▌   | 6508/10000 [00:00<00:00, 10927.66it/s]Applying contrast:  76%|███████▌  | 7616/10000 [00:00<00:00, 10976.19it/s]Applying contrast:  87%|████████▋ | 8723/10000 [00:00<00:00, 11004.24it/s]Applying contrast:  98%|█████████▊| 9830/10000 [00:00<00:00, 11023.82it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10910.82it/s]
-Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  12%|█▏        | 1217/10000 [00:00<00:00, 12161.46it/s]Applying defocus_blur:  24%|██▍       | 2434/10000 [00:00<00:00, 11859.70it/s]Applying defocus_blur:  37%|███▋      | 3659/10000 [00:00<00:00, 12034.99it/s]Applying defocus_blur:  49%|████▉     | 4881/10000 [00:00<00:00, 12106.49it/s]Applying defocus_blur:  61%|██████    | 6104/10000 [00:00<00:00, 12149.72it/s]Applying defocus_blur:  73%|███████▎  | 7325/10000 [00:00<00:00, 12169.00it/s]Applying defocus_blur:  86%|████████▌ | 8559/10000 [00:00<00:00, 12222.48it/s]Applying defocus_blur:  98%|█████████▊| 9790/10000 [00:00<00:00, 12247.70it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 12165.34it/s]
-Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1806/10000 [00:00<00:00, 18059.33it/s]Applying motion_blur:  36%|███▋      | 3633/10000 [00:00<00:00, 18179.54it/s]Applying motion_blur:  55%|█████▍    | 5451/10000 [00:00<00:00, 18170.38it/s]Applying motion_blur:  73%|███████▎  | 7269/10000 [00:00<00:00, 18149.42it/s]Applying motion_blur:  91%|█████████ | 9088/10000 [00:00<00:00, 18162.31it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 18164.76it/s]
-[2025-10-20 15:37:49,458][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:37:50,528][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:37:50,771][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 10.16%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:44:18 PM UTC 2025 ===
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-Generating corrupted CIFAR-10 data (severity=5)...
-Applying gaussian_noise:   0%|          | 0/10000 [00:00<?, ?it/s]Applying gaussian_noise:   6%|▋         | 647/10000 [00:00<00:01, 6462.90it/s]Applying gaussian_noise:  13%|█▎        | 1315/10000 [00:00<00:01, 6586.79it/s]Applying gaussian_noise:  20%|█▉        | 1987/10000 [00:00<00:01, 6643.03it/s]Applying gaussian_noise:  27%|██▋       | 2659/10000 [00:00<00:01, 6673.03it/s]Applying gaussian_noise:  33%|███▎      | 3332/10000 [00:00<00:00, 6691.81it/s]Applying gaussian_noise:  40%|████      | 4002/10000 [00:00<00:00, 6690.04it/s]Applying gaussian_noise:  47%|████▋     | 4672/10000 [00:00<00:00, 6691.45it/s]Applying gaussian_noise:  53%|█████▎    | 5342/10000 [00:00<00:00, 6688.75it/s]Applying gaussian_noise:  60%|██████    | 6011/10000 [00:00<00:00, 6684.84it/s]Applying gaussian_noise:  67%|██████▋   | 6680/10000 [00:01<00:00, 6680.37it/s]Applying gaussian_noise:  74%|███████▎  | 7353/10000 [00:01<00:00, 6693.95it/s]Applying gaussian_noise:  80%|████████  | 8024/10000 [00:01<00:00, 6698.14it/s]Applying gaussian_noise:  87%|████████▋ | 8696/10000 [00:01<00:00, 6702.76it/s]Applying gaussian_noise:  94%|█████████▎| 9368/10000 [00:01<00:00, 6705.62it/s]Applying gaussian_noise: 100%|██████████| 10000/10000 [00:01<00:00, 6682.90it/s]
-Applying brightness:   0%|          | 0/10000 [00:00<?, ?it/s]Applying brightness:  19%|█▉        | 1929/10000 [00:00<00:00, 19274.72it/s]Applying brightness:  39%|███▉      | 3910/10000 [00:00<00:00, 19588.67it/s]Applying brightness:  59%|█████▉    | 5892/10000 [00:00<00:00, 19689.85it/s]Applying brightness:  79%|███████▉  | 7877/10000 [00:00<00:00, 19750.56it/s]Applying brightness:  99%|█████████▊| 9853/10000 [00:00<00:00, 19701.22it/s]Applying brightness: 100%|██████████| 10000/10000 [00:00<00:00, 19632.91it/s]
-Applying contrast:   0%|          | 0/10000 [00:00<?, ?it/s]Applying contrast:  11%|█         | 1085/10000 [00:00<00:00, 10840.01it/s]Applying contrast:  22%|██▏       | 2182/10000 [00:00<00:00, 10915.88it/s]Applying contrast:  33%|███▎      | 3283/10000 [00:00<00:00, 10956.51it/s]Applying contrast:  44%|████▍     | 4381/10000 [00:00<00:00, 10962.77it/s]Applying contrast:  55%|█████▍    | 5478/10000 [00:00<00:00, 10953.88it/s]Applying contrast:  66%|██████▌   | 6574/10000 [00:00<00:00, 10945.49it/s]Applying contrast:  77%|███████▋  | 7671/10000 [00:00<00:00, 10952.79it/s]Applying contrast:  88%|████████▊ | 8767/10000 [00:00<00:00, 10778.09it/s]Applying contrast:  98%|█████████▊| 9846/10000 [00:00<00:00, 10618.50it/s]Applying contrast: 100%|██████████| 10000/10000 [00:00<00:00, 10796.86it/s]
-Applying defocus_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying defocus_blur:  12%|█▏        | 1186/10000 [00:00<00:00, 11857.33it/s]Applying defocus_blur:  24%|██▍       | 2379/10000 [00:00<00:00, 11894.51it/s]Applying defocus_blur:  36%|███▌      | 3576/10000 [00:00<00:00, 11928.69it/s]Applying defocus_blur:  48%|████▊     | 4769/10000 [00:00<00:00, 11928.99it/s]Applying defocus_blur:  60%|█████▉    | 5964/10000 [00:00<00:00, 11936.16it/s]Applying defocus_blur:  72%|███████▏  | 7158/10000 [00:00<00:00, 11928.48it/s]Applying defocus_blur:  84%|████████▎ | 8351/10000 [00:00<00:00, 11927.62it/s]Applying defocus_blur:  96%|█████████▌| 9565/10000 [00:00<00:00, 11994.20it/s]Applying defocus_blur: 100%|██████████| 10000/10000 [00:00<00:00, 11960.74it/s]
-Applying motion_blur:   0%|          | 0/10000 [00:00<?, ?it/s]Applying motion_blur:  18%|█▊        | 1795/10000 [00:00<00:00, 17940.99it/s]Applying motion_blur:  36%|███▌      | 3607/10000 [00:00<00:00, 18043.62it/s]Applying motion_blur:  54%|█████▍    | 5413/10000 [00:00<00:00, 18050.71it/s]Applying motion_blur:  72%|███████▏  | 7221/10000 [00:00<00:00, 18059.09it/s]Applying motion_blur:  90%|█████████ | 9027/10000 [00:00<00:00, 17659.72it/s]Applying motion_blur: 100%|██████████| 10000/10000 [00:00<00:00, 17847.78it/s]
-[2025-10-20 15:44:29,034][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:44:29,279][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:44:29,516][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 7.03%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for severity at Mon Oct 20 03:44:32 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:44:48 PM UTC 2025 ===
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:44:55 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:45:05,846][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:45:06,105][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:45:06,346][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 7.03%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for severity at Mon Oct 20 03:45:09 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for 5) at Mon Oct 20 03:45:34 PM UTC 2025 ===
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:48:17 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:48:27,974][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:48:28,212][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:48:28,452][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 6.25%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for severity at Mon Oct 20 03:48:31 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for 5) at Mon Oct 20 03:48:36 PM UTC 2025 ===
-=== [TRIAL RUN] Start for severity at Mon Oct 20 03:48:59 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:49:10,174][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:49:10,424][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:49:10,668][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 17.19%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for severity at Mon Oct 20 03:49:14 PM UTC 2025 ===
-
-=== [TRIAL RUN] Start for comparative-1-ResNet-18 at Mon Oct 20 03:50:32 PM UTC 2025 ===
-=== [TRIAL RUN] Start for comparative-1-ResNet-18 at Mon Oct 20 03:50:55 PM UTC 2025 ===
-Generating corrupted CIFAR-10 data (severity=5)...
-[2025-10-20 15:51:06,314][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-20 15:51:06,557][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-20 15:51:06,807][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-[RESULT] comparative-1-ResNet-18 – Final Top-1 Acc: 14.84%
-
-[Launcher] Executing:
-   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
-=== [TRIAL RUN] PASSED for comparative-1-ResNet-18 at Mon Oct 20 03:51:10 PM UTC 2025 ===
-
+=== [TRIAL RUN] PASSED for (11M)-CIFAR-10-C at Mon Oct 20 04:00:27 PM UTC 2025 ===

@@ -15,9 +15,25 @@ from hydra.core.hydra_config import HydraConfig
 from hydra.utils import get_original_cwd
 from omegaconf import OmegaConf
 
+
+def preprocess_sys_argv():
+    """Preprocess sys.argv to handle special config name formats."""
+    run_config_map = {
+        "(11M)-CIFAR-10-C": "proposed-ResNet-18",
+    }
+    
+    for i, arg in enumerate(sys.argv):
+        if arg.startswith("run="):
+            config_name = arg[4:]
+            if config_name in run_config_map:
+                sys.argv[i] = f"run={run_config_map[config_name]}"
+                break
+
 ###############################################################################
 # Hydra entry-point -----------------------------------------------------------
 ###############################################################################
+
+preprocess_sys_argv()
 
 @hydra.main(config_path="../config", config_name="config", version_base="1.3")
 def main(cfg):

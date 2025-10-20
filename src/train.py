@@ -7,6 +7,7 @@ Everything (models, datasets) is cached in .cache/ so that CI stays fast.
 from __future__ import annotations
 
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
@@ -30,6 +31,23 @@ from src.model import (
     initialize_bn_adaptation,
 )
 from src.preprocess import build_dataloader
+
+###############################################################################
+# Config preprocessing --------------------------------------------------------
+###############################################################################
+
+def preprocess_sys_argv():
+    """Preprocess sys.argv to handle special config name formats."""
+    run_config_map = {
+        "(11M)-CIFAR-10-C": "proposed-ResNet-18",
+    }
+    
+    for i, arg in enumerate(sys.argv):
+        if arg.startswith("run="):
+            config_name = arg[4:]
+            if config_name in run_config_map:
+                sys.argv[i] = f"run={run_config_map[config_name]}"
+                break
 
 ###############################################################################
 # Utility functions -----------------------------------------------------------
@@ -211,6 +229,8 @@ def _apply_trial_params(cfg, params: Dict[str, Any]):
 ###############################################################################
 # Hydra entry-point -----------------------------------------------------------
 ###############################################################################
+
+preprocess_sys_argv()
 
 @hydra.main(config_path="../config", config_name="config", version_base="1.3")
 def main(cfg):  # noqa: C901  (complex but clear)
