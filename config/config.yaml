@@ -1,6 +1,6 @@
 defaults:
   - _self_
-  - run: proposed-ResNet-18
+  - run: severity
 
 # Global switches -------------------------------------------------------------
 trial_mode: false            # set to true via CLI for lightweight CI validation
