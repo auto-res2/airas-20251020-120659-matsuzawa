@@ -1,0 +1,72 @@
+dataset:
+  batch_size: 64
+  corruption_severity: 5
+  corruption_types: all
+  name: CIFAR-10-C
+  num_workers: 8
+  shuffle: false
+  split: test
+hardware:
+  gpu_type: A100
+  gpus: 8
+  vram_per_gpu: 80GB
+logging:
+  checkpoint_interval: null
+  log_every_n_steps: 20
+  tensorboard: true
+method:
+  confidence_weighting: true
+  description: Confidence-Weighted Entropy Minimization for one-step test-time adaptation
+  inner_steps: 1
+  name: CW-TENT
+model:
+  checkpoint: timm/resnet18.a1_in1k
+  freeze_except:
+  - BatchNorm2d.weight
+  - BatchNorm2d.bias
+  input_size: 3x32x32
+  name: resnet18.a1_in1k
+  num_classes: 10
+  num_params: 11000000
+  pretrained: true
+optuna:
+  direction: maximize
+  metric: top1_accuracy
+  n_trials: 0
+  search_space:
+    batch_size:
+      choices:
+      - 32
+      - 64
+      - 128
+      type: categorical
+    learning_rate:
+      high: 0.01
+      low: 0.0001
+      type: loguniform
+    momentum:
+      high: 0.99
+      low: 0.0
+      type: uniform
+    weight_decay:
+      high: 0.001
+      low: 1.0e-06
+      type: loguniform
+results_dir: .research/iteration1
+run: default-run-id
+run_id: proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)
+training:
+  accumulate_grad_batches: 1
+  epochs: 1
+  grad_clip: null
+  learning_rate: 0.001
+  momentum: 0.9
+  optimizer: sgd
+  precision: fp32
+  weight_decay: 0.0
+trial_limit_batches: 2
+trial_mode: true
+wandb:
+  entity: gengaru617-personal
+  mode: disabled
+  project: 251020-test

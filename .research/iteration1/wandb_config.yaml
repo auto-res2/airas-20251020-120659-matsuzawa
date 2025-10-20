@@ -1,0 +1,4 @@
+wandb:
+  entity: gengaru617-personal
+  mode: disabled
+  project: 251020-test

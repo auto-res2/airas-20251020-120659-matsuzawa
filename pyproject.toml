@@ -4,19 +4,19 @@ requires = ["setuptools", "wheel"]
 [project]
 name = "cw-tent-experiments"
 version = "0.4.0"
-
-[project.dependencies]
-torch = ">=2.0"
-torchvision = "*"
-timm = "*"
-robustbench = "*"               # optional, handled gracefully if missing
-hydra-core = "*"
-omegaconf = "*"
-wandb = "*"
-optuna = "*"
-matplotlib = "*"
-seaborn = "*"
-scikit-learn = "*"
-pandas = "*"
-pyyaml = "*"
-scipy = "*"
+dependencies = [
+    "torch>=2.0",
+    "torchvision",
+    "timm",
+    "robustbench",
+    "hydra-core",
+    "omegaconf",
+    "wandb",
+    "optuna",
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "pandas",
+    "pyyaml",
+    "scipy",
+]

@@ -1,8 +1,18 @@
 # config/config.yaml – root Hydra configuration
 # ------------------------------------------------
+defaults:
+  - optional run: null
+  - _self_
+
 run: default-run-id        # overridden from CLI (name of YAML inside config/run/)
 results_dir: ./results     # overridden from CLI
 trial_mode: false          # set to true for quick CI runs
+
+hydra:
+  run:
+    dir: .
+  job:
+    chdir: false
 
 wandb:
   entity: gengaru617-personal

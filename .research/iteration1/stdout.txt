@@ -1,0 +1,68 @@
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:29:55 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:30:27 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:31:31 PM UTC 2025 ===
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train wandb.mode=disabled run=default-run-id results_dir=.research/iteration1 trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:31:50 PM UTC 2025 ===
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train wandb.mode=disabled run=default-run-id results_dir=.research/iteration1 trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:33:03 PM UTC 2025 ===
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:33:42 PM UTC 2025 ===
+[train.py] run_name from cfg_cli.run: default-run-id
+[train.py] Looking for files matching: default-run-id*.yaml
+[train.py] Found matching files: []
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:34:15 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:38:24 PM UTC 2025 ===
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:39:02 PM UTC 2025 ===
+[train.py] run_name: proposed-ResNet-18
+[train.py] Looking for files matching: proposed-ResNet-18*.yaml
+[train.py] Found matching files: [PosixPath('/home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml')]
+[train.py] Using config file: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:39:21 PM UTC 2025 ===
+[train.py] run_name: proposed-ResNet-18
+[train.py] Looking for files matching: proposed-ResNet-18*.yaml
+[train.py] Found matching files: [PosixPath('/home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml')]
+[train.py] Using config file: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:39:39 PM UTC 2025 ===
+[train.py] run_name: proposed-ResNet-18
+[train.py] Looking for files matching: proposed-ResNet-18*.yaml
+[train.py] Found matching files: [PosixPath('/home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml')]
+[train.py] Using config file: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:40:23 PM UTC 2025 ===
+[train.py] run_name: proposed-ResNet-18
+[train.py] Looking for files matching: proposed-ResNet-18*.yaml
+[train.py] Found matching files: [PosixPath('/home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml')]
+[train.py] Using config file: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/config/run/proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5).yaml
+[2025-10-20 13:40:31,054][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 13:40:31,422][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 13:40:31,719][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+[step 0001] loss=2.1444 acc_b=0.0938 acc_a=0.0938
+[step 0002] loss=2.1186 acc_b=0.1406 acc_a=0.1094
+FINAL top-1 accuracy: 0.1016
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] PASSED for proposed-ResNet-18 at Mon Oct 20 01:40:40 PM UTC 2025 ===
+
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 01:40:59 PM UTC 2025 ===
+[2025-10-20 13:41:06,639][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 13:41:06,900][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 13:41:07,146][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+[step 0001] loss=2.1444 acc_b=0.0938 acc_a=0.0938
+[step 0002] loss=2.1186 acc_b=0.1406 acc_a=0.1094
+FINAL top-1 accuracy: 0.1016
+[main] Launching subprocess:
+   /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true
+=== [TRIAL RUN] PASSED for proposed-ResNet-18 at Mon Oct 20 01:41:10 PM UTC 2025 ===
+

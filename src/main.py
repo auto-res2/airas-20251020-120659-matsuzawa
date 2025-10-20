@@ -5,19 +5,12 @@ import subprocess
 import sys
 from typing import List
 
-import hydra
-from hydra.core.hydra_config import HydraConfig
-from omegaconf import DictConfig
-
-@hydra.main(config_path="../config", config_name="config")
-def main(cfg: DictConfig) -> None:
-    overrides: List[str] = HydraConfig.get().overrides.task.copy()
-    filtered = [o for o in overrides if not o.startswith(("run=", "results_dir=", "trial_mode="))]
-    filtered.append(f"run={cfg.run}")
-    filtered.append(f"results_dir={cfg.results_dir}")
-    if cfg.get("trial_mode", False):
-        filtered.append("trial_mode=true")
-    cmd: List[str] = [sys.executable, "-u", "-m", "src.train", *filtered]
+def main() -> None:
+    # Pass all command line arguments directly to train.py
+    args: List[str] = sys.argv[1:]
+    
+    cmd: List[str] = [sys.executable, "-u", "-m", "src.train", *args]
+    
     print("[main] Launching subprocess:\n  ", " ".join(cmd))
     subprocess.run(cmd, check=True)
 

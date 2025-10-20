@@ -146,14 +146,29 @@ def build_objective(cfg_template: DictConfig):
 # ---------------------------------------------------------------------------
 #                               Hydra entry-point
 # ---------------------------------------------------------------------------
-@hydra.main(config_path="../config", config_name="config")
+@hydra.main(config_path="../config", config_name="config", version_base=None)
 def main(cfg_cli: DictConfig) -> None:
-    run_name = str(cfg_cli.run)
-    run_cfg_file = Path(__file__).resolve().parents[1] / "config" / "run" / f"{run_name}.yaml"
+    # Extract run name from command line args directly, bypassing Hydra's config group system
+    import sys
+    run_name = str(cfg_cli.run)  # default
+    for arg in sys.argv:
+        if arg.startswith("run="):
+            run_name = arg.split("=", 1)[1]
+            break
+    
+    run_dir_path = Path(__file__).resolve().parents[1] / "config" / "run"
+    run_cfg_file = run_dir_path / f"{run_name}.yaml"
     if not run_cfg_file.exists():
-        raise FileNotFoundError(run_cfg_file)
+        # Try to find a file that starts with run_name
+        matching_files = list(run_dir_path.glob(f"{run_name}*.yaml"))
+        if matching_files:
+            run_cfg_file = matching_files[0]
+        else:
+            raise FileNotFoundError(f"No config file found for run: {run_name}")
     cfg_run = OmegaConf.load(run_cfg_file)
+    OmegaConf.set_struct(cfg_cli, False)  # Allow new keys
     cfg: DictConfig = OmegaConf.merge(cfg_cli, cfg_run)
+    OmegaConf.set_struct(cfg, False)  # Keep struct mode disabled
 
     # ----------------------------- trial-mode tweaks ----------------------
     if cfg.get("trial_mode", False):

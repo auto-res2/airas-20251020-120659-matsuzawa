@@ -20,7 +20,6 @@ def create_backbone(cfg) -> nn.Module:  # noqa: ANN001 – cfg is Hydra object
         cfg.model.name,
         pretrained=bool(cfg.model.pretrained),
         num_classes=int(cfg.model.num_classes),
-        cache_dir=".cache/",
     )
 
     # freeze everything ----------------------------------------------------
