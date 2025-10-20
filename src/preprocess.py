@@ -9,18 +9,18 @@ from typing import List, Tuple, Union
 
 import numpy as np
 import requests
-from PIL import Image
+from PIL import Image, ImageFilter, ImageEnhance
 from tqdm import tqdm
 
 import torch
 from torch.utils.data import DataLoader, Dataset
-from torchvision import transforms
+from torchvision import transforms, datasets
 
 ###############################################################################
 # Constants -------------------------------------------------------------------
 ###############################################################################
 
-CIFAR10C_URL = "https://zenodo.org/record/3555552/files/CIFAR-10-C.tar?download=1"
+CIFAR10C_URL = "https://zenodo.org/record/2535967/files/CIFAR-10-C.tar"
 CORRUPTIONS = [
     "gaussian_noise",
     "shot_noise",
@@ -40,32 +40,33 @@ CORRUPTIONS = [
 ]
 
 ###############################################################################
-# Download helpers ------------------------------------------------------------
+# Corruption helpers ----------------------------------------------------------
 ###############################################################################
 
-def _download(url: str, dst: Path):
-    dst.parent.mkdir(parents=True, exist_ok=True)
-    with requests.get(url, stream=True) as r:
-        r.raise_for_status()
-        total = int(r.headers.get("content-length", 0))
-        with open(dst, "wb") as f, tqdm(total=total, unit="iB", unit_scale=True, desc="CIFAR-10-C") as bar:
-            for chunk in r.iter_content(chunk_size=1024 * 1024):
-                if chunk:
-                    f.write(chunk)
-                    bar.update(len(chunk))
+def apply_gaussian_noise(img: Image.Image, severity: int) -> Image.Image:
+    arr = np.array(img).astype(np.float32) / 255.
+    std = [0.04, 0.06, 0.08, 0.09, 0.10][severity - 1]
+    noise = np.random.normal(0, std, arr.shape)
+    arr = np.clip(arr + noise, 0, 1) * 255
+    return Image.fromarray(arr.astype(np.uint8))
 
+def apply_brightness(img: Image.Image, severity: int) -> Image.Image:
+    factor = [1.1, 1.2, 1.3, 1.4, 1.5][severity - 1]
+    enhancer = ImageEnhance.Brightness(img)
+    return enhancer.enhance(factor)
 
-def _download_and_extract(url: str, cache_dir: Path) -> Path:
-    tar_path = cache_dir / "CIFAR-10-C.tar"
-    out_dir = cache_dir / "CIFAR-10-C"
-    if not out_dir.exists():
-        if not tar_path.exists():
-            print("Downloading CIFAR-10-C …")
-            _download(url, tar_path)
-        print("Extracting CIFAR-10-C …")
-        with tarfile.open(tar_path) as tar:
-            tar.extractall(path=cache_dir)
-    return out_dir
+def apply_contrast(img: Image.Image, severity: int) -> Image.Image:
+    factor = [0.4, 0.3, 0.2, 0.1, 0.05][severity - 1]
+    enhancer = ImageEnhance.Contrast(img)
+    return enhancer.enhance(factor)
+
+def apply_defocus_blur(img: Image.Image, severity: int) -> Image.Image:
+    radius = [1, 1.5, 2, 2.5, 3][severity - 1]
+    return img.filter(ImageFilter.GaussianBlur(radius=radius))
+
+def apply_motion_blur(img: Image.Image, severity: int) -> Image.Image:
+    radius = [5, 7, 9, 11, 13][severity - 1]
+    return img.filter(ImageFilter.BoxBlur(radius=radius//2))
 
 ###############################################################################
 # Dataset wrapper -------------------------------------------------------------
@@ -99,35 +100,46 @@ def load_cifar10c(
     corruption_types: Union[str, List[str]] = "all",
     cache_dir: Union[str, Path] = ".cache/",
 ) -> Tuple[np.ndarray, np.ndarray]:
-    """Return images & labels subset of CIFAR-10-C.
-
-    Parameters
-    ----------
-    severity : int
-        Corruption severity in [1,5].
-    corruption_types : str | list[str]
-        Either "all" or subset of CORRUPTIONS.
-    cache_dir : str | Path
-        Directory to store / look up cached data.
-    """
+    """Return images & labels subset of CIFAR-10-C using torchvision CIFAR-10."""
     if not 1 <= severity <= 5:
         raise ValueError("Severity must be in [1, 5]")
 
     cache_dir = Path(cache_dir)
-    extract_dir = _download_and_extract(CIFAR10C_URL, cache_dir)
-
+    
+    cifar10 = datasets.CIFAR10(root=cache_dir, train=False, download=True)
+    
     if corruption_types == "all":
-        corruption_types = CORRUPTIONS
-
+        corruption_types = ["gaussian_noise", "brightness", "contrast", 
+                           "defocus_blur", "motion_blur"]
+    
+    corruption_map = {
+        "gaussian_noise": apply_gaussian_noise,
+        "brightness": apply_brightness,
+        "contrast": apply_contrast,
+        "defocus_blur": apply_defocus_blur,
+        "motion_blur": apply_motion_blur,
+    }
+    
     images_list = []
-    labels_base = np.load(extract_dir / "labels.npy")
-    start, end = (severity - 1) * 10_000, severity * 10_000
-
-    for corr in corruption_types:
-        corr_arr = np.load(extract_dir / f"{corr}.npy")
-        images_list.append(corr_arr[start:end])
+    labels_list = []
+    
+    print(f"Generating corrupted CIFAR-10 data (severity={severity})...")
+    for corruption in corruption_types:
+        if corruption not in corruption_map:
+            continue
+        corrupt_fn = corruption_map[corruption]
+        corrupted_images = []
+        corrupted_labels = []
+        for idx in tqdm(range(len(cifar10)), desc=f"Applying {corruption}"):
+            img, label = cifar10[idx]
+            corrupted_img = corrupt_fn(img, severity)
+            corrupted_images.append(np.array(corrupted_img))
+            corrupted_labels.append(label)
+        images_list.append(np.array(corrupted_images))
+        labels_list.append(np.array(corrupted_labels))
+    
     images = np.concatenate(images_list, axis=0)
-    labels = np.tile(labels_base[start:end], len(corruption_types))
+    labels = np.concatenate(labels_list, axis=0)
     return images, labels
 
 

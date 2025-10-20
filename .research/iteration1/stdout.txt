@@ -1,0 +1,30 @@
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:04:58 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:05:25 PM UTC 2025 ===
+Downloading CIFAR-10-C …
+
+[Launcher] Executing:
+   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:06:27 PM UTC 2025 ===
+Downloading CIFAR-10-C …
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:16:56 PM UTC 2025 ===
+Extracting CIFAR-10-C …
+
+[Launcher] Executing:
+   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:17:27 PM UTC 2025 ===
+
+[Launcher] Executing:
+   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:17:51 PM UTC 2025 ===
+Downloading CIFAR-10-C …
+=== [TRIAL RUN] Start for proposed-ResNet-18 at Mon Oct 20 03:29:17 PM UTC 2025 ===
+Generating corrupted CIFAR-10 data (severity=5)...
+[2025-10-20 15:29:43,287][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 15:29:44,409][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 15:29:44,861][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+[RESULT] proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5) – Final Top-1 Acc: 13.28%
+
+[Launcher] Executing:
+   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=proposed-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
+=== [TRIAL RUN] PASSED for proposed-ResNet-18 at Mon Oct 20 03:29:53 PM UTC 2025 ===
+

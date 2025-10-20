@@ -1,0 +1,70 @@
+trial_mode: true
+results_dir: .research/iteration1
+wandb:
+  entity: gengaru617-personal
+  project: 251020-test
+  mode: disabled
+optuna:
+  n_trials: 0
+  direction: maximize
+  metric: top1_accuracy
+  search_space: {}
+run:
+  run_id: proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)
+  method: proposed
+  model:
+    name: ResNet-18
+    provider: timm
+    checkpoint: resnet18.a1_in1k
+    num_parameters: 11700000
+    pretrained: true
+    trainable_parameters:
+    - BatchNorm2d.weight
+    - BatchNorm2d.bias
+  dataset:
+    name: CIFAR-10-C
+    severity: 5
+    corruption_types: all
+    normalization:
+      mean:
+      - 0.4914
+      - 0.4822
+      - 0.4465
+      std:
+      - 0.247
+      - 0.2435
+      - 0.2616
+    batch_size: 64
+  training:
+    adaptation: true
+    inner_steps: 1
+    loss: confidence_weighted_entropy
+    optimizer: sgd
+    learning_rate: 0.001
+    momentum: 0.9
+    weight_decay: 0.0
+    epochs: 1
+    lr_schedule: constant
+  optuna:
+    n_trials: 30
+    direction: maximize
+    metric: top1_accuracy
+    search_space:
+      learning_rate:
+        type: loguniform
+        low: 0.0001
+        high: 0.01
+      momentum:
+        type: uniform
+        low: 0.0
+        high: 0.99
+      weight_decay:
+        type: loguniform
+        low: 1.0e-06
+        high: 0.001
+      batch_size:
+        type: categorical
+        choices:
+        - 32
+        - 64
+        - 128
