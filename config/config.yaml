@@ -1,50 +1,19 @@
-# config/config.yaml
-# ==============================================================================
-# Global Hydra configuration shared by *all* runs.
-# ==============================================================================
-
-defaults:
-  - _self_
-  - run: null          # injected via CLI, e.g.  run=proposed-ResNet-18
-
-# ------------------------------------------------------------------------------
-# Global toggles
-# ------------------------------------------------------------------------------
-
-trial_mode: false
-results_dir: ./results
-seed: 42
-
-# ------------------------------------------------------------------------------
-# WandB (auto-disabled in trial-mode by main.py)
-# ------------------------------------------------------------------------------
+# config/config.yaml – root Hydra configuration
+# ------------------------------------------------
+run: default-run-id        # overridden from CLI (name of YAML inside config/run/)
+results_dir: ./results     # overridden from CLI
+trial_mode: false          # set to true for quick CI runs
 
 wandb:
   entity: gengaru617-personal
   project: 251020-test
-  mode: online
+  mode: online             # automatically set to "disabled" in trial_mode
 
-# ------------------------------------------------------------------------------
-# Place-holders (overwritten by flattening helper)
-# ------------------------------------------------------------------------------
+optuna:
+  n_trials: 0              # 0 → disabled; can be overridden per-run
+  direction: maximize
+  metric: top1_accuracy
+  search_space: {}
 
-model: {}
-dataset: {}
-training: {}
-optuna: {}
-
-# ------------------------------------------------------------------------------
-# Hydra runtime dirs & logging
-# ------------------------------------------------------------------------------
-
-hydra:
-  run:
-    dir: ./outputs/${now:%Y-%m-%d}_${now:%H-%M-%S}_${run.run_id}
-  job_logging:
-    version: 1
-    root:
-      level: INFO
-  hydra_logging:
-    version: 1
-    root:
-      level: INFO
+logging:
+  log_every_n_steps: 50

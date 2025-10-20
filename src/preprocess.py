@@ -1,110 +1,94 @@
-# src/preprocess.py
-"""Data pipeline for CIFAR-10-C (severity configurable).
-
-All datasets are expected inside ``.cache/datasets/`` to fully comply with the
-specification.
-"""
+"""src/preprocess.py – dataset loading & preprocessing pipeline."""
 from __future__ import annotations
 
-from pathlib import Path
-from typing import List, Tuple
+import warnings
+from typing import Iterator, List, Tuple
 
-import numpy as np
 import torch
 import torchvision.transforms as T
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, TensorDataset
+from torchvision.datasets import CIFAR10
 
+try:
+    from robustbench.data import load_cifar10c
 
-class CIFAR10CDataset(Dataset):
-    _STANDARD_TYPES: List[str] = [
-        "gaussian_noise", "shot_noise", "impulse_noise", "defocus_blur",
-        "glass_blur", "motion_blur", "zoom_blur", "snow", "frost", "fog",
-        "brightness", "contrast", "elastic_transform", "pixelate", "jpeg_compression",
+    _ROBUSTBENCH_AVAILABLE = True
+    CORRUPTIONS_ALL = [
+        "gaussian_noise",
+        "shot_noise",
+        "impulse_noise",
+        "defocus_blur",
+        "glass_blur",
+        "motion_blur",
+        "zoom_blur",
+        "snow",
+        "frost",
+        "fog",
+        "brightness",
+        "contrast",
+        "elastic_transform",
+        "pixelate",
+        "jpeg_compression",
     ]
+except ImportError:  # pragma: no cover
+    _ROBUSTBENCH_AVAILABLE = False
+    CORRUPTIONS_ALL: List[str] = []
 
-    def __init__(
-        self,
-        root: Path,
-        severity: int,
-        corruption_types,
-        transform=None,
-    ) -> None:
-        super().__init__()
-        self.transform = transform
-        self.severity = severity
+IMAGENET_MEAN = (0.485, 0.456, 0.406)
+IMAGENET_STD = (0.229, 0.224, 0.225)
 
-        if corruption_types == "all" or (
-            isinstance(corruption_types, list) and "all" in corruption_types
-        ):
-            self.types = self._STANDARD_TYPES
-        else:
-            self.types = list(corruption_types)
+# ---------------------------------------------------------------------------
+#                         helpers
+# ---------------------------------------------------------------------------
 
-        labels_path = root / "labels.npy"
-        if not labels_path.exists():
-            raise FileNotFoundError(
-                f"CIFAR-10-C not found under {root}.  Download it from \n"
-                "https://zenodo.org/record/2535967 and place it inside .cache/datasets/"
-            )
-        self.labels = np.load(labels_path)
+def _np_to_tensor(arr):
+    return torch.from_numpy(arr).permute(0, 3, 1, 2).float().div(255.0)
 
-        self._images: List[np.ndarray] = []
-        self._cum_counts: List[int] = []
-        start, end = (severity - 1) * 10000, severity * 10000
-        for c in self.types:
-            arr = np.load(root / f"{c}.npy", mmap_mode="r")[start:end]
-            self._images.append(arr)
-            self._cum_counts.append(
-                arr.shape[0] if not self._cum_counts else self._cum_counts[-1] + arr.shape[0]
-            )
-        self.length = self._cum_counts[-1]
+# ---------------------------------------------------------------------------
+#                    public builder
+# ---------------------------------------------------------------------------
 
-    # ------------------------------------------------------------------
-    def __len__(self):
-        return self.length
+def build_dataloader(cfg, device: torch.device) -> Iterator[Tuple[torch.Tensor, torch.Tensor]]:
+    name = str(cfg.dataset.name).lower()
+    batch_size = int(cfg.dataset.batch_size)
+    severity = int(getattr(cfg.dataset, "corruption_severity", 5))
 
-    # ------------------------------------------------------------------
-    def __getitem__(self, idx):
-        bucket = int(np.searchsorted(self._cum_counts, idx, side="right"))
-        prev = 0 if bucket == 0 else self._cum_counts[bucket - 1]
-        local_idx = idx - prev
-        img_np = self._images[bucket][local_idx]
-        label = int(self.labels[local_idx])
-        img = T.ToPILImage()(img_np)
-        if self.transform:
-            img = self.transform(img)
-        return img, label
+    if "cifar" in name and "c" in name and _ROBUSTBENCH_AVAILABLE:
+        corruption_types = cfg.dataset.corruption_types
+        if corruption_types in {"all", "*", None}:
+            corruption_types = CORRUPTIONS_ALL
+        elif isinstance(corruption_types, str):
+            corruption_types = [corruption_types]
 
+        xs, ys = [], []
+        for c in corruption_types:
+            x_np, y_np = load_cifar10c(c, severity, data_dir=".cache/cifar10c")
+            xs.append(_np_to_tensor(x_np))
+            ys.append(torch.from_numpy(y_np))
+        images = torch.cat(xs, dim=0)
+        labels = torch.cat(ys).long()
+        dataset: Dataset = TensorDataset(images, labels)
+    else:
+        if not _ROBUSTBENCH_AVAILABLE:
+            warnings.warn("RobustBench not found – falling back to clean CIFAR-10 test set.")
+        transform = T.Compose([T.ToTensor(), T.Normalize(IMAGENET_MEAN, IMAGENET_STD)])
+        dataset = CIFAR10(root=".cache/cifar10", train=False, download=True, transform=transform)
 
-# -----------------------------------------------------------------------------
-# Factory
-# -----------------------------------------------------------------------------
-
-def build_dataloader(dataset_cfg, cache_dir: Path) -> Tuple[DataLoader, int]:
-    root = cache_dir / "datasets" / "CIFAR-10-C"
-
-    transform = T.Compose(
-        [
-            T.ToTensor(),
-            T.Normalize(
-                mean=dataset_cfg.preprocessing.normalize.mean,
-                std=dataset_cfg.preprocessing.normalize.std,
-            ),
-        ]
-    )
-
-    ds = CIFAR10CDataset(
-        root=root,
-        severity=int(dataset_cfg.corruption_severity),
-        corruption_types=dataset_cfg.corruption_types,
-        transform=transform,
-    )
-
-    loader = DataLoader(
-        ds,
-        batch_size=int(dataset_cfg.batch_size),
-        shuffle=False,
-        num_workers=int(dataset_cfg.num_workers),
+    dataloader = DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=getattr(cfg.dataset, "shuffle", False),
+        num_workers=getattr(cfg.dataset, "num_workers", 4),
         pin_memory=True,
+        drop_last=False,
     )
-    return loader, 10  # CIFAR-10 has 10 classes
+
+    def _iter():
+        for x, y in dataloader:
+            x = x.to(device, non_blocking=True)
+            y = y.to(device, non_blocking=True)
+            if x.max() <= 1.0:  # ensure normalisation for CIFAR-10-C
+                x = T.Normalize(IMAGENET_MEAN, IMAGENET_STD)(x)
+            yield x, y
+
+    return _iter()

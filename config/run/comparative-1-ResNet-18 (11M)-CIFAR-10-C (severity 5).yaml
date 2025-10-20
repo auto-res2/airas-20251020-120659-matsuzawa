@@ -1,40 +1,45 @@
-run_id: 'comparative-1-ResNet-18 (11M)-CIFAR-10-C (severity 5)'
-method: tent
+run_id: comparative-1-ResNet-18 (11M)-CIFAR-10-C (severity 5)
+method:
+  name: TENT
+  description: Original entropy minimization test-time adaptation baseline
+  inner_steps: 10
+  confidence_weighting: false
 model:
-  name: resnet18
-  pretrained_checkpoint: timm/resnet18.a1_in1k
-  num_parameters_m: 11.7
-  num_classes: 10
+  name: resnet18.a1_in1k
+  pretrained: true
+  num_params: 11000000
   freeze_except:
-    - BatchNorm.weight
-    - BatchNorm.bias
+    - BatchNorm2d.weight
+    - BatchNorm2d.bias
+  checkpoint: timm/resnet18.a1_in1k
+  input_size: 3x32x32
+  num_classes: 10
 dataset:
-  name: cifar10c
-  root: /datasets/CIFAR-10-C
+  name: CIFAR-10-C
   corruption_severity: 5
   corruption_types: all
   split: test
   batch_size: 64
   num_workers: 8
-  preprocessing:
-    normalize:
-      mean: [0.4914, 0.4822, 0.4465]
-      std:  [0.2023, 0.1994, 0.2010]
+  shuffle: false
 training:
-  adaptation: true
-  objective: entropy
-  inner_steps: 10
-  learning_rate: 0.0005
+  optimizer: sgd
+  learning_rate: 0.001
   momentum: 0.9
   weight_decay: 0.0
-  optimizer: sgd
-  epochs: 1
-  scheduler: none
-  gradient_clip: null
-  stream_mode: sequential
-  log_interval: 50
+  grad_clip: null
+  precision: fp32
+  accumulate_grad_batches: 1
+  epochs: 1  # adaptation is online
+hardware:
+  gpus: 8
+  gpu_type: A100
+  vram_per_gpu: 80GB
+logging:
+  log_every_n_steps: 20
+  checkpoint_interval: null
+  tensorboard: true
 optuna:
-  enabled: true
   n_trials: 30
   direction: maximize
   metric: top1_accuracy
@@ -52,11 +57,9 @@ optuna:
       low: 1e-6
       high: 1e-3
     inner_steps:
+      type: int
+      low: 3
+      high: 10
+    batch_size:
       type: categorical
-      choices: [1, 3, 5, 10]
-hardware:
-  gpus: 8
-  gpu_type: NVIDIA H200
-  vram_per_gpu_gb: 144
-  mixed_precision: true
-seed: 42
+      choices: [32, 64, 128]

@@ -1,40 +1,45 @@
-run_id: 'proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)'
-method: cw-tent
+run_id: proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)
+method:
+  name: CW-TENT
+  description: Confidence-Weighted Entropy Minimization for one-step test-time adaptation
+  inner_steps: 1
+  confidence_weighting: true
 model:
-  name: resnet18
-  pretrained_checkpoint: timm/resnet18.a1_in1k
-  num_parameters_m: 11.7
-  num_classes: 10
+  name: resnet18.a1_in1k
+  pretrained: true
+  num_params: 11000000
   freeze_except:
-    - BatchNorm.weight
-    - BatchNorm.bias
+    - BatchNorm2d.weight
+    - BatchNorm2d.bias
+  checkpoint: timm/resnet18.a1_in1k
+  input_size: 3x32x32
+  num_classes: 10
 dataset:
-  name: cifar10c
-  root: /datasets/CIFAR-10-C
+  name: CIFAR-10-C
   corruption_severity: 5
-  corruption_types: all
+  corruption_types: all  # 15 standard corruptions
   split: test
   batch_size: 64
   num_workers: 8
-  preprocessing:
-    normalize:
-      mean: [0.4914, 0.4822, 0.4465]
-      std:  [0.2023, 0.1994, 0.2010]
+  shuffle: false
 training:
-  adaptation: true
-  objective: confidence_weighted_entropy
-  inner_steps: 1
+  optimizer: sgd
   learning_rate: 0.001
   momentum: 0.9
   weight_decay: 0.0
-  optimizer: sgd
-  epochs: 1
-  scheduler: none
-  gradient_clip: null
-  stream_mode: sequential
-  log_interval: 50
+  grad_clip: null
+  precision: fp32
+  accumulate_grad_batches: 1
+  epochs: 1  # adaptation is online, one pass over stream
+hardware:
+  gpus: 8
+  gpu_type: A100
+  vram_per_gpu: 80GB
+logging:
+  log_every_n_steps: 20
+  checkpoint_interval: null
+  tensorboard: true
 optuna:
-  enabled: true
   n_trials: 30
   direction: maximize
   metric: top1_accuracy
@@ -51,9 +56,6 @@ optuna:
       type: loguniform
       low: 1e-6
       high: 1e-3
-hardware:
-  gpus: 8
-  gpu_type: NVIDIA H200
-  vram_per_gpu_gb: 144
-  mixed_precision: true
-seed: 42
+    batch_size:
+      type: categorical
+      choices: [32, 64, 128]
