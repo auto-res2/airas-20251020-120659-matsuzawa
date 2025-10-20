@@ -1,0 +1,270 @@
+
+LLM Name: o3-2025-04-16
+Input:
+You are an AI code reviewer validating production-ready experiment code for research papers.
+
+Analyze the provided experiment code and determine if it meets all requirements for immediate execution in research experiments.
+
+# Instructions
+
+## Core Validation Criteria
+Check if the generated experiment code meets ALL of the following requirements:
+
+1. **Complete Implementation**:
+   - Every component is fully functional, production-ready, publication-worthy code
+   - No "omitted for brevity", no "simplified version", no TODO, PLACEHOLDER, pass, or ...
+   - All functions and classes are completely implemented
+   - No truncated code sections or incomplete implementations
+
+2. **Hydra Integration**:
+   - Uses Hydra to manage all experiment configurations from `config/run/*.yaml` files
+   - All parameters are loaded from run configs dynamically
+   - Proper configuration structure with run_id, method, model, dataset, training, and optuna sections
+   - CLI interface matches:
+     * Training: `uv run python -u -m src.main run={run_id} results_dir={path}`
+     * Evaluation: `uv run python -m src.evaluate results_dir={path} run_ids='["run-1", "run-2", ...]'` (independent execution)
+   - Supports trial_mode=true flag for lightweight validation runs (automatically disables WandB)
+
+3. **Complete Data Pipeline**:
+   - Full data loading and preprocessing implementation
+   - Dataset-specific preprocessing is properly implemented
+   - No placeholder dataset loading code
+   - Proper error handling for data operations
+   - Uses `.cache/` as the cache directory for all datasets and models
+
+4. **Model Implementation**:
+   - Complete model architectures for all methods (proposed and comparative methods)
+   - No placeholders (TODO, PLACEHOLDER, pass, or incomplete implementations)
+   - When External Resources specify HuggingFace models: properly use and customize them (acceptable to wrap AutoModel, add adapters, etc.)
+   - When no external models specified: implement architectures from scratch using PyTorch primitives
+   - Model-specific configurations correctly applied
+   - Proper PyTorch usage throughout
+
+5. **File Structure Compliance**:
+   - Contains EXACTLY these required files (and NO other files):
+     * `src/train.py`
+     * `src/evaluate.py`
+     * `src/preprocess.py`
+     * `src/model.py`
+     * `src/main.py`
+     * `pyproject.toml`
+     * `config/config.yaml`
+   - NO additional files (e.g., NO `src/__init__.py`, NO `setup.py`, NO other Python files)
+   - No missing files from the structure
+   - All functionality contained within specified files
+
+6. **WandB Integration**:
+   - train.py initializes WandB and logs ALL metrics using `wandb.log()`
+   - trial_mode automatically disables WandB (sets wandb.mode=disabled)
+   - NO results.json or stdout JSON dumps in train.py
+   - config/config.yaml contains mandatory WandB settings (entity/project)
+
+7. **Configuration Files**:
+   - The generated code properly references config files via Hydra
+   - NOTE: config/run/{run_id}.yaml files are provided separately (not in ExperimentCode)
+   - All run configurations match the experiment_runs provided
+   - Optuna search spaces are properly defined if applicable
+
+8. **Evaluation Script Independence**:
+   - evaluate.py is executed independently via `uv run python -m src.evaluate results_dir={path} run_ids='["run-1", "run-2"]'`
+   - Accepts `run_ids` parameter as JSON string list (parse with `json.loads(args.run_ids)`)
+   - main.py DOES NOT call evaluate.py
+   - evaluate.py retrieves ALL data from WandB API using `wandb.Api()` (not from local files)
+   - **STEP 1: Per-Run Processing** (for each run_id):
+     * Export run-specific metrics to: `{results_dir}/{run_id}/metrics.json`
+     * Generate run-specific figures (learning curves, confusion matrices) to: `{results_dir}/{run_id}/`
+     * Each run should have its own subdirectory with its metrics and figures
+   - **STEP 2: Aggregated Analysis** (after processing all runs):
+     * Export aggregated metrics to: `{results_dir}/comparison/aggregated_metrics.json`
+     * Compute secondary/derived metrics (e.g., improvement rate: (proposed - baseline) / baseline)
+     * Generate comparison figures to: `{results_dir}/comparison/`
+     * Cross-run comparison charts (bar charts, box plots)
+     * Performance metrics tables
+     * Statistical significance tests
+   - Proper figure quality: legends, annotations, tight_layout
+   - Follows naming convention: `<figure_topic>[_<condition>][_pairN].pdf`
+   - train.py and main.py generate NO figures
+   - evaluate.py cannot run in trial_mode (no WandB data available when WandB disabled)
+
+9. **Trial Mode Implementation**:
+   - trial_mode=true flag properly reduces computational load
+   - Training: epochs=1, batches limited to 1-2, Optuna disabled (n_trials=0), small evaluation subset
+   - WandB automatically disabled in trial_mode (wandb.mode=disabled)
+   - Purpose: Fast validation that code runs without errors
+
+## Output Format
+Respond with a JSON object containing:
+- `is_code_ready`: boolean - true if ALL criteria are met, false otherwise
+- `code_issue`: string - specific issues found if any criteria are not met, focusing on what needs to be fixed
+
+# Current Research Method
+{
+    "Open Problems": "Most popular test-time adaptation (TTA) methods such as TENT adapt only BatchNorm affine parameters by minimizing prediction entropy on the incoming test stream. Although very effective, they often require 3-10 gradient steps for each incoming mini-batch to reach their best performance. The slow convergence mainly comes from noisy gradients produced by low-confidence (high-entropy) samples that dominate early in adaptation. A simple mechanism to down-weight these uncertain samples during optimization is missing.",
+    "Methods": "Confidence-Weighted Entropy Minimization (CW-TENT).\n1. Keep the original TENT objective L = Σ_i H(p_i) where H is entropy.\n2. Introduce a scalar weight per sample w_i = 1 – H(p_i)/log(C)  (ranges in [0,1]; C = #classes).\n3. Replace the loss with the weighted variant  L_w = Σ_i w_i · H(p_i) / Σ_i w_i.\n4. Use the same SGD update of BatchNorm affine parameters, but with a single gradient step per mini-batch (optionally with momentum=0.9).\nTheoretical intuition: high-confidence samples (low entropy) are already close to the target domain optimum and provide reliable gradients; amplifying their contribution yields a cleaner gradient direction, allowing larger learning rate or fewer steps, hence faster convergence.",
+    "Experimental Setup": "Dataset: CIFAR-10-C with 15 corruption types, severity 5 (standard TTA benchmark).\nModel: Pre-trained ResNet-18.\nBaselines: 1) Source model (no adaptation). 2) Original TENT (default 10 inner steps). 3) CW-TENT (1 inner step).\nMetric: Top-1 accuracy after processing the full test stream; also accuracy after first K (e.g., 1, 3) adaptation steps to measure convergence speed.",
+    "Experimental Code": "import torch, torch.nn.functional as F\n\ndef entropy(p):\n    return -(p * p.log()).sum(1)\n\nclass CWTentAdapter:\n    def __init__(self, model, lr=1e-3, momentum=0.9):\n        self.model = model.eval()\n        self.model.requires_grad_(False)\n        # enable gradients for affine BN params only\n        for m in model.modules():\n            if isinstance(m, torch.nn.BatchNorm2d):\n                m.weight.requires_grad_(True)\n                m.bias.requires_grad_(True)\n        self.optimizer = torch.optim.SGD(filter(lambda p: p.requires_grad, model.parameters()), lr=lr, momentum=momentum)\n\n    @torch.no_grad()\n    def predict(self, x):\n        return self.model(x).softmax(1)\n\n    def adapt(self, x):\n        self.model.train()        # BN uses batch statistics\n        self.optimizer.zero_grad()\n        logits = self.model(x)\n        probs = logits.softmax(1)\n        H = entropy(probs)\n        w = 1 - H / torch.log(torch.tensor(probs.size(1), device=x.device))\n        loss = (w * H).sum() / w.sum()\n        loss.backward()\n        self.optimizer.step()\n        self.model.eval()\n        return probs.detach()\n",
+    "Expected Result": "With only one gradient step per mini-batch, CW-TENT is expected to match or surpass the accuracy of TENT that uses 5–10 steps. For example on CIFAR-10-C severity 5: Source 58.7%, TENT (10 steps) 71.0%, CW-TENT (1 step) ≈71.5%. Convergence plot should show CW-TENT reaching peak accuracy after the first step, whereas TENT needs several.",
+    "Expected Conclusion": "A tiny modification—confidence-weighted entropy—suppresses noisy gradients from uncertain samples and lets TENT converge in a single step. The change is trivial to implement (four extra lines) yet meaningfully cuts computation and latency at test time, making TTA more practical for real-time deployment."
+}
+
+# Experimental Design
+- Strategy: This experiment evaluates the ability of Confidence-Weighted TENT (CW-TENT) to accelerate and improve test-time adaptation (TTA) of image classifiers under distribution shift. A pre-trained ResNet-18 is exposed to a streaming evaluation set composed of CIFAR-10-C (corruption severity 5). At every incoming mini-batch the model adapts only the affine parameters of its Batch-Norm layers. CW-TENT assigns each sample a confidence weight w_i = 1 – H(p_i)/log(C) and minimizes the weighted entropy L_w = Σ w_i·H(p_i) / Σ w_i with a single SGD update per batch. Performance is tracked online and compared against: (1) the static source model (no adaptation) and (2) vanilla TENT that performs 10 inner gradient steps of un-weighted entropy minimization. The main workflow is: 1) load the source checkpoint, 2) build three adapters (None, TENT, CW-TENT), 3) iterate over the corruption stream, calling adapter.adapt(x) then measuring accuracy, 4) aggregate final and early-step accuracies, 5) perform a small hyper-parameter grid search over learning-rate, momentum and weight-temperature for CW-TENT. All code runs on a single A100 GPU but can be parallelised across the 8 available devices for faster hyper-parameter sweeps. The primary goal is to demonstrate that CW-TENT reaches or surpasses the accuracy of TENT while using only one gradient step, reducing latency and computation.
+- Proposed Method: Confidence-Weighted TENT (CW-TENT) augments the original Test-time Entropy Minimisation (TENT) framework with per-sample confidence weights to dampen the influence of uncertain (high-entropy) predictions during adaptation.
+
+Objective: For a mini-batch of predictions p_i over C classes, compute entropy H(p_i) = −Σ_c p_{ic} log p_{ic}. Define weight w_i = 1 − H(p_i)/log(C) ∈ [0,1]. Optimise the weighted entropy
+    L_w = Σ_i w_i · H(p_i) / Σ_i w_i.
+
+Optimisation protocol:
+1. Freeze all network parameters except γ, β of BatchNorm layers; keep them in training mode so that batch statistics are updated.
+2. For each incoming batch x:
+   a. Forward pass → logits → softmax p.
+   b. Compute H(p), w, and L_w.
+   c. One SGD step on BN affine params (lr≈1e-3, momentum optional).
+   d. Switch model back to eval mode for inference until next batch arrives.
+
+Theoretical intuition: samples with low entropy have gradients that more accurately point toward the target-domain optimum. Re-weighting removes noise caused by high-entropy instances, allowing the optimiser to converge in a single step.
+
+Implementation: apart from four extra lines to compute w and L_w, the code is identical to TENT. No additional memory or forward passes are required, preserving TENT’s simplicity while cutting adaptation steps 10×.
+- Evaluation Metrics: ['Top-1 Accuracy']
+
+# Experiment Runs
+
+- Run ID: proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5
+  Method: proposed
+  Model: ResNet-18 (11.7M)
+  Dataset: CIFAR-10-C (severity 5)
+  
+  Config Content:
+  ```yaml
+  run_id: proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5
+method: proposed
+model:
+  name: resnet18.a1_in1k
+  architecture: ResNet-18
+  num_parameters: 11.7M
+  pretrained: true
+  checkpoint: timm/resnet18.a1_in1k
+  trainable_parameters: batchnorm_affine
+
+dataset:
+  name: cifar10-c
+  corruption_severity: 5
+  corruption_types: all
+  split: test
+  image_size: 32
+  normalization: cifar
+
+training:
+  adaptation_algorithm: cw-tent
+  objective: confidence_weighted_entropy
+  batch_size: 128    # default, will be tuned by Optuna
+  learning_rate: 0.001  # default, will be tuned by Optuna
+  optimizer: sgd
+  momentum: 0.9
+  weight_temperature: 1.0
+  inner_steps: 1  # single gradient step per batch
+  weight_decay: 0.0
+  epochs: 1  # single pass over the streaming test set
+  shuffle_stream: false
+
+optuna:
+  n_trials: 40
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 5e-4
+      high: 1e-2
+    momentum:
+      type: categorical
+      choices: [0.0, 0.5, 0.9]
+    batch_size:
+      type: categorical
+      choices: [64, 128, 256]
+    weight_temperature:
+      type: uniform
+      low: 0.8
+      high: 1.2
+
+other:
+  seed: 42
+  device: cuda
+  num_workers: 8
+
+  ```
+  
+
+- Run ID: comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5
+  Method: comparative-1
+  Model: ResNet-18 (11.7M)
+  Dataset: CIFAR-10-C (severity 5)
+  
+  Config Content:
+  ```yaml
+  run_id: comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5
+method: comparative-1
+model:
+  name: resnet18.a1_in1k
+  architecture: ResNet-18
+  num_parameters: 11.7M
+  pretrained: true
+  checkpoint: timm/resnet18.a1_in1k
+  trainable_parameters: batchnorm_affine
+
+dataset:
+  name: cifar10-c
+  corruption_severity: 5
+  corruption_types: all
+  split: test
+  image_size: 32
+  normalization: cifar
+
+training:
+  adaptation_algorithm: tent
+  objective: entropy_minimization
+  batch_size: 128    # default, will be tuned by Optuna
+  learning_rate: 0.001  # default, will be tuned by Optuna
+  optimizer: sgd
+  momentum: 0.9
+  inner_steps: 10  # standard TENT
+  weight_decay: 0.0
+  epochs: 1
+  shuffle_stream: false
+
+optuna:
+  n_trials: 40
+  direction: maximize
+  search_space:
+    learning_rate:
+      type: loguniform
+      low: 5e-4
+      high: 1e-2
+    momentum:
+      type: categorical
+      choices: [0.0, 0.5, 0.9]
+    batch_size:
+      type: categorical
+      choices: [64, 128, 256]
+    inner_steps:
+      type: int
+      low: 3
+      high: 10
+
+other:
+  seed: 42
+  device: cuda
+  num_workers: 8
+
+  ```
+  
+
+
+# Generated Experiment Code (To be validated)
+{"config_yaml": "defaults:\n  - _self_\n\n# WandB configuration (overridable by command-line or run configs)\nwandb:\n  entity: gengaru617-personal\n  project: 251020-test\n  mode: online\n\n# results and misc\nresults_dir: outputs\ntrial_mode: false\n\n", "evaluate_py": "import argparse\nimport json\nimport os\nfrom pathlib import Path\nfrom typing import List\n\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport pandas as pd\nimport yaml\nimport wandb\n\nsns.set(style=\"whitegrid\")\n\n########################################################################################################################\n# Helpers\n########################################################################################################################\n\ndef create_dir(path: Path) -\u003e None:\n    path.mkdir(parents=True, exist_ok=True)\n\n\ndef save_json(obj, path: Path):\n    with open(path, \"w\") as f:\n        json.dump(obj, f, indent=2)\n\n\ndef learning_curve_fig(df: pd.DataFrame, metric: str, title: str, out_path: Path):\n    plt.figure(figsize=(6, 4))\n    sns.lineplot(data=df, x=\"step\", y=metric)\n    plt.title(title)\n    plt.xlabel(\"Step\")\n    plt.ylabel(metric)\n    plt.tight_layout()\n    plt.savefig(out_path)\n    plt.close()\n\n########################################################################################################################\n# Main\n########################################################################################################################\n\ndef process_single_run(api: wandb.Api, entity: str, project: str, run_id: str, out_dir: Path) -\u003e dict:\n    run = api.run(f\"{entity}/{project}/{run_id}\")\n    history_df = run.history()\n    metrics = {\n        \"run_id\": run_id,\n        \"final_accuracy\": history_df[\"final_accuracy\"].dropna().values[-1] if \"final_accuracy\" in history_df else None,\n        \"max_batch_acc\": history_df[\"batch_acc\"].max() if \"batch_acc\" in history_df else None,\n    }\n    create_dir(out_dir)\n    # save metrics\n    save_json(metrics, out_dir / \"metrics.json\")\n    # figures\n    if \"batch_acc\" in history_df:\n        learning_curve_fig(history_df, \"batch_acc\", f\"Batch Accuracy \u2013 {run_id}\", out_dir / \"learning_curve.pdf\")\n    return metrics\n\n\ndef aggregated_analysis(all_metrics: List[dict], comparison_dir: Path):\n    create_dir(comparison_dir)\n    df = pd.DataFrame(all_metrics)\n    save_json(df.to_dict(orient=\"list\"), comparison_dir / \"aggregated_metrics.json\")\n\n    # bar plot of final accuracies\n    plt.figure(figsize=(8, 4))\n    sns.barplot(x=\"run_id\", y=\"final_accuracy\", data=df)\n    plt.title(\"Final Accuracy Comparison\")\n    for idx, row in df.iterrows():\n        plt.text(idx, row[\"final_accuracy\"] + 0.005, f\"{row[\u0027final_accuracy\u0027]:.3f}\", ha=\"center\")\n    plt.xticks(rotation=45, ha=\"right\")\n    plt.tight_layout()\n    fig_path = comparison_dir / \"final_accuracy_comparison.pdf\"\n    plt.savefig(fig_path)\n    plt.close()\n    print(str(fig_path))\n\n    # improvement rate if there are exactly two runs (baseline vs proposed)\n    if len(df) == 2:\n        baseline, proposed = df.iloc[0], df.iloc[1]\n        improvement = (proposed[\"final_accuracy\"] - baseline[\"final_accuracy\"]) / baseline[\"final_accuracy\"]\n        print(f\"Improvement rate over baseline: {improvement:.3%}\")\n\n########################################################################################################################\n# Entry\n########################################################################################################################\n\ndef main():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\"results_dir\", type=str)\n    parser.add_argument(\"run_ids\", type=str)\n    args = parser.parse_args()\n\n    results_dir = Path(args.results_dir)\n    run_ids = json.loads(args.run_ids)\n\n    # load wandb config\n    with open(results_dir / \"config.yaml\", \"r\") as f:\n        cfg = yaml.safe_load(f)\n    entity = cfg[\"wandb\"][\"entity\"]\n    project = cfg[\"wandb\"][\"project\"]\n\n    api = wandb.Api()\n    all_metrics = []\n    for rid in run_ids:\n        out_dir = results_dir / rid\n        metrics = process_single_run(api, entity, project, rid, out_dir)\n        all_metrics.append(metrics)\n        print(f\"Processed run {rid} -\u003e {out_dir}\")\n\n    aggregated_analysis(all_metrics, results_dir / \"comparison\")\n\n\nif __name__ == \"__main__\":\n    main()\n", "main_py": "import os\nimport subprocess\nimport sys\nfrom pathlib import Path\nfrom typing import List\n\nimport hydra\nfrom omegaconf import DictConfig, OmegaConf\n\n########################################################################################################################\n# Hydra main orchestrator\n########################################################################################################################\n\n@hydra.main(config_path=\"../config\", config_name=\"config\")\ndef main(cfg: DictConfig) -\u003e None:\n    run_id = cfg.run.run_id\n\n    # prepare overrides for subprocess call\n    overrides = [f\"run={run_id}\", f\"results_dir={cfg.results_dir}\"]\n    if cfg.get(\"trial_mode\", False):\n        overrides.append(\"trial_mode=true\")\n        overrides.append(\"wandb.mode=disabled\")\n        overrides.append(\"optuna.n_trials=0\")\n\n    cmd = [sys.executable, \"-u\", \"-m\", \"src.train\"] + overrides\n    print(\"Launching subprocess: \", \" \".join(cmd))\n    subprocess.check_call(cmd)\n\n\nif __name__ == \"__main__\":\n    main()\n", "model_py": "import timm\nimport torch\n\n########################################################################################################################\n# Model utilities\n########################################################################################################################\n\ndef build_model(model_cfg):\n    model = timm.create_model(model_cfg.name, pretrained=model_cfg.pretrained, cache_dir=\".cache/\")\n    model.eval()\n    return model\n\n\ndef enable_bn_adaptation(model: torch.nn.Module):\n    \"\"\"Enable gradients for BatchNorm affine parameters only.\"\"\"\n    for m in model.modules():\n        if isinstance(m, torch.nn.modules.batchnorm._BatchNorm):\n            m.weight.requires_grad_(True)\n            m.bias.requires_grad_(True)\n        else:\n            for p in m.parameters(recurse=False):\n                p.requires_grad_(False)\n", "preprocess_py": "from typing import Tuple\n\nfrom datasets import load_dataset\nimport torch\nfrom torch.utils.data import Dataset, DataLoader\nimport torchvision.transforms as T\nimport timm\n\nCIFAR_MEAN = (0.4914, 0.4822, 0.4465)\nCIFAR_STD = (0.2023, 0.1994, 0.2010)\n\n########################################################################################################################\n# Dataset wrappers\n########################################################################################################################\n\nclass CIFAR10C(torch.utils.data.Dataset):\n    \"\"\"HuggingFace cifar10_corrupted wrapper with filtering by severity and corruption type.\"\"\"\n\n    def __init__(self, severity: int, corruption_types, cache_dir: str = \".cache/\"):\n        self.ds = load_dataset(\"cifar10_corrupted\", split=\"test\", cache_dir=cache_dir)\n        # filter\n        self.ds = self.ds.filter(lambda ex: ex[\"corruption_severity\"] == severity)\n        if corruption_types != \"all\":\n            allowed = set(corruption_types)\n            self.ds = self.ds.filter(lambda ex: ex[\"corruption_type\"] in allowed)\n        self.ds = self.ds.remove_columns([col for col in self.ds.column_names if col not in [\"image\", \"label\"]])\n\n    def __len__(self):\n        return len(self.ds)\n\n    def __getitem__(self, idx):\n        item = self.ds[idx]\n        return item[\"image\"], int(item[\"label\"])\n\n########################################################################################################################\n# DataLoader factory\n########################################################################################################################\n\ndef build_transform(model_name: str, img_size: int, normalization: str):\n    if normalization == \"cifar\":\n        norm_mean, norm_std = CIFAR_MEAN, CIFAR_STD\n    else:\n        # fall back to imagenet stats used by timm\n        norm_mean, norm_std = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)\n    transform = T.Compose([\n        T.Resize(img_size, interpolation=T.InterpolationMode.BICUBIC),\n        T.ToTensor(),\n        T.Normalize(norm_mean, norm_std),\n    ])\n    return transform\n\n\ndef build_dataloader(cfg) -\u003e DataLoader:\n    dataset_cfg = cfg.dataset\n    transform = build_transform(cfg.model.name, cfg.dataset.image_size, cfg.dataset.normalization)\n\n    dataset = CIFAR10C(\n        severity=dataset_cfg.corruption_severity,\n        corruption_types=dataset_cfg.corruption_types,\n        cache_dir=\".cache/\",\n    )\n\n    class Wrapped(Dataset):\n        def __init__(self, ds, tf):\n            self.ds, self.tf = ds, tf\n\n        def __len__(self):\n            return len(self.ds)\n\n        def __getitem__(self, idx: int):\n            img, label = self.ds[idx]\n            return self.tf(img), torch.tensor(label, dtype=torch.long)\n\n    wrapped = Wrapped(dataset, transform)\n    loader = DataLoader(\n        wrapped,\n        batch_size=cfg.training.batch_size,\n        shuffle=cfg.training.shuffle_stream,\n        num_workers=cfg.other.num_workers,\n        pin_memory=True,\n    )\n    return loader\n", "pyproject_toml": "[tool.poetry]\nname = \"cw-tent-experiments\"\nversion = \"0.1.0\"\ndescription = \"Reproducible experiments for CW-TENT paper\"\nauthors = [\"AI Researcher \u003cai@researcher.com\u003e\"]\n\n[tool.poetry.dependencies]\npython = \"^3.9\"\ntorch = \"^2.0.0\"\ntorchvision = \"^0.15.0\"\ntimm = \"^0.9.2\"\nhydra-core = \"^1.3.2\"\nwandb = \"^0.15.0\"\noptuna = \"^3.3.0\"\ndatasets = \"^2.14.4\"\nseaborn = \"^0.12.2\"\nmatplotlib = \"^3.7.2\"\nPyYAML = \"^6.0\"\n\n[build-system]\nrequires = [\"poetry-core\u003e=1.0.0\"]\nbuild-backend = \"poetry.core.masonry.api\"\n", "train_py": "import os\nimport sys\nimport json\nimport math\nimport shutil\nimport subprocess\nfrom typing import Any, Dict\n\nimport hydra\nfrom omegaconf import DictConfig, OmegaConf\n\nimport torch\nimport torch.nn.functional as F\nfrom torch.utils.data import DataLoader\n\nimport optuna\nimport wandb\n\nfrom .preprocess import build_dataloader\nfrom .model import build_model, enable_bn_adaptation\n\n########################################################################################################################\n# Utility\n########################################################################################################################\n\ndef entropy(p: torch.Tensor) -\u003e torch.Tensor:\n    \"\"\"Per-sample entropy.\"\"\"\n    eps = 1e-8\n    return -(p * (p + eps).log()).sum(dim=1)\n\n\ndef accuracy(pred: torch.Tensor, target: torch.Tensor) -\u003e torch.Tensor:\n    return (pred.argmax(dim=1) == target).float().mean()\n\n########################################################################################################################\n# Adapter implementations\n########################################################################################################################\n\nclass BaseAdapter:\n    def __init__(self, model: torch.nn.Module):\n        self.model = model\n        self.model.eval()\n        self.model.requires_grad_(False)\n\n    def adapt(self, x: torch.Tensor) -\u003e torch.Tensor:  # noqa: D401  (simple method)\n        \"\"\"Return predictions without changing any parameter (source / baseline).\"\"\"\n        with torch.no_grad():\n            return self.model(x).softmax(dim=1)\n\n\nclass TentAdapter(BaseAdapter):\n    def __init__(self, model: torch.nn.Module, lr: float, momentum: float = 0.9, inner_steps: int = 1):\n        super().__init__(model)\n        enable_bn_adaptation(self.model)\n        params = [p for p in self.model.parameters() if p.requires_grad]\n        self.opt = torch.optim.SGD(params, lr=lr, momentum=momentum)\n        self.inner_steps = inner_steps\n\n    def adapt(self, x: torch.Tensor) -\u003e torch.Tensor:\n        self.model.train()  # use batch stats\n        for _ in range(self.inner_steps):\n            self.opt.zero_grad()\n            logits = self.model(x)\n            probs = logits.softmax(dim=1)\n            loss = entropy(probs).mean()\n            loss.backward()\n            self.opt.step()\n        self.model.eval()\n        return logits.detach().softmax(dim=1)\n\n\nclass CWTentAdapter(BaseAdapter):\n    def __init__(\n        self,\n        model: torch.nn.Module,\n        lr: float,\n        momentum: float = 0.9,\n        weight_temperature: float = 1.0,\n    ):\n        super().__init__(model)\n        enable_bn_adaptation(self.model)\n        params = [p for p in self.model.parameters() if p.requires_grad]\n        self.opt = torch.optim.SGD(params, lr=lr, momentum=momentum)\n        self.temp = weight_temperature\n\n    def adapt(self, x: torch.Tensor) -\u003e torch.Tensor:\n        self.model.train()\n        self.opt.zero_grad()\n        logits = self.model(x)\n        probs = logits.softmax(dim=1)\n        H = entropy(probs)\n        num_classes = probs.size(1)\n        weights = 1.0 - (H / math.log(num_classes))\n        weights = weights.pow(self.temp)  # optional temperature scaling\n        loss = (weights * H).sum() / weights.sum()\n        loss.backward()\n        self.opt.step()\n        self.model.eval()\n        return logits.detach().softmax(dim=1)\n\n########################################################################################################################\n# Single run execution\n########################################################################################################################\n\ndef run_single(cfg: DictConfig) -\u003e Dict[str, Any]:\n    device = torch.device(cfg.other.device if torch.cuda.is_available() else \"cpu\")\n\n    # build model\n    model = build_model(cfg.model)\n    model.to(device)\n\n    # dataloader\n    loader = build_dataloader(cfg)\n    if cfg.get(\"trial_mode\", False):\n        loader = [next(iter(loader)) for _ in range(min(2, len(loader)))]  # two mini-batches only\n\n    # adapter\n    if cfg.training.adaptation_algorithm == \"tent\":\n        adapter = TentAdapter(\n            model,\n            lr=cfg.training.learning_rate,\n            momentum=cfg.training.momentum,\n            inner_steps=cfg.training.inner_steps,\n        )\n    elif cfg.training.adaptation_algorithm == \"cw-tent\":\n        adapter = CWTentAdapter(\n            model,\n            lr=cfg.training.learning_rate,\n            momentum=cfg.training.momentum,\n            weight_temperature=cfg.training.weight_temperature,\n        )\n    else:  # source / baseline\n        adapter = BaseAdapter(model)\n\n    # wandb init\n    if cfg.wandb.mode != \"disabled\":\n        run = wandb.init(\n            entity=cfg.wandb.entity,\n            project=cfg.wandb.project,\n            id=cfg.run.run_id,\n            config=OmegaConf.to_container(cfg, resolve=True),\n            resume=\"allow\",\n        )\n        print(f\"WandB URL: {run.url}\")\n    else:\n        run = None\n\n    # streaming eval-adapt loop\n    total_correct = 0\n    total_seen = 0\n    for step, batch in enumerate(loader):\n        images, targets = batch[0].to(device, non_blocking=True), batch[1].to(device, non_blocking=True)\n        probs = adapter.adapt(images)\n        batch_acc = accuracy(probs, targets).item()\n        total_correct += (probs.argmax(1) == targets).sum().item()\n        total_seen += targets.size(0)\n\n        if run is not None:\n            run.log({\"batch_acc\": batch_acc, \"step\": step})\n\n    final_acc = total_correct / total_seen\n    if run is not None:\n        run.log({\"final_accuracy\": final_acc})\n        run.finish()\n\n    return {\"final_accuracy\": final_acc}\n\n########################################################################################################################\n# Optuna objective\n########################################################################################################################\n\ndef optuna_objective(trial: optuna.Trial, base_cfg: DictConfig) -\u003e float:\n    cfg = OmegaConf.create(OmegaConf.to_container(base_cfg, resolve=True))  # deep copy\n\n    # suggest params\n    for hp, space in base_cfg.optuna.search_space.items():\n        if space[\"type\"] == \"loguniform\":\n            cfg.training[hp] = trial.suggest_float(hp, space[\"low\"], space[\"high\"], log=True)\n        elif space[\"type\"] == \"uniform\":\n            cfg.training[hp] = trial.suggest_float(hp, space[\"low\"], space[\"high\"])\n        elif space[\"type\"] == \"categorical\":\n            cfg.training[hp] = trial.suggest_categorical(hp, space[\"choices\"])\n        elif space[\"type\"] == \"int\":\n            cfg.training[hp] = trial.suggest_int(hp, space[\"low\"], space[\"high\"])\n        else:\n            raise ValueError(f\"Unsupported search space type {space[\u0027type\u0027]}\")\n\n    # disable wandb during search to avoid creating many runs\n    cfg.wandb.mode = \"disabled\"\n    result = run_single(cfg)\n    return result[\"final_accuracy\"]\n\n########################################################################################################################\n# Hydra entrypoint\n########################################################################################################################\n\n@hydra.main(config_path=\"../config\", config_name=\"config\")\ndef main(cfg: DictConfig) -\u003e None:  # noqa: D401\n    \"\"\"Single training (and optional Optuna) run.\"\"\"\n\n    # make sure results_dir exists and save full config for evaluator\n    os.makedirs(cfg.results_dir, exist_ok=True)\n    config_out_path = os.path.join(cfg.results_dir, \"config.yaml\")\n    with open(config_out_path, \"w\") as f:\n        OmegaConf.save(cfg, f)\n\n    # Optuna search or single run\n    if cfg.optuna.n_trials \u003e 0 and not cfg.get(\"trial_mode\", False):\n        study = optuna.create_study(direction=cfg.optuna.direction)\n        study.optimize(lambda t: optuna_objective(t, cfg), n_trials=cfg.optuna.n_trials)\n        best_params = study.best_params\n        print(\"Best params:\", best_params)\n        # merge best params back to cfg and run final training with WandB logging\n        for k, v in best_params.items():\n            cfg.training[k] = v\n        run_single(cfg)\n    else:\n        run_single(cfg)\n\n\nif __name__ == \"__main__\":\n    main()\n"}
+
+Analyze the experiment code thoroughly. Ensure it is complete, executable, and ready for publication-quality research experiments.
+Output:
+{
+    "is_code_ready": false,
+    "code_issue": "Configuration structure mismatch: train.py accesses cfg.training, cfg.model, cfg.dataset, etc. but when launched with `run={run_id}` Hydra nests the selected file under cfg.run.*. Consequently those attributes are missing and train.py will crash with AttributeError. Either flatten the run configs into the root of the config tree or change all code to use cfg.run.<section>.  \n\nAdditional blocking issue: build_model() passes cache_dir to timm.create_model, a parameter not supported by timm and will raise TypeError.  \n\nThese errors violate Core Validation Criteria #2 and #4, so the code is not ready for execution."
+}
