@@ -2,5 +2,13 @@
   "research_topic": "Improving Test-Time Adaptation in terms of convergence speed.",
   "queries": [
     "fast convergence test-time adaptation"
+  ],
+  "research_study_list": [
+    {
+      "title": "Test Time Adaptation With Regularized Loss for Weakly Supervised Salient Object Detection"
+    },
+    {
+      "title": "DELTA: DEGRADATION-FREE FULLY TEST-TIME ADAPTATION"
+    }
   ]
 }
