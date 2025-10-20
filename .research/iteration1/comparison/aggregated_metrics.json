@@ -1,0 +1,7 @@
+{
+  "proposed-ResNet-18 (11M)-CIFAR-10-C (severity 5)": {
+    "top1_accuracy": 10.94,
+    "improvement_rate": 0.0,
+    "p_value_vs_baseline": NaN
+  }
+}

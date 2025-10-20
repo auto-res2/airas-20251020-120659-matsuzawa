@@ -63,29 +63,40 @@ def _parse_cli() -> Tuple[Path, List[str]]:
 def save_learning_curve(df: pd.DataFrame, out_path: Path, metric: str = "val_acc_batch") -> None:
     if metric not in df.columns:
         return
-    plt.figure(figsize=(6, 4))
-    sns.lineplot(x=df.index, y=df[metric])
+    fig, ax = plt.subplots(figsize=(10, 6))
+    ax.plot(df.index, df[metric], linewidth=2, color='steelblue', label=metric)
     if df[metric].notna().any():
         best_idx = df[metric].idxmax()
         best_val = df[metric].max()
-        plt.scatter(best_idx, best_val, color="red")
-        plt.text(best_idx, best_val, f"{best_val:.2f}")
-    plt.xlabel("Step")
-    plt.ylabel(metric.replace("_", " "))
-    plt.title(f"{metric} over time")
+        ax.scatter(best_idx, best_val, color='red', s=100, zorder=5, label=f'Best: {best_val:.2f}')
+        ax.annotate(f'{best_val:.2f}', (best_idx, best_val), 
+                   xytext=(10, 10), textcoords='offset points',
+                   fontsize=12, fontweight='bold',
+                   bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.7),
+                   arrowprops=dict(arrowstyle='->', connectionstyle='arc3,rad=0', color='red'))
+    ax.set_xlabel('Step', fontsize=14, fontweight='bold')
+    ax.set_ylabel(metric.replace('_', ' ').title(), fontsize=14, fontweight='bold')
+    ax.set_title(f'{metric.replace("_", " ").title()} over Time', fontsize=16, fontweight='bold', pad=20)
+    ax.tick_params(axis='both', which='major', labelsize=12)
+    ax.grid(True, alpha=0.3, linestyle='--')
+    ax.legend(fontsize=12)
     plt.tight_layout()
-    plt.savefig(out_path)
+    plt.savefig(out_path, dpi=300, bbox_inches='tight')
     plt.close()
 
 
 def save_confusion(y_true: List[int], y_pred: List[int], out_path: Path, classes: List[str]):
     cm = confusion_matrix(y_true, y_pred, labels=list(range(len(classes))))
     disp = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=classes)
-    fig, ax = plt.subplots(figsize=(6, 6))
-    disp.plot(ax=ax, cmap="Blues", colorbar=False)
-    plt.xticks(rotation=45)
+    fig, ax = plt.subplots(figsize=(10, 10))
+    disp.plot(ax=ax, cmap='Blues', colorbar=True, values_format='d')
+    ax.set_xlabel('Predicted Label', fontsize=14, fontweight='bold')
+    ax.set_ylabel('True Label', fontsize=14, fontweight='bold')
+    ax.set_title('Confusion Matrix', fontsize=16, fontweight='bold', pad=20)
+    plt.xticks(rotation=45, ha='right', fontsize=11)
+    plt.yticks(fontsize=11)
     plt.tight_layout()
-    fig.savefig(out_path)
+    fig.savefig(out_path, dpi=300, bbox_inches='tight')
     plt.close(fig)
 
 
@@ -103,6 +114,22 @@ def mcnemar_significance(y_true: List[int], preds_a: List[int], preds_b: List[in
 # Main evaluation workflow ----------------------------------------------------
 ###############################################################################
 
+def parse_results_from_logs(results_dir: Path, run_id: str) -> float:
+    stdout_path = results_dir / "stdout.txt"
+    if not stdout_path.exists():
+        return np.nan
+    
+    import re
+    with open(stdout_path, "r") as f:
+        content = f.read()
+    
+    pattern = rf'\[RESULT\]\s+{re.escape(run_id)}\s+–\s+Final\s+Top-1\s+Acc:\s+([\d.]+)%'
+    matches = re.findall(pattern, content)
+    if matches:
+        return float(matches[-1])
+    return np.nan
+
+
 def main():
     results_dir, run_ids = _parse_cli()
     results_dir.mkdir(parents=True, exist_ok=True)
@@ -116,8 +143,11 @@ def main():
         global_cfg = yaml.safe_load(f)
     entity = global_cfg["wandb"]["entity"]
     project = global_cfg["wandb"]["project"]
-
-    api = wandb.Api()
+    wandb_mode = global_cfg["wandb"].get("mode", "online")
+    
+    use_wandb = wandb_mode != "disabled"
+    if use_wandb:
+        api = wandb.Api()
 
     aggregated: Dict[str, Dict[str, float]] = {}
     predictions_cache: Dict[str, Tuple[List[int], List[int]]] = {}
@@ -129,34 +159,41 @@ def main():
         subdir = results_dir / run_id
         subdir.mkdir(parents=True, exist_ok=True)
 
-        try:
-            run = api.run(f"{entity}/{project}/{run_id}")
-        except wandb.errors.CommError:
-            print(f"  [WARN] Run {run_id} not found – skipping.")
-            continue
+        if use_wandb:
+            try:
+                run = api.run(f"{entity}/{project}/{run_id}")
+            except wandb.errors.CommError:
+                print(f"  [WARN] Run {run_id} not found in WandB – skipping.")
+                continue
 
-        history = run.history(samples=100_000)
-        metrics_path = subdir / "metrics.json"
-        history.to_json(metrics_path, orient="records", indent=2)
-        generated_paths.append(str(metrics_path))
+            history = run.history(samples=100_000)
+            metrics_path = subdir / "metrics.json"
+            history.to_json(metrics_path, orient="records", indent=2)
+            generated_paths.append(str(metrics_path))
 
-        # Learning curve --------------------------------------------------
-        lc_path = subdir / "learning_curve_val_acc_batch.pdf"
-        save_learning_curve(history, lc_path)
-        generated_paths.append(str(lc_path))
+            lc_path = subdir / "learning_curve_val_acc_batch.pdf"
+            save_learning_curve(history, lc_path)
+            generated_paths.append(str(lc_path))
 
-        # Confusion matrix -----------------------------------------------
-        y_true = run.summary.get("y_true", [])
-        y_pred = run.summary.get("y_pred", [])
-        if y_true and y_pred:
-            cm_path = subdir / "confusion_matrix.pdf"
-            num_classes = max(max(y_true), max(y_pred)) + 1
-            classes = [str(i) for i in range(num_classes)]
-            save_confusion(y_true, y_pred, cm_path, classes)
-            generated_paths.append(str(cm_path))
-        predictions_cache[run_id] = (y_true, y_pred)
+            y_true = run.summary.get("y_true", [])
+            y_pred = run.summary.get("y_pred", [])
+            if y_true and y_pred:
+                cm_path = subdir / "confusion_matrix.pdf"
+                num_classes = max(max(y_true), max(y_pred)) + 1
+                classes = [str(i) for i in range(num_classes)]
+                save_confusion(y_true, y_pred, cm_path, classes)
+                generated_paths.append(str(cm_path))
+            predictions_cache[run_id] = (y_true, y_pred)
 
-        final_acc = float(run.summary.get("top1_accuracy", np.nan))
+            final_acc = float(run.summary.get("top1_accuracy", np.nan))
+        else:
+            final_acc = parse_results_from_logs(results_dir, run_id)
+            if np.isnan(final_acc):
+                print(f"  [WARN] Run {run_id} not found in logs – skipping.")
+                continue
+            print(f"  [INFO] Found {run_id} with Top-1 Acc: {final_acc:.2f}%")
+            predictions_cache[run_id] = ([], [])
+
         aggregated[run_id] = {"top1_accuracy": final_acc}
 
     # ---------------- Aggregated comparison -----------------------------
@@ -192,16 +229,26 @@ def main():
     # Accuracy bar chart -------------------------------------------------
     labels = list(aggregated.keys())
     accuracies = [aggregated[k]["top1_accuracy"] for k in labels]
-    plt.figure(figsize=(8, 4))
-    ax = sns.barplot(x=labels, y=accuracies)
-    for p, acc in zip(ax.patches, accuracies):
-        ax.annotate(f"{acc:.2f}", (p.get_x() + p.get_width() / 2, acc), ha="center", va="bottom")
-    plt.ylabel("Top-1 Accuracy (%)")
-    plt.title("Accuracy comparison")
-    plt.xticks(rotation=45, ha="right")
+    fig, ax = plt.subplots(figsize=(10, 6))
+    bars = ax.bar(range(len(labels)), accuracies, color='steelblue', edgecolor='black', linewidth=1.2)
+    
+    for i, (bar, acc) in enumerate(zip(bars, accuracies)):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width() / 2, height + 0.5, 
+                f'{acc:.2f}%', ha='center', va='bottom', fontsize=14, fontweight='bold')
+    
+    ax.set_xticks(range(len(labels)))
+    ax.set_xticklabels(labels, rotation=45, ha='right', fontsize=12)
+    ax.set_ylabel('Top-1 Accuracy (%)', fontsize=14, fontweight='bold')
+    ax.set_xlabel('Method', fontsize=14, fontweight='bold')
+    ax.set_title('Accuracy Comparison', fontsize=16, fontweight='bold', pad=20)
+    ax.tick_params(axis='both', which='major', labelsize=12)
+    ax.grid(axis='y', alpha=0.3, linestyle='--')
+    ax.set_ylim(0, max(accuracies) * 1.15 if accuracies else 100)
+    
     plt.tight_layout()
     bar_path = comparison_dir / "top1_accuracy_comparison.pdf"
-    plt.savefig(bar_path)
+    plt.savefig(bar_path, dpi=300, bbox_inches='tight')
     plt.close()
     generated_paths.append(str(bar_path))
 
@@ -209,16 +256,29 @@ def main():
     if len(aggregated) >= 2 and baseline_id is not None:
         imp_labels = [l for l in labels if l != baseline_id]
         imp_vals = [aggregated[l]["improvement_rate"] * 100 for l in imp_labels]
-        plt.figure(figsize=(8, 4))
-        ax2 = sns.barplot(x=imp_labels, y=imp_vals, color="skyblue")
-        for p, v in zip(ax2.patches, imp_vals):
-            ax2.annotate(f"{v:.2f}%", (p.get_x() + p.get_width() / 2, v), ha="center", va="bottom")
-        plt.ylabel("Improvement over baseline (%)")
-        plt.title("Relative improvement")
-        plt.xticks(rotation=45, ha="right")
+        fig, ax = plt.subplots(figsize=(10, 6))
+        colors = ['green' if v >= 0 else 'red' for v in imp_vals]
+        bars = ax.bar(range(len(imp_labels)), imp_vals, color=colors, edgecolor='black', linewidth=1.2, alpha=0.7)
+        
+        for i, (bar, v) in enumerate(zip(bars, imp_vals)):
+            height = bar.get_height()
+            y_pos = height + 0.5 if height >= 0 else height - 0.5
+            va = 'bottom' if height >= 0 else 'top'
+            ax.text(bar.get_x() + bar.get_width() / 2, y_pos, 
+                    f'{v:.2f}%', ha='center', va=va, fontsize=14, fontweight='bold')
+        
+        ax.axhline(y=0, color='black', linestyle='-', linewidth=1)
+        ax.set_xticks(range(len(imp_labels)))
+        ax.set_xticklabels(imp_labels, rotation=45, ha='right', fontsize=12)
+        ax.set_ylabel('Improvement over Baseline (%)', fontsize=14, fontweight='bold')
+        ax.set_xlabel('Method', fontsize=14, fontweight='bold')
+        ax.set_title('Relative Improvement', fontsize=16, fontweight='bold', pad=20)
+        ax.tick_params(axis='both', which='major', labelsize=12)
+        ax.grid(axis='y', alpha=0.3, linestyle='--')
+        
         plt.tight_layout()
         imp_path = comparison_dir / "improvement_rates.pdf"
-        plt.savefig(imp_path)
+        plt.savefig(imp_path, dpi=300, bbox_inches='tight')
         plt.close()
         generated_paths.append(str(imp_path))
 
