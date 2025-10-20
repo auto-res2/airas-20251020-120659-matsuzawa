@@ -15,7 +15,7 @@ CIFAR_STD = (0.2023, 0.1994, 0.2010)
 
 
 class CIFAR10C(Dataset):
-    """HuggingFace ‘cifar10_corrupted’ wrapper with corruption filtering."""
+    """HuggingFace 'robro/cifar10-c-parquet' wrapper with corruption filtering."""
 
     def __init__(
         self,
@@ -24,11 +24,12 @@ class CIFAR10C(Dataset):
         corruption_types: List[str] | str = "all",
         cache_dir: str = ".cache/",
     ) -> None:
-        self.ds = load_dataset("cifar10_corrupted", split=split, cache_dir=cache_dir)
-        self.ds = self.ds.filter(lambda e: e["corruption_severity"] == severity)
+        ds_all = load_dataset("robro/cifar10-c-parquet", split="train", cache_dir=cache_dir)
+        filter_fn = lambda e: e["corruption_level"] == severity
         if corruption_types != "all":
             allowed = set(corruption_types)
-            self.ds = self.ds.filter(lambda e: e["corruption_type"] in allowed)
+            filter_fn = lambda e: e["corruption_level"] == severity and e["corruption_name"] in allowed
+        self.ds = ds_all.filter(filter_fn)
         self.ds = self.ds.remove_columns([c for c in self.ds.column_names if c not in {"image", "label"}])
         self.n_classes = 10
 

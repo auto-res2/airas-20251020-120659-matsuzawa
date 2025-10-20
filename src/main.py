@@ -3,6 +3,7 @@ import sys
 from typing import List
 
 import hydra
+from hydra.core.hydra_config import HydraConfig
 from omegaconf import DictConfig
 
 ########################################################################################################################
@@ -14,7 +15,8 @@ def main(cfg: DictConfig) -> None:  # noqa: D401
     # ------------------------------------------------------------------
     # Retrieve selected run (Hydra stores choice in runtime choices)
     # ------------------------------------------------------------------
-    run_choice = cfg.hydra.runtime.choices.get("run")
+    hydra_cfg = HydraConfig.get()
+    run_choice = hydra_cfg.runtime.choices.get("run")
     if run_choice is None:
         raise ValueError("Specify run=<run_id> corresponding to a YAML in config/run/")
 
@@ -26,9 +28,12 @@ def main(cfg: DictConfig) -> None:  # noqa: D401
     if cfg.get("trial_mode", False):
         overrides.extend(["trial_mode=true", "wandb.mode=disabled", "run.optuna.n_trials=0"])
 
-    cmd = [sys.executable, "-u", "-m", "src.train"] + overrides
+    import os
+    original_cwd = hydra_cfg.runtime.cwd
+    train_script = os.path.join(original_cwd, "src", "train.py")
+    cmd = [sys.executable, "-u", train_script] + overrides
     print("Launching:", " ".join(cmd))
-    subprocess.check_call(cmd)
+    subprocess.check_call(cmd, cwd=original_cwd)
 
 
 if __name__ == "__main__":

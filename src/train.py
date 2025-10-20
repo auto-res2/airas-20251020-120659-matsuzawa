@@ -1,7 +1,10 @@
 import math
 import os
+import sys
 from pathlib import Path
 from typing import Any, Dict, List
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import hydra
 import optuna
@@ -52,7 +55,8 @@ class BaseAdapter:
 
     def __init__(self, model: torch.nn.Module):
         self.model = model.eval()
-        self.model.requires_grad_(False)
+        for p in model.parameters():
+            p.requires_grad_(False)
 
     @torch.no_grad()
     def adapt(self, x: torch.Tensor) -> torch.Tensor:
@@ -67,7 +71,7 @@ class TentAdapter(BaseAdapter):
         params = [p for p in model.parameters() if p.requires_grad]
         self.opt = torch.optim.SGD(params, lr=lr, momentum=momentum)
         self.inner_steps = inner_steps
-        super().__init__(model)
+        self.model = model
 
     def adapt(self, x: torch.Tensor) -> torch.Tensor:  # type: ignore[override]
         self.model.train()
@@ -91,7 +95,7 @@ class CWTentAdapter(BaseAdapter):
         params = [p for p in model.parameters() if p.requires_grad]
         self.opt = torch.optim.SGD(params, lr=lr, momentum=momentum)
         self.temp = temperature
-        super().__init__(model)
+        self.model = model
 
     def adapt(self, x: torch.Tensor) -> torch.Tensor:  # type: ignore[override]
         self.model.train()
