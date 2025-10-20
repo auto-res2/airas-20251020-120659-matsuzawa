@@ -218,3 +218,15 @@ Generating corrupted CIFAR-10 data (severity=5)...
    /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=severity results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
 === [TRIAL RUN] PASSED for severity at Mon Oct 20 03:49:14 PM UTC 2025 ===
 
+=== [TRIAL RUN] Start for comparative-1-ResNet-18 at Mon Oct 20 03:50:32 PM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-ResNet-18 at Mon Oct 20 03:50:55 PM UTC 2025 ===
+Generating corrupted CIFAR-10 data (severity=5)...
+[2025-10-20 15:51:06,314][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-20 15:51:06,557][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-20 15:51:06,807][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+[RESULT] comparative-1-ResNet-18 – Final Top-1 Acc: 14.84%
+
+[Launcher] Executing:
+   /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u -m src.train run=comparative-1-ResNet-18 results_dir=.research/iteration1 wandb.mode=disabled trial_mode=true optuna.n_trials=0 run.training.epochs=1
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18 at Mon Oct 20 03:51:10 PM UTC 2025 ===
+
