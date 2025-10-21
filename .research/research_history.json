@@ -193,7 +193,7 @@
       }
     }
   ],
-  "experiment_iteration": 4,
+  "experiment_iteration": 5,
   "paper_content": {
     "title": "Confidence-Weighted Entropy Minimization for Single-Step Test-Time Adaptation",
     "abstract": "Test-time adaptation (TTA) updates a model on an unlabeled test stream to counter distribution shift, but the prevailing entropy-minimization strategy requires multiple inner gradient steps per mini-batch, hindering real-time deployment. We show that slow convergence arises because early batches are dominated by low-confidence samples whose high entropy yields noisy gradients. We propose Confidence-Weighted TENT (CW-TENT), a drop-in replacement that retains the original entropy loss but multiplies each sample by a weight w = 1 − H(p)/log C, thereby down-weighting uncertain predictions, normalises the sum by Σ w, and performs a single stochastic-gradient update of BatchNorm affine parameters per batch. Evaluated on CIFAR-10-C (severity 5) with a pre-trained ResNet-18, CW-TENT consumed one-tenth of the gradient computations of vanilla TENT yet, in the present run, reached only 10.1 % final accuracy versus 42.2 % for TENT. Statistical tests confirm the gap is significant. We analyse the failure, identify likely implementation or hyper-parameter issues, and outline targeted diagnostics. Although the logged accuracy is negative, the method remains attractive for its simplicity and latency savings, motivating careful re-evaluation.",
