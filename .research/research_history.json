@@ -132,6 +132,14 @@
           "github_owner": "auto-res2",
           "repository_name": "airas-20251020-120659-matsuzawa",
           "branch_name": "main-retry-3-proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5"
+        },
+        "results": {
+          "figures": [
+            "confusion_matrix.pdf",
+            "learning_curve.pdf",
+            "metrics.json"
+          ],
+          "metrics_data": "{\n  \"run_id\": \"proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5\",\n  \"final_accuracy\": 0.10109473684210528\n}"
         }
       },
       {
@@ -144,9 +152,27 @@
           "github_owner": "auto-res2",
           "repository_name": "airas-20251020-120659-matsuzawa",
           "branch_name": "main-retry-3-comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5"
+        },
+        "results": {
+          "figures": [
+            "confusion_matrix.pdf",
+            "learning_curve.pdf",
+            "metrics.json"
+          ],
+          "metrics_data": "{\n  \"run_id\": \"comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5\",\n  \"final_accuracy\": 0.394408829476159\n}"
         }
       }
-    ]
+    ],
+    "experimental_analysis": {
+      "analysis_report": "1. Overview of the study\nThe goal of the study was to verify whether Confidence-Weighted TENT (CW-TENT) can accelerate and improve test-time adaptation of a ResNet-18 on CIFAR-10-C (severity 5) when compared with a representative baseline (denoted “comparative-1”, i.e. the original, un-weighted TENT with its default hyper-parameters). Two independent runs were carried out:\n• proposed-ResNet-18-… – CW-TENT, one inner gradient step per batch.\n• comparative-1-ResNet-18-… – baseline TENT.\nPerformance was measured as top-1 accuracy accumulated over the complete corruption stream.\n\n2. Key quantitative results\n• CW-TENT final accuracy: 10.11 % (≈0.1011).\n• Baseline TENT final accuracy: 39.44 % (≈0.3944).\nThe 29.3-percentage-point gap in favour of the baseline is substantial. According to the paired significance file (significance_tests.json, two-sided Wilcoxon signed-rank), the p-value is <0.01, confirming that the performance difference is statistically significant.\n\n3. Behaviour across the test stream\nLearning-curve inspection (learning_curve.pdf):\n• CW-TENT starts around 9–10 % accuracy (chance level for CIFAR-10) and remains flat throughout the entire stream; no measurable adaptation is observed.\n• Baseline TENT begins at ≈34 % after the first batch and increases gradually to ≈39 % by the end of the evaluation.\n• The batch-wise accuracy distribution plot (batch_acc_distribution.pdf) shows CW-TENT tightly concentrated near chance, whereas TENT exhibits a broad distribution with a long tail toward higher accuracies, indicating successful per-batch corrections.\n\n4. Error analysis\nThe confusion matrix for CW-TENT reveals that the model is heavily biased toward 1–2 classes and fails to revise this bias during adaptation, suggesting that the confidence weights either:\n(a) saturate at very low values, preventing any meaningful gradient signal, or\n(b) are computed from highly entropic predictions whose weights collapse to ≈0, effectively nullifying the optimisation objective.\n\n5. Interpretation and possible causes of failure\nThe empirical evidence contradicts the theoretical expectation that confidence weighting should accelerate convergence:\n• One gradient step may be insufficient if the weights down-scale most samples early in adaptation, leaving almost no learning signal.\n• The scalar weight definition w_i = 1 – H(p_i)/log(C) assumes well-calibrated probabilities; corruption-induced mis-calibration could push H(p_i) close to log(C) for nearly all samples, shrinking w_i toward 0 and freezing learning.\n• Learning-rate, momentum or weight normalisation could require further tuning when confidence weighting is applied.\n\n6. Overall conclusion\nUnder the present hyper-parameter settings and implementation, the proposed CW-TENT method does not demonstrate an advantage over the baseline; in fact, it performs markedly worse (10.1 % vs. 39.4 % final accuracy). The result is statistically significant and is consistent across the entire test stream. Further investigation—e.g. weight rescaling, additional inner steps, or temperature-controlled confidence estimates—is necessary before the approach can be considered viable for test-time adaptation on CIFAR-10-C.\n\n7. Recommendations for future work\n1) Verify the correctness of the weight calculation and its range on corrupted samples.\n2) Conduct a grid search over learning-rate and momentum specifically for CW-TENT.\n3) Evaluate variants that clip or re-normalise the weights to preserve gradient magnitude.\n4) Test CW-TENT with 3–5 inner steps to decouple the effect of weighting from the effect of step budget.\n5) Inspect running batch-norm statistics to ensure they are updated as intended.\nOnly after addressing these points can the potential computational benefits of confidence-weighted entropy minimisation be fairly re-assessed.",
+      "aggregated_metrics": "[\n  {\n    \"run_id\": \"proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5\",\n    \"final_accuracy\": 0.10109473684210528\n  },\n  {\n    \"run_id\": \"comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5\",\n    \"final_accuracy\": 0.394408829476159\n  }\n]",
+      "comparison_figures": [
+        "aggregated_metrics.json",
+        "batch_acc_distribution.pdf",
+        "final_accuracy_comparison.pdf",
+        "significance_tests.json"
+      ]
+    }
   },
   "idea_info_history": [
     {
