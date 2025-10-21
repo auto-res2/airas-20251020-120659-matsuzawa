@@ -143,8 +143,11 @@ jobs:
         | jq -r '(.results // .) | map(select(.gated == false and .private == false and .disabled == false)) | .[0]?.id // empty'
       PROMPT: |
         Your task is to correct the code for the experiment associated with run ID ${{ needs.setup.outputs.current_run_id }}. 
-        Your sole responsibility is to modify the code to ensure it is runnable; you are not to execute the experiment itself.
         You have been granted full tool access. 
+
+        Your operational environment is a standard CPU-only runner without GPUs. 
+        Any attempt to run the experiment code will fail and lead to incorrect conclusions. Your sole responsibility is to **modify the code to make it runnable**. 
+        The actual experiment will be executed in a separate, GPU-enabled environment after your corrections.
         
         Guiding Principles:
         - Scope: Do not perform any Git operations like commit or push. Your only task is to fix the code to make it executable.
