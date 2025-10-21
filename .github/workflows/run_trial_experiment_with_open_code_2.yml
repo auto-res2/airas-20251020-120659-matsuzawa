@@ -252,7 +252,7 @@ jobs:
           else
             echo "Triggering next run with remaining run_ids: $REMAINING_IDS"
             gh workflow run "${{ github.workflow }}" --ref ${{ github.ref }} \
-              -f run_ids="$REMAINING_IDS" \
+              -f run_ids='"$REMAINING_IDS"' \
               -f experiment_iteration="${{ github.event.inputs.experiment_iteration }}" \
               -f runner_type='${{ github.event.inputs.runner_type }}' \
               -f model_name='${{ github.event.inputs.model_name }}'
