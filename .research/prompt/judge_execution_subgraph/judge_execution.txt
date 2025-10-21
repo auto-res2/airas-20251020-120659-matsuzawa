@@ -17,127 +17,8 @@ Follow the rules below:
 # Standard Error:
 Using CPython 3.11.13
 Creating virtual environment at: .venv
-Resolved 121 packages in 186ms
-Installed 93 packages in 4.60s
- + aiohappyeyeballs==2.6.1
- + aiohttp==3.13.1
- + aiosignal==1.4.0
- + alembic==1.17.0
- + annotated-types==0.7.0
- + antlr4-python3-runtime==4.9.3
- + anyio==4.11.0
- + attrs==25.4.0
- + certifi==2025.10.5
- + charset-normalizer==3.4.4
- + click==8.3.0
- + colorlog==6.10.1
- + contourpy==1.3.3
- + cw-tent-experiments==0.1.0 (from file:///home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa)
- + cycler==0.12.1
- + datasets==4.2.0
- + dill==0.4.0
- + filelock==3.20.0
- + fonttools==4.60.1
- + frozenlist==1.8.0
- + fsspec==2025.9.0
- + gitdb==4.0.12
- + gitpython==3.1.45
- + greenlet==3.2.4
- + h11==0.16.0
- + hf-xet==1.1.10
- + httpcore==1.0.9
- + httpx==0.28.1
- + huggingface-hub==0.35.3
- + hydra-core==1.3.2
- + idna==3.11
- + jinja2==3.1.6
- + kiwisolver==1.4.9
- + mako==1.3.10
- + markupsafe==3.0.3
- + matplotlib==3.10.7
- + mpmath==1.3.0
- + multidict==6.7.0
- + multiprocess==0.70.16
- + networkx==3.5
- + numpy==2.3.4
- + nvidia-cublas-cu12==12.8.4.1
- + nvidia-cuda-cupti-cu12==12.8.90
- + nvidia-cuda-nvrtc-cu12==12.8.93
- + nvidia-cuda-runtime-cu12==12.8.90
- + nvidia-cudnn-cu12==9.10.2.21
- + nvidia-cufft-cu12==11.3.3.83
- + nvidia-cufile-cu12==1.13.1.3
- + nvidia-curand-cu12==10.3.9.90
- + nvidia-cusolver-cu12==11.7.3.90
- + nvidia-cusparse-cu12==12.5.8.93
- + nvidia-cusparselt-cu12==0.7.1
- + nvidia-nccl-cu12==2.27.5
- + nvidia-nvjitlink-cu12==12.8.93
- + nvidia-nvshmem-cu12==3.3.20
- + nvidia-nvtx-cu12==12.8.90
- + omegaconf==2.3.0
- + optuna==4.5.0
- + packaging==25.0
- + pandas==2.3.3
- + pillow==12.0.0
- + platformdirs==4.5.0
- + propcache==0.4.1
- + protobuf==6.33.0
- + pyarrow==21.0.0
- + pydantic==2.12.3
- + pydantic-core==2.41.4
- + pyparsing==3.2.5
- + python-dateutil==2.9.0.post0
- + pytz==2025.2
- + pyyaml==6.0.3
- + requests==2.32.5
- + safetensors==0.6.2
- + scipy==1.16.2
- + seaborn==0.13.2
- + sentry-sdk==2.42.1
- + six==1.17.0
- + smmap==5.0.2
- + sniffio==1.3.1
- + sqlalchemy==2.0.44
- + sympy==1.14.0
- + timm==1.0.20
- + torch==2.9.0
- + torchvision==0.24.0
- + tqdm==4.67.1
- + triton==3.5.0
- + typing-extensions==4.15.0
- + typing-inspection==0.4.2
- + tzdata==2025.2
- + urllib3==2.5.0
- + wandb==0.22.2
- + xxhash==3.6.0
- + yarl==1.22.0
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/main.py:13: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py:261: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  28%|██▊       | 14200/50000 [00:00<00:00, 139747.48 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 191414.34 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 115710.17 examples/s]
-Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 93387.30 examples/s]
-Using CPython 3.11.13
-Creating virtual environment at: .venv
-Resolved 121 packages in 133ms
-Installed 93 packages in 4.36s
+Resolved 121 packages in 587ms
+Installed 93 packages in 4.69s
  + aiohappyeyeballs==2.6.1
  + aiohttp==3.13.1
  + aiosignal==1.4.0
@@ -251,12 +132,12 @@ Will assume defaults for version 1.1
 /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
 See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
   ret = run_job(
-Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  32%|███▏      | 16200/50000 [00:00<00:00, 160481.92 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 205029.08 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 126655.45 examples/s]
-Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 95875.72 examples/s]
+Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  32%|███▏      | 15900/50000 [00:00<00:00, 157539.43 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 199360.55 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 123254.29 examples/s]
+Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 100109.17 examples/s]
 Using CPython 3.11.13
 Creating virtual environment at: .venv
-Resolved 121 packages in 682ms
-Installed 93 packages in 4.95s
+Resolved 121 packages in 166ms
+Installed 93 packages in 4.66s
  + aiohappyeyeballs==2.6.1
  + aiohttp==3.13.1
  + aiosignal==1.4.0
@@ -370,297 +251,29 @@ Will assume defaults for version 1.1
 /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
 See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
   ret = run_job(
-Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  33%|███▎      | 16400/50000 [00:00<00:00, 162620.27 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 204093.87 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 122411.04 examples/s]
-Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 98695.08 examples/s]
-Using CPython 3.11.13
-Creating virtual environment at: .venv
-Resolved 121 packages in 183ms
-Installed 93 packages in 4.62s
- + aiohappyeyeballs==2.6.1
- + aiohttp==3.13.1
- + aiosignal==1.4.0
- + alembic==1.17.0
- + annotated-types==0.7.0
- + antlr4-python3-runtime==4.9.3
- + anyio==4.11.0
- + attrs==25.4.0
- + certifi==2025.10.5
- + charset-normalizer==3.4.4
- + click==8.3.0
- + colorlog==6.10.1
- + contourpy==1.3.3
- + cw-tent-experiments==0.1.0 (from file:///home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa)
- + cycler==0.12.1
- + datasets==4.2.0
- + dill==0.4.0
- + filelock==3.20.0
- + fonttools==4.60.1
- + frozenlist==1.8.0
- + fsspec==2025.9.0
- + gitdb==4.0.12
- + gitpython==3.1.45
- + greenlet==3.2.4
- + h11==0.16.0
- + hf-xet==1.1.10
- + httpcore==1.0.9
- + httpx==0.28.1
- + huggingface-hub==0.35.3
- + hydra-core==1.3.2
- + idna==3.11
- + jinja2==3.1.6
- + kiwisolver==1.4.9
- + mako==1.3.10
- + markupsafe==3.0.3
- + matplotlib==3.10.7
- + mpmath==1.3.0
- + multidict==6.7.0
- + multiprocess==0.70.16
- + networkx==3.5
- + numpy==2.3.4
- + nvidia-cublas-cu12==12.8.4.1
- + nvidia-cuda-cupti-cu12==12.8.90
- + nvidia-cuda-nvrtc-cu12==12.8.93
- + nvidia-cuda-runtime-cu12==12.8.90
- + nvidia-cudnn-cu12==9.10.2.21
- + nvidia-cufft-cu12==11.3.3.83
- + nvidia-cufile-cu12==1.13.1.3
- + nvidia-curand-cu12==10.3.9.90
- + nvidia-cusolver-cu12==11.7.3.90
- + nvidia-cusparse-cu12==12.5.8.93
- + nvidia-cusparselt-cu12==0.7.1
- + nvidia-nccl-cu12==2.27.5
- + nvidia-nvjitlink-cu12==12.8.93
- + nvidia-nvshmem-cu12==3.3.20
- + nvidia-nvtx-cu12==12.8.90
- + omegaconf==2.3.0
- + optuna==4.5.0
- + packaging==25.0
- + pandas==2.3.3
- + pillow==12.0.0
- + platformdirs==4.5.0
- + propcache==0.4.1
- + protobuf==6.33.0
- + pyarrow==21.0.0
- + pydantic==2.12.3
- + pydantic-core==2.41.4
- + pyparsing==3.2.5
- + python-dateutil==2.9.0.post0
- + pytz==2025.2
- + pyyaml==6.0.3
- + requests==2.32.5
- + safetensors==0.6.2
- + scipy==1.16.2
- + seaborn==0.13.2
- + sentry-sdk==2.42.1
- + six==1.17.0
- + smmap==5.0.2
- + sniffio==1.3.1
- + sqlalchemy==2.0.44
- + sympy==1.14.0
- + timm==1.0.20
- + torch==2.9.0
- + torchvision==0.24.0
- + tqdm==4.67.1
- + triton==3.5.0
- + typing-extensions==4.15.0
- + typing-inspection==0.4.2
- + tzdata==2025.2
- + urllib3==2.5.0
- + wandb==0.22.2
- + xxhash==3.6.0
- + yarl==1.22.0
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/main.py:13: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py:261: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  29%|██▉       | 14500/50000 [00:00<00:00, 143899.53 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 195263.03 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 116602.57 examples/s]
-Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 89329.65 examples/s]
-Using CPython 3.11.13
-Creating virtual environment at: .venv
-Resolved 121 packages in 218ms
-Installed 93 packages in 4.98s
- + aiohappyeyeballs==2.6.1
- + aiohttp==3.13.1
- + aiosignal==1.4.0
- + alembic==1.17.0
- + annotated-types==0.7.0
- + antlr4-python3-runtime==4.9.3
- + anyio==4.11.0
- + attrs==25.4.0
- + certifi==2025.10.5
- + charset-normalizer==3.4.4
- + click==8.3.0
- + colorlog==6.10.1
- + contourpy==1.3.3
- + cw-tent-experiments==0.1.0 (from file:///home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa)
- + cycler==0.12.1
- + datasets==4.2.0
- + dill==0.4.0
- + filelock==3.20.0
- + fonttools==4.60.1
- + frozenlist==1.8.0
- + fsspec==2025.9.0
- + gitdb==4.0.12
- + gitpython==3.1.45
- + greenlet==3.2.4
- + h11==0.16.0
- + hf-xet==1.1.10
- + httpcore==1.0.9
- + httpx==0.28.1
- + huggingface-hub==0.35.3
- + hydra-core==1.3.2
- + idna==3.11
- + jinja2==3.1.6
- + kiwisolver==1.4.9
- + mako==1.3.10
- + markupsafe==3.0.3
- + matplotlib==3.10.7
- + mpmath==1.3.0
- + multidict==6.7.0
- + multiprocess==0.70.16
- + networkx==3.5
- + numpy==2.3.4
- + nvidia-cublas-cu12==12.8.4.1
- + nvidia-cuda-cupti-cu12==12.8.90
- + nvidia-cuda-nvrtc-cu12==12.8.93
- + nvidia-cuda-runtime-cu12==12.8.90
- + nvidia-cudnn-cu12==9.10.2.21
- + nvidia-cufft-cu12==11.3.3.83
- + nvidia-cufile-cu12==1.13.1.3
- + nvidia-curand-cu12==10.3.9.90
- + nvidia-cusolver-cu12==11.7.3.90
- + nvidia-cusparse-cu12==12.5.8.93
- + nvidia-cusparselt-cu12==0.7.1
- + nvidia-nccl-cu12==2.27.5
- + nvidia-nvjitlink-cu12==12.8.93
- + nvidia-nvshmem-cu12==3.3.20
- + nvidia-nvtx-cu12==12.8.90
- + omegaconf==2.3.0
- + optuna==4.5.0
- + packaging==25.0
- + pandas==2.3.3
- + pillow==12.0.0
- + platformdirs==4.5.0
- + propcache==0.4.1
- + protobuf==6.33.0
- + pyarrow==21.0.0
- + pydantic==2.12.3
- + pydantic-core==2.41.4
- + pyparsing==3.2.5
- + python-dateutil==2.9.0.post0
- + pytz==2025.2
- + pyyaml==6.0.3
- + requests==2.32.5
- + safetensors==0.6.2
- + scipy==1.16.2
- + seaborn==0.13.2
- + sentry-sdk==2.42.1
- + six==1.17.0
- + smmap==5.0.2
- + sniffio==1.3.1
- + sqlalchemy==2.0.44
- + sympy==1.14.0
- + timm==1.0.20
- + torch==2.9.0
- + torchvision==0.24.0
- + tqdm==4.67.1
- + triton==3.5.0
- + typing-extensions==4.15.0
- + typing-inspection==0.4.2
- + tzdata==2025.2
- + urllib3==2.5.0
- + wandb==0.22.2
- + xxhash==3.6.0
- + yarl==1.22.0
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/main.py:13: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'repr' attribute with value False was provided to the `Field()` function, which has no effect in the context it was used. 'repr' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/pydantic/_internal/_generate_schema.py:2249: UnsupportedFieldAttributeWarning: The 'frozen' attribute with value True was provided to the `Field()` function, which has no effect in the context it was used. 'frozen' is field-specific metadata, and can only be attached to a model field using `Annotated` metadata or by assignment. This may have happened because an `Annotated` type alias using the `type` statement was used, or if the `Field()` function was attached to a single member of a union type.
-  warnings.warn(
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py:261: UserWarning: 
-The version_base parameter is not specified.
-Please specify a compatability version level, or None.
-Will assume defaults for version 1.1
-  @hydra.main(config_path="../config", config_name="config")
-/home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/lib/python3.11/site-packages/hydra/_internal/hydra.py:119: UserWarning: Future Hydra versions will no longer change working directory at job runtime by default.
-See https://hydra.cc/docs/1.2/upgrades/1.1_to_1.2/changes_to_job_working_dir/ for more information.
-  ret = run_job(
-Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  21%|██        | 10300/50000 [00:00<00:00, 93527.80 examples/s]Generating train split:  57%|█████▋    | 28400/50000 [00:00<00:00, 141804.64 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 172707.58 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 104562.06 examples/s]
-Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 91429.57 examples/s]
+Generating train split:   0%|          | 0/50000 [00:00<?, ? examples/s]Generating train split:  32%|███▏      | 16100/50000 [00:00<00:00, 159143.24 examples/s]Generating train split:  85%|████████▌ | 42600/50000 [00:00<00:00, 205628.81 examples/s]Generating train split: 100%|██████████| 50000/50000 [00:00<00:00, 124750.87 examples/s]
+Generating test split:   0%|          | 0/10000 [00:00<?, ? examples/s]Generating test split: 100%|██████████| 10000/10000 [00:00<00:00, 102644.08 examples/s]
 
 # Standard Output:
-=== [UV SYNC] Start at Tue Oct 21 04:41:01 PM UTC 2025 ===
-=== [UV SYNC] Finished successfully at Tue Oct 21 04:41:06 PM UTC 2025 ===
-=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:41:06 PM UTC 2025 ===
-Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
-[2025-10-21 16:41:28,399][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-21 16:41:28,637][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-21 16:41:28,880][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+=== [UV SYNC] Start at Tue Oct 21 05:38:11 PM UTC 2025 ===
+=== [UV SYNC] Finished successfully at Tue Oct 21 05:38:16 PM UTC 2025 ===
+=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 05:38:16 PM UTC 2025 ===
+Launching: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration7 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+[2025-10-21 17:38:38,008][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 17:38:38,260][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 17:38:38,516][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
 Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
-=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:42:49 PM UTC 2025 ===
+=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 05:39:56 PM UTC 2025 ===
 
-=== [UV SYNC] Start at Tue Oct 21 04:43:53 PM UTC 2025 ===
-=== [UV SYNC] Finished successfully at Tue Oct 21 04:43:58 PM UTC 2025 ===
-=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:43:58 PM UTC 2025 ===
-Launching: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
-[2025-10-21 16:44:17,831][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-21 16:44:18,073][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-21 16:44:18,323][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+=== [UV SYNC] Start at Tue Oct 21 05:41:10 PM UTC 2025 ===
+=== [UV SYNC] Finished successfully at Tue Oct 21 05:41:15 PM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 05:41:15 PM UTC 2025 ===
+Launching: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration7 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+[2025-10-21 17:41:36,677][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 17:41:36,915][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 17:41:37,186][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
 Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
-=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:45:37 PM UTC 2025 ===
-
-=== [UV SYNC] Start at Tue Oct 21 04:48:14 PM UTC 2025 ===
-=== [UV SYNC] Finished successfully at Tue Oct 21 04:48:20 PM UTC 2025 ===
-=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:48:20 PM UTC 2025 ===
-Launching: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
-[2025-10-21 16:48:41,253][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-21 16:48:41,490][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-21 16:48:41,742][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
-=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:49:59 PM UTC 2025 ===
-
-=== [UV SYNC] Start at Tue Oct 21 04:52:08 PM UTC 2025 ===
-=== [UV SYNC] Finished successfully at Tue Oct 21 04:52:13 PM UTC 2025 ===
-=== [TRIAL RUN] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:52:13 PM UTC 2025 ===
-Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
-[2025-10-21 16:52:33,948][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-21 16:52:35,002][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-21 16:52:35,264][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
-=== [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:53:48 PM UTC 2025 ===
-
-=== [UV SYNC] Start at Tue Oct 21 04:54:59 PM UTC 2025 ===
-=== [UV SYNC] Finished successfully at Tue Oct 21 04:55:04 PM UTC 2025 ===
-=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:55:04 PM UTC 2025 ===
-Launching: /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
-[2025-10-21 16:55:27,768][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
-[2025-10-21 16:55:28,015][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
-[2025-10-21 16:55:28,296][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
-Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
-=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:56:54 PM UTC 2025 ===
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 05:42:56 PM UTC 2025 ===
 
 
 Output:
