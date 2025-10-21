@@ -48,7 +48,7 @@ jobs:
           else
             echo "is_empty=false" >> "$GITHUB_OUTPUT"
             CURRENT_ID=$(echo "$RUN_IDS" | jq -r '.[0]')
-            REMAINING_IDS=$(echo "$RUN_IDS" | jq -c '.[1:]')
+            REMAINING_IDS=$(echo "$RUN_IDS" | jq -c'.[1:]')
             echo "current_run_id=$CURRENT_ID" >> "$GITHUB_OUTPUT"
             echo "remaining_run_ids=$REMAINING_IDS" >> "$GITHUB_OUTPUT"
 
@@ -72,19 +72,21 @@ jobs:
       RUN_ID: ${{ needs.setup.outputs.current_run_id }}
 
       SYNC_COMMAND: "uv sync"
-      TRIAL_RUN_COMMAND_TEMPLATE: |
-        set -e
-        echo "=== [TRIAL RUN] Start for ${RUN_ID_PLACEHOLDER} at $(date -u) ===" | tee -a "$RESULTS_DIR/stdout.txt"
-
-        uv run python -m src.main \
-          run=${RUN_ID_PLACEHOLDER} \
-          results_dir="$RESULTS_DIR" \
-          wandb.mode=disabled \
-          trial_mode=true \
-          > >(tee -a "$RESULTS_DIR/stdout.txt") \
-          2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
-
-        echo -e "=== [TRIAL RUN] PASSED for ${RUN_ID_PLACEHOLDER} at $(date -u) ===\n" | tee -a "$RESULTS_DIR/stdout.txt"
+      TRIAL_RUN_COMMAND: |
+        set -o pipefail
+        (
+          echo "=== [UV SYNC] Start at $(date -u) ==="
+          uv sync
+          echo "=== [UV SYNC] Finished successfully at $(date -u) ==="
+        
+          echo "=== [TRIAL RUN] Start for $RUN_ID at $(date -u) ==="
+          uv run python -m src.main \
+            run=$RUN_ID \
+            results_dir="$RESULTS_DIR" \
+            wandb.mode=disabled \
+            trial_mode=true
+          echo -e "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===\n"
+        )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
 
     steps:
       - name: Checkout repository
@@ -101,17 +103,7 @@ jobs:
       - name: Run trial experiment
         id: run-exp
         continue-on-error: true
-        run: |
-          set -o pipefail
-          echo "=== [TRIAL RUN] Start for $RUN_ID at $(date -u) ===" | tee -a "$RESULTS_DIR/stdout.txt"
-          uv run python -m src.main \
-            run=$RUN_ID \
-            results_dir="$RESULTS_DIR" \
-            wandb.mode=disabled \
-            trial_mode=true \
-            > >(tee -a "$RESULTS_DIR/stdout.txt") \
-            2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
-          echo "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===" | tee -a "$RESULTS_DIR/stdout.txt"
+        run: bash -c "$TRIAL_RUN_COMMAND"
 
       - name: Check result
         run: |
@@ -126,7 +118,7 @@ jobs:
       - name: Upload results
         uses: actions/upload-artifact@v4
         with:
-          name: trial-results-${{ github.run.id }}
+          name: trial-results-${{ github.run.id }}-${{ env.RUN_ID }}
           path: .research/
 
   fix-and-rerun:
@@ -148,7 +140,7 @@ jobs:
           "https://huggingface.co/api/${RESOURCE_TYPE}" \
         | jq -r '(.results // .) | map(select(.gated == false and .private == false and .disabled == false)) | .[0]?.id // empty'
       PROMPT: |
-        Your task is to correct the code for the experiment associated with run ID ${{ github.event.inputs.run_id }}. 
+        Your task is to correct the code for the experiment associated with run ID ${{ needs.setup.outputs.current_run_id }}. 
         Your sole responsibility is to modify the code to ensure it is runnable; you are not to execute the experiment itself.
         You have been granted full tool access. 
         
@@ -168,7 +160,7 @@ jobs:
       - name: Download experiment results
         uses: actions/download-artifact@v4
         with:
-          name: trial-results-${{ github.run.id }}
+          name: trial-results-${{ github.run.id }}-${{ needs.setup.outputs.current_run_id }}
           path: .research/
 
       - name: Setup Node.js Environment
@@ -201,7 +193,16 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           WANDB_API_KEY: ${{ secrets.WANDB_API_KEY }}
         run: |
-          opencode run --model "${{ github.event.inputs.model_name }}" "Fix the code for run ID ${{ github.event.inputs.run_id }}"
+          for i in {1..10}; do
+            opencode run --model "${{ github.event.inputs.model_name }}" "$PROMPT" && break
+            if [ $i -lt 10 ]; then
+              echo "Attempt $i failed with exit code $?. Retrying in $((2**i)) seconds..."
+              sleep $((2**i))
+            else
+              echo "All 10 attempts failed."
+              exit 1
+            fi
+          done
 
       - name: Commit and push fix
         run: |
@@ -225,7 +226,7 @@ jobs:
         run: |
           echo "Re-running workflow"
           gh workflow run "${{ github.workflow }}" --ref ${{ github.ref }} \
-            -f run_id="${{ github.event.inputs.run_id }}" \
+            -f run_ids="${{ github.event.inputs.run_ids }}" \
             -f experiment_iteration="${{ github.event.inputs.experiment_iteration }}" \
             -f runner_type='${{ github.event.inputs.runner_type }}' \
             -f model_name="${{ github.event.inputs.model_name }}"
