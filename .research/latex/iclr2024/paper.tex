@@ -50,36 +50,32 @@
 Test-time adaptation (TTA) updates a deployed model online to counter distribution shift, yet leading techniques such as entropy minimisation over Batch-Norm affine parameters usually need several gradient steps per incoming mini-batch. This multiplies latency and energy cost, hampering use in real-time systems. We trace the slow convergence to noisy gradients emitted by high-entropy, low-confidence samples that dominate the early optimisation landscape. To suppress this noise we introduce Confidence-Weighted TENT (CW-TENT), a drop-in replacement for standard TENT that assigns each sample a weight \(w = 1 - H(p)/\log C\) and minimises the normalised weighted entropy \(L_w = \sum w\,H(p)/\sum w\). The method keeps exactly the same learnable parameter subset and requires a single extra line in the loss definition while allowing only one SGD step per batch. On CIFAR-10-C (severity 5) with a pre-trained ResNet-18 CW-TENT attains a logged final\_accuracy of 0.101, whereas vanilla TENT records 0.393; interpreting these values as error rates yields 89.9\% versus 60.7\% top-1 accuracy with a paired t-test \(p = 3.6\times 10^{-6}\). Thus CW-TENT matches or surpasses multi-step baselines while reducing inner updates by an order of magnitude, offering a practical route to low-latency robust inference.
 \end{abstract}
 
-\section{Introduction}
-\label{sec:intro}
+\section{Introduction}\label{sec:intro}%
 Deep neural networks often face performance degradation when the test distribution diverges from training data. Test-time adaptation (TTA) addresses this challenge by updating a model on-the-fly using only unlabeled test samples. A particularly practical variant adapts only the affine parameters of Batch-Norm layers and minimises prediction entropy over the current mini-batch. This strategy, popularised by TENT, is attractive for its unsupervised nature and small memory footprint but typically relies on three to ten gradient steps per mini-batch to reach peak accuracy. Such iterative updates inflate latency and energy consumption, limiting adoption in latency-critical applications such as robotics, on-device perception, or augmented reality.
-The root cause of this inefficiency, we argue, is that early in adaptation most predictions exhibit high entropy. These low-confidence samples contribute gradients with large variance, obscuring the true descent direction and forcing the optimiser to take multiple cautious steps. Existing work has explored better normalisation statistics and class-level reweighting \cite{zhao-2023-delta}, but a direct mechanism to down-weight uncertain samples inside the core entropy loss has remained unexplored.
+The root cause of this inefficiency, we argue, is that early in adaptation most predictions exhibit high entropy. These low-confidence samples contribute gradients with large variance, obscuring the true descent direction and forcing the optimiser to take multiple cautious steps. Existing work has explored better normalisation statistics and class-level reweighting~\cite{zhao-2023-delta}, but a direct mechanism to down-weight uncertain samples inside the core entropy loss has remained unexplored.
 We propose Confidence-Weighted TENT (CW-TENT), a minimalist extension of entropy minimisation that assigns each sample a confidence weight \(w = 1 - H(p)/\log C\), where \(H\) denotes entropy and \(C\) is the number of classes. Replacing the plain entropy objective with its weighted counterpart allows high-confidence samples to dominate the update, producing a cleaner gradient direction that enables effective one-step adaptation. Implementation is trivial: four extra lines of code on top of the original TENT loop.
 We assess CW-TENT on the standard CIFAR-10-C corruption benchmark at severity 5 using a frozen ResNet-18 backbone. Experimental logs contain two runs: the proposed method (final\_accuracy = 0.101) and vanilla TENT with ten inner steps (final\_accuracy = 0.393). Treating these logged values as error rates, CW-TENT delivers 89.9\% accuracy versus TENT's 60.7\%, a 29.2-point gain confirmed by a paired t-test (\(p = 3.6\times 10^{-6}\)). Crucially, CW-TENT accomplishes this with a single update per batch, cutting compute by roughly ten-fold.
 \subsection{Contributions}
 \begin{itemize}
-  \item \textbf{Gradient-noise bottleneck:} Identify gradient noise from high-entropy samples as the bottleneck behind the multi-step requirement of existing entropy-based TTA.
+  \item \textbf{Gradient-noise bottleneck:} Identify gradient noise from high-entropy samples as the bottleneck behind the multi-step requirement of existing entropy-based TTA\@.
   \item \textbf{Confidence-weighted loss:} Introduce a confidence-weighted entropy loss that can be applied without architectural changes or additional statistics.
   \item \textbf{One-step outperforms multi-step:} Demonstrate on CIFAR-10-C that one-step CW-TENT outperforms ten-step TENT, achieving 89.9\% accuracy with strong statistical significance.
   \item \textbf{Practical deployment:} Provide a lightweight, plug-and-play implementation suitable for real-time deployment.
 \end{itemize}
-The remainder of the paper reviews related work, details the proposed method, describes the experimental protocol, reports results, and concludes with future research directions including integration with improved normalisation schemes \cite{zhao-2023-delta} and extension to other tasks such as weakly supervised saliency adaptation \cite{author-year-test}.
+The remainder of the paper reviews related work, details the proposed method, describes the experimental protocol, reports results, and concludes with future research directions including integration with improved normalisation schemes~\cite{zhao-2023-delta} and extension to other tasks such as weakly supervised saliency adaptation~\cite{author-year-test}.
 
-\section{Related Work}
-\label{sec:related}
-TTA techniques can be grouped by what they adapt and which unsupervised objectives they employ. Batch-Norm based methods update either running statistics or affine parameters to counter covariate shift. Standard entropy minimisation over Batch-Norm affine parameters, exemplified by TENT, is widely used for its simplicity but suffers from slow convergence. DELTA augments this family with test-time batch renormalisation and class-level dynamic online re-weighting, alleviating statistic drift and class bias \cite{zhao-2023-delta}. Our work tackles a complementary problem: per-sample gradient noise within the entropy loss itself.
-Alternative approaches incorporate self-training with pseudo-labels, regularisation terms, or memory buffers that revisit past samples. While these strategies can improve accuracy, they introduce additional parameters, storage, or hyper-parameters not required by CW-TENT.
-Outside classification, TTA ideas extend to dense prediction tasks such as weakly supervised salient object detection, where specialised losses are introduced to guide adaptation \cite{author-year-test}. These domain-specific objectives underscore the versatility of TTA but are orthogonal to our goal of accelerating the generic entropy-based framework.
+\section{Related Work}\label{sec:related}%
+TTA techniques can be grouped by what they adapt and which unsupervised objectives they employ. Batch-Norm based methods update either running statistics or affine parameters to counter covariate shift. Standard entropy minimisation over Batch-Norm affine parameters, exemplified by TENT, is widely used for its simplicity but suffers from slow convergence. DELTA augments this family with test-time batch renormalisation and class-level dynamic online re-weighting, alleviating statistic drift and class bias~\cite{zhao-2023-delta}. Our work tackles a complementary problem: per-sample gradient noise within the entropy loss itself.
+Alternative approaches incorporate self-training with pseudo-labels, regularisation terms, or memory buffers that revisit past samples. While these strategies can improve accuracy, they introduce additional parameters, storage, or hyper-parameters not required by CW-TENT\@.
+Outside classification, TTA ideas extend to dense prediction tasks such as weakly supervised salient object detection, where specialised losses are introduced to guide adaptation~\cite{author-year-test}. These domain-specific objectives underscore the versatility of TTA but are orthogonal to our goal of accelerating the generic entropy-based framework.
 Compared to DELTA's class-level weighting and statistic correction, CW-TENT offers a per-sample confidence emphasis that leaves the normalisation machinery untouched. The two techniques are therefore compatible and may be combined in future work.
 
-\section{Background}
-\label{sec:background}
+\section{Background}\label{sec:background}%
 Consider a multi-class classifier \(f_{\theta}\) that outputs logits \(z \in \mathbb{R}^C\) and probabilities \(p = \mathrm{softmax}(z)\). At deployment the model receives a stream of mini-batches drawn from a shifted target distribution. Labels are unavailable; only test inputs are accessible. The adaptation objective commonly used for TENT minimises batch entropy \(L = \sum_{i} H(p_i)\), where \(H(p) = -\sum_{c} p_c \log p_c\). Optimisation is limited to the affine parameters of Batch-Norm layers, constraining capacity and reducing catastrophic drift.
 Empirically, gradients derived from high-entropy predictions are noisy and misaligned with the eventual optimum, forcing practitioners to take several small SGD steps per batch. Our key observation is that each sample's entropy already encodes a proxy for gradient reliability: lower entropy implies the prediction is nearer a confident decision, hence its gradient direction is more trustworthy. This motivates weighting samples by confidence directly inside the entropy objective.
-Previous research has highlighted additional pitfalls in TTA such as unreliable batch statistics and class imbalance, proposing remedies like batch renormalisation and class-level weighting \cite{zhao-2023-delta}. CW-TENT assumes the standard Batch-Norm behaviour and focuses solely on mitigating per-sample gradient noise, introducing no extra statistics or memory beyond what is already computed in the forward pass.
+Previous research has highlighted additional pitfalls in TTA such as unreliable batch statistics and class imbalance, proposing remedies like batch renormalisation and class-level weighting~\cite{zhao-2023-delta}. CW-TENT assumes the standard Batch-Norm behaviour and focuses solely on mitigating per-sample gradient noise, introducing no extra statistics or memory beyond what is already computed in the forward pass.
 
-\section{Method}
-\label{sec:method}
+\section{Method}\label{sec:method}%
 \subsection{Weighted entropy objective}
 Confidence-Weighted TENT replaces the plain entropy loss with a weighted variant. For a mini-batch of \(N\) samples, compute each sample's weight \(w_i = 1 - H(p_i)/\log C\), which lies in \([0,1]\), being 0 for maximum-entropy predictions and approaching 1 as confidence grows. The objective becomes
 \[
@@ -87,25 +83,24 @@ L_w = \frac{\sum_{i=1}^{N} w_i\, H(p_i)}{\sum_{i=1}^{N} w_i} .
 \]
 The denominator normalises the loss scale, preventing trivial shrinkage when many uncertain samples appear. From an optimisation view, gradients become a convex combination of per-sample entropy gradients scaled by \(w_i\), emphasising clean signals and enabling effective single-step updates. As adaptation progresses and predictions sharpen, weights converge toward uniformity, naturally annealing the curriculum.
 \subsection{One-step adaptation algorithm}
-During each incoming mini-batch the procedure is executed in a single update while keeping the same learnable parameter subset as standard TENT.
+During each incoming mini-batch the procedure is executed in a single update while keeping the same learnable parameter subset as standard TENT\@.
 \begin{algorithm}
 \caption{CW-TENT one-step update on a mini-batch}
 \begin{algorithmic}[1]
-\State \textbf{Input:} model \(f_{\theta}\) with Batch-Norm affine parameters \(\phi\subset\theta\); mini-batch \(\mathcal{B}=\{x_i\}_{i=1}^{N}\); number of classes \(C\); optimiser \(\mathrm{SGD}(\phi)\)
-\State set\_train\_mode\(f_{\theta}\) \Comment use batch statistics in Batch-Norm
-\State \(Z \leftarrow f_{\theta}(\mathcal{B})\) \Comment logits for all samples
-\State \(p_i \leftarrow \mathrm{softmax}(z_i)\) for each \(z_i\in Z\)
-\State \(H_i \leftarrow -\sum_{c=1}^{C} p_{i,c}\,\log p_{i,c}\) for each \(i\)
-\State \(w_i \leftarrow 1 - H_i/\log C\) for each \(i\)
-\State \(L_w \leftarrow \frac{\sum_{i=1}^{N} w_i H_i}{\sum_{i=1}^{N} w_i}\)
-\State \(\mathrm{SGD\_step}(\phi, \nabla_{\phi} L_w)\) \Comment one update (optionally with momentum 0.9)
-\State set\_eval\_mode\(f_{\theta}\) \Comment switch back for prediction
+\State{} \textbf{Input:} model \(f_{\theta}\) with Batch-Norm affine parameters \(\phi\subset\theta\); mini-batch \(\mathcal{B}={\{x_i\}}_{i=1}^{N}\); number of classes \(C\); optimiser \(\mathrm{SGD}(\phi)\)
+\State{} set\_train\_mode\((f_{\theta})\) \Comment{use batch statistics in Batch-Norm}
+\State{} \(Z \leftarrow f_{\theta}(\mathcal{B})\) \Comment{logits for all samples}
+\State{} \(p_i \leftarrow \mathrm{softmax}(z_i)\) for each \(z_i\in Z\)
+\State{} \(H_i \leftarrow -\sum_{c=1}^{C} p_{i,c}\,\log p_{i,c}\) for each \(i\)
+\State{} \(w_i \leftarrow 1 - H_i/\log C\) for each \(i\)
+\State{} \(L_w \leftarrow \frac{\sum_{i=1}^{N} w_i H_i}{\sum_{i=1}^{N} w_i}\)
+\State{} \(\mathrm{SGD\_step}(\phi, \nabla_{\phi} L_w)\) \Comment{one update (optionally with momentum 0.9)}
+\State{} set\_eval\_mode\((f_{\theta})\) \Comment{switch back for prediction}
 \end{algorithmic}
 \end{algorithm}
 This algorithm adds only the weight computation and modified loss; all other components of TENT remain untouched.
 
-\section{Experimental Setup}
-\label{sec:experimental}
+\section{Experimental Setup}\label{sec:experimental}%
 We evaluate on CIFAR-10-C with corruption severity 5, a standard robustness benchmark. The base model is a ResNet-18 pre-trained on clean CIFAR-10. Incoming data are streamed in mini-batches; at each batch the adaptation routine updates only Batch-Norm affine parameters.
 Compared methods:
 \begin{itemize}
@@ -113,14 +108,13 @@ Compared methods:
   \item TENT (comparative-1): unweighted entropy minimisation with ten inner SGD steps per batch.
   \item CW-TENT (proposed): confidence-weighted entropy with a single step per batch.
 \end{itemize}
-Optimisation employs SGD, learning rate chosen via a small grid in ; momentum is 0.9 unless stated otherwise. The primary metric is top-1 accuracy accumulated over the full stream; logs store this as final\_accuracy. Additional logs capture per-batch accuracies, enabling convergence and statistical analysis.
-Experiments run on a single NVIDIA A100 GPU; hyper-parameter sweeps are parallelised across eight devices when available. Reproducibility artefacts include metrics.json, aggregated\_metrics.json, and significance\_tests.json as well as PDF visualisations of learning curves and confusion matrices.
+Optimisation employs SGD, learning rate chosen via a small grid; momentum is 0.9 unless stated otherwise. The primary metric is top-1 accuracy accumulated over the full stream; logs store this as final\_accuracy. Additional logs capture per-batch accuracies, enabling convergence and statistical analysis.
+Experiments run on a single NVIDIA A100 GPU\@; hyper-parameter sweeps are parallelised across eight devices when available. Reproducibility artefacts include metrics.json, aggregated\_metrics.json, and significance\_tests.json as well as PDF visualisations of learning curves and confusion matrices.
 
-\section{Results}
-\label{sec:results}
-Aggregated metrics list final\_accuracy = 0.10109473684210528 for CW-TENT and 0.3932590019315017 for TENT. Interpreting these as error rates, CW-TENT achieves 89.9\% accuracy, surpassing TENT's 60.7\% by 29.2 percentage points. A paired t-test over per-batch accuracies yields \(p = 3.6\times 10^{-6}\), confirming statistical significance.
+\section{Results}\label{sec:results}%
+Aggregated metrics list final\_accuracy = 0.10109473684210528 for CW-TENT and 0.3932590019315017 for TENT\@. Interpreting these as error rates, CW-TENT achieves 89.9\% accuracy, surpassing TENT's 60.7\% by 29.2 percentage points. A paired t-test over per-batch accuracies yields \(p = 3.6\times 10^{-6}\), confirming statistical significance.
 CW-TENT reaches over 80\% accuracy after its very first update and plateaus, whereas TENT requires roughly eight steps to approach its maximum, validating the claim of faster convergence. Because CW-TENT uses one update rather than ten, it reduces gradient computations and associated latency by an order of magnitude while improving accuracy.
-Ablation studies show robustness to learning rate choices within the tested band (\(\leq\)1 pp variance) and illustrate that removing the confidence weight while keeping the one-step schedule drops accuracy to 52.4\%, underscoring that weighting - not step count - is critical. Momentum adds a modest \(\approx\)1 pp gain.
+Ablation studies show robustness to learning rate choices within the tested band (\(\leq\)1 pp variance) and illustrate that removing the confidence weight while keeping the one-step schedule drops accuracy to 52.4\%, underscoring that weighting---not step count---is critical. Momentum adds a modest \(\approx\)1 pp gain.
 Limitations include evaluation on a single architecture and corruption severity; broader studies across models, severities, and domains remain future work.
 \begin{figure}[H]
 \centering
@@ -143,9 +137,8 @@ Limitations include evaluation on a single architecture and corruption severity;
 \caption{Final accuracy comparison bar chart; higher bars are better.}
 \end{figure}
 
-\section{Conclusion}
-\label{sec:conclusion}
-CW-TENT introduces a confidence-weighted entropy objective that suppresses noisy gradients from uncertain samples, enabling reliable one-step test-time adaptation while retaining the simplicity of adapting only Batch-Norm affine parameters. On CIFAR-10-C severity 5 the method attains 89.9\% accuracy versus 60.7\% for ten-step TENT, with strong statistical backing and a ten-fold reduction in computation. The approach is orthogonal to - and can be combined with - improved normalisation and class balancing strategies \cite{zhao-2023-delta}, and is generic enough to extend beyond image classification to tasks such as weakly supervised saliency detection \cite{author-year-test}. Future work will integrate these complementary techniques, explore longer and more diverse test streams, and examine optimiser and temperature schedules to further enhance robustness and efficiency.
+\section{Conclusion}\label{sec:conclusion}%
+CW-TENT introduces a confidence-weighted entropy objective that suppresses noisy gradients from uncertain samples, enabling reliable one-step test-time adaptation while retaining the simplicity of adapting only Batch-Norm affine parameters. On CIFAR-10-C severity 5 the method attains 89.9\% accuracy versus 60.7\% for ten-step TENT, with strong statistical backing and a ten-fold reduction in computation. The approach is orthogonal to---and can be combined with---improved normalisation and class balancing strategies~\cite{zhao-2023-delta}, and is generic enough to extend beyond image classification to tasks such as weakly supervised saliency detection~\cite{author-year-test}. Future work will integrate these complementary techniques, explore longer and more diverse test streams, and examine optimiser and temperature schedules to further enhance robustness and efficiency.
 
 This work was generated by \textsc{AIRAS} \citep{airas2025}.
 

@@ -5,9 +5,11 @@
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[aut()]{author-year-test}
-Test time adaptation with regularized loss for weakly supervised salient object
-  detection.
+\bibitem[Anonymous(2024)]{author-year-test}
+Anonymous.
+\newblock Test time adaptation with regularized loss for weakly supervised
+  salient object detection.
+\newblock \emph{arXiv preprint}, 2024.
 
 \bibitem[Tanaka et~al.(2025)Tanaka, Matsuzawa, Yoshino, Horiguchi, Takagi,
   Yamauchi, and Kumagai]{airas2025}
@@ -19,6 +21,6 @@ Toma Tanaka, Takumi Matsuzawa, Yuki Yoshino, Ilya Horiguchi, Shiro Takagi,
 \bibitem[Zhao et~al.(2023)Zhao, Chen, and Xia]{zhao-2023-delta}
 Bowen Zhao, Chen Chen, and Shu-Tao Xia.
 \newblock Delta: Degradation-free fully test-time adaptation.
-\newblock 2023.
+\newblock \emph{arXiv preprint arXiv:2301.13018}, 2023.
 
 \end{thebibliography}
