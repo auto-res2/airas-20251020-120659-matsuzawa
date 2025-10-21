@@ -212,8 +212,8 @@
   "readme_upload_result": true,
   "paper_review_scores": {
     "novelty_score": 5,
-    "significance_score": 5,
-    "reproducibility_score": 6,
+    "significance_score": 4,
+    "reproducibility_score": 7,
     "experimental_quality_score": 4
   }
 }
