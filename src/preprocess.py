@@ -98,12 +98,11 @@ class CIFAR10C(Dataset):
         return len(self.ds) * len(self.corruption_types)
 
     def __getitem__(self, idx):
-        # Determine which corruption type and base image to use
         corruption_idx = idx % len(self.corruption_types)
         base_idx = idx // len(self.corruption_types)
         
         record = self.ds[base_idx]
-        img = record["img"]
+        img = record["image"]
         label = int(record["label"])
         
         # Apply the selected corruption
