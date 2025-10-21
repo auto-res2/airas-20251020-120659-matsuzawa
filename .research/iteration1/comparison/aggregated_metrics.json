@@ -5,6 +5,6 @@
   },
   {
     "run_id": "comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5",
-    "final_accuracy": 0.4174605185827368
+    "final_accuracy": 0.394408829476159
   }
 ]

@@ -21,7 +21,7 @@ def mkdir(p: Path) -> None:
     p.mkdir(parents=True, exist_ok=True)
 
 
-def save_json(obj: Dict, path: Path) -> None:
+def save_json(obj, path: Path) -> None:
     with open(path, "w") as f:
         json.dump(obj, f, indent=2)
 
@@ -32,23 +32,24 @@ def save_json(obj: Dict, path: Path) -> None:
 def plot_learning_curve(df: pd.DataFrame, run_id: str, out_path: Path) -> None:
     if df.empty or "batch_acc" not in df.columns:
         return
-    plt.figure(figsize=(8, 5))
-    plt.rcParams.update({'font.size': 12})
+    plt.figure(figsize=(10, 6))
+    plt.rcParams.update({'font.size': 14})
     
-    sns.lineplot(data=df, x="step", y="batch_acc", linewidth=2, markersize=4, markevery=max(1, len(df)//20))
+    sns.lineplot(data=df, x="step", y="batch_acc", linewidth=2.5, markersize=6, markevery=max(1, len(df)//20))
     
     short_id = run_id.split("--")[0] if "--" in run_id else run_id
-    plt.title(f"Learning Curve: {short_id}", fontsize=14, fontweight='bold')
-    plt.xlabel("Step", fontsize=12)
-    plt.ylabel("Batch Accuracy", fontsize=12)
+    plt.title(f"Learning Curve: {short_id}", fontsize=18, fontweight='bold', pad=15)
+    plt.xlabel("Step", fontsize=16, fontweight='bold')
+    plt.ylabel("Batch Accuracy", fontsize=16, fontweight='bold')
     plt.ylim(0, 1.0)
-    plt.grid(True, alpha=0.3)
+    plt.grid(True, alpha=0.3, linewidth=0.8)
+    plt.tick_params(axis='both', which='major', labelsize=14)
     
     best = df["batch_acc"].max()
     final = df["batch_acc"].iloc[-1]
     plt.text(0.02, 0.98, f"Best: {best:.3f}\nFinal: {final:.3f}", 
-             transform=plt.gca().transAxes, fontsize=11,
-             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.8))
+             transform=plt.gca().transAxes, fontsize=13, fontweight='bold',
+             verticalalignment='top', bbox=dict(boxstyle='round', facecolor='white', alpha=0.9, edgecolor='black', linewidth=1.5))
     
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
@@ -58,16 +59,19 @@ def plot_learning_curve(df: pd.DataFrame, run_id: str, out_path: Path) -> None:
 def plot_confusion_matrix(cm: np.ndarray, run_id: str, out_path: Path) -> None:
     if cm.size == 0:
         return
-    plt.figure(figsize=(8, 6))
-    plt.rcParams.update({'font.size': 10})
+    plt.figure(figsize=(10, 8))
+    plt.rcParams.update({'font.size': 12})
     
-    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", cbar_kws={'label': 'Count'}, 
-                annot_kws={'size': 9})
+    sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", 
+                cbar_kws={'label': 'Count', 'shrink': 0.8}, 
+                annot_kws={'size': 11, 'fontweight': 'bold'},
+                linewidths=0.5, linecolor='gray')
     
     short_id = run_id.split("--")[0] if "--" in run_id else run_id
-    plt.title(f"Confusion Matrix: {short_id}", fontsize=14, fontweight='bold')
-    plt.ylabel("True Label", fontsize=12)
-    plt.xlabel("Predicted Label", fontsize=12)
+    plt.title(f"Confusion Matrix: {short_id}", fontsize=18, fontweight='bold', pad=15)
+    plt.ylabel("True Label", fontsize=16, fontweight='bold')
+    plt.xlabel("Predicted Label", fontsize=16, fontweight='bold')
+    plt.tick_params(axis='both', which='major', labelsize=13)
     
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
@@ -77,26 +81,32 @@ def plot_confusion_matrix(cm: np.ndarray, run_id: str, out_path: Path) -> None:
 def plot_bar_comparison(df: pd.DataFrame, out_path: Path) -> None:
     if df.empty:
         return
-    plt.figure(figsize=(10, 6))
-    plt.rcParams.update({'font.size': 12})
+    plt.figure(figsize=(12, 7))
+    plt.rcParams.update({'font.size': 14})
     
     short_ids = [rid.split("--")[0] if "--" in rid else rid for rid in df["run_id"]]
     df_plot = df.copy()
     df_plot["short_id"] = short_ids
     
-    ax = sns.barplot(data=df_plot, x="short_id", y="final_accuracy", palette="Set2")
+    ax = sns.barplot(data=df_plot, x="short_id", y="final_accuracy", palette="Set2", hue="short_id", legend=False)
     
-    plt.title("Final Accuracy Comparison", fontsize=16, fontweight='bold', pad=20)
-    plt.ylabel("Final Accuracy", fontsize=13)
-    plt.xlabel("Run ID", fontsize=13)
-    plt.ylim(0, max(1.0, df["final_accuracy"].max() * 1.15))
-    plt.grid(axis='y', alpha=0.3)
+    plt.title("Final Accuracy Comparison", fontsize=20, fontweight='bold', pad=20)
+    plt.ylabel("Final Accuracy", fontsize=18, fontweight='bold')
+    plt.xlabel("Run ID", fontsize=18, fontweight='bold')
     
-    for i, row in df.iterrows():
-        ax.text(i, row["final_accuracy"] + 0.02, f"{row['final_accuracy']:.3f}", 
-                ha="center", fontsize=11, fontweight='bold')
+    y_max = float(df["final_accuracy"].max())
+    plt.ylim(0, min(1.0, y_max * 1.2))
+    plt.grid(axis='y', alpha=0.4, linewidth=0.8)
+    plt.tick_params(axis='both', which='major', labelsize=15)
     
-    plt.xticks(rotation=45, ha="right", fontsize=11)
+    for i in range(len(df)):
+        height = float(df.iloc[i]["final_accuracy"])
+        offset = (y_max * 1.2) * 0.03
+        ax.text(i, height + offset, f"{height:.3f}", 
+                ha="center", va='bottom', fontsize=14, fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='black', linewidth=1))
+    
+    plt.xticks(rotation=45, ha="right", fontsize=14)
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
     plt.close()
@@ -105,8 +115,8 @@ def plot_bar_comparison(df: pd.DataFrame, out_path: Path) -> None:
 def plot_batch_acc_distribution(batch_dict: Dict[str, List[float]], out_path: Path) -> None:
     if not batch_dict:
         return
-    plt.figure(figsize=(10, 6))
-    plt.rcParams.update({'font.size': 12})
+    plt.figure(figsize=(12, 7))
+    plt.rcParams.update({'font.size': 14})
     
     records = []
     for rid, vals in batch_dict.items():
@@ -115,15 +125,16 @@ def plot_batch_acc_distribution(batch_dict: Dict[str, List[float]], out_path: Pa
             records.append({"run_id": rid, "short_id": short_id, "batch_acc": v})
     df = pd.DataFrame(records)
     
-    sns.boxplot(data=df, x="short_id", y="batch_acc", palette="Set2")
+    sns.boxplot(data=df, x="short_id", y="batch_acc", palette="Set2", hue="short_id", legend=False)
     
-    plt.title("Batch Accuracy Distribution Across Runs", fontsize=16, fontweight='bold', pad=20)
-    plt.ylabel("Batch Accuracy", fontsize=13)
-    plt.xlabel("Run ID", fontsize=13)
+    plt.title("Batch Accuracy Distribution Across Runs", fontsize=20, fontweight='bold', pad=20)
+    plt.ylabel("Batch Accuracy", fontsize=18, fontweight='bold')
+    plt.xlabel("Run ID", fontsize=18, fontweight='bold')
     plt.ylim(0, 1.0)
-    plt.grid(axis='y', alpha=0.3)
+    plt.grid(axis='y', alpha=0.4, linewidth=0.8)
+    plt.tick_params(axis='both', which='major', labelsize=15)
     
-    plt.xticks(rotation=45, ha="right", fontsize=11)
+    plt.xticks(rotation=45, ha="right", fontsize=14)
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
     plt.close()
@@ -197,8 +208,10 @@ def aggregated_analysis(all_metrics: List[Dict], batch_dict: Dict[str, List[floa
             r1, r2 = run_ids[i], run_ids[j]
             vals1, vals2 = batch_dict[r1], batch_dict[r2]
             if len(vals1) > 1 and len(vals2) > 1:
-                t_stat, p_val = stats.ttest_ind(vals1, vals2, equal_var=False)
-                sig_results[f"{r1}_vs_{r2}"] = {"t_stat": float(t_stat), "p_value": float(p_val)}
+                t_result = stats.ttest_ind(vals1, vals2, equal_var=False)
+                t_stat_val: float = float(t_result[0])
+                p_val_val: float = float(t_result[1])
+                sig_results[f"{r1}_vs_{r2}"] = {"t_stat": t_stat_val, "p_value": p_val_val}
     save_json(sig_results, comparison_dir / "significance_tests.json")
     print(str(comparison_dir / "significance_tests.json"))
 
