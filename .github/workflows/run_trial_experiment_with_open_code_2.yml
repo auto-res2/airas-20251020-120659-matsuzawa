@@ -106,6 +106,7 @@ jobs:
           )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
 
       - name: Check result
+        id: check-result
         run: |
           if [[ "${{ steps.run-exp.outcome }}" == "success" && $(grep -q "=== \[TRIAL RUN\] PASSED" "$RESULTS_DIR/stdout.txt") ]]; then
             echo "✅ Trial passed for $RUN_ID"
