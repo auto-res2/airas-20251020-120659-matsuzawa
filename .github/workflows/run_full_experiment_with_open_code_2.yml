@@ -82,7 +82,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: experiment-results-${{ github.run.id }}
-          path: .research/
+          path: ${{ env.RESULTS_DIR }}
 
 
   fix-and-rerun:
@@ -125,7 +125,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: experiment-results-${{ github.run.id }}
-          path: .research/
+          path: ${{ env.RESULTS_DIR }}
 
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
