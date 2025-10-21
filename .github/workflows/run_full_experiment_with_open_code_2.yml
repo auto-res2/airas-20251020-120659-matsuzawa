@@ -94,6 +94,7 @@ jobs:
     timeout-minutes: 60
 
     env: 
+      RESULTS_DIR: ".research/iteration${{ github.event.inputs.experiment_iteration }}"
       SEARCH_HF_COMMAND: |
         curl -s -G \
           -H "Authorization: Bearer $HF_TOKEN" \
