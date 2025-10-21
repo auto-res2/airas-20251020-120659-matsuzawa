@@ -105,7 +105,7 @@ jobs:
           "https://huggingface.co/api/${RESOURCE_TYPE}" \
         | jq -r '(.results // .) | map(select(.gated == false and .private == false and .disabled == false)) | .[0]?.id // empty'
       PROMPT: |
-        Your task is to correct the code for the experiment associated with run ID ${{ needs.setup.outputs.current_run_id }}. 
+        Your task is to correct the code for the experiment associated with run ID ${{ github.event.inputs.run_id }}.
         You have been granted full tool access. 
 
         Your operational environment is a standard CPU-only runner without GPUs. 
@@ -196,6 +196,9 @@ jobs:
       needs: run-experiment
       if: needs.run-experiment.outputs.experiment_passed == 'true'
 
+      env:
+        RESULTS_DIR: ".research/iteration${{ github.event.inputs.experiment_iteration }}"
+
       steps:
         - name: Checkout repository
           uses: actions/checkout@v4
@@ -204,7 +207,8 @@ jobs:
           uses: actions/download-artifact@v4
           with:
             name: experiment-results-${{ github.run.id }}
-            path: .research/
+            path: ${{ env.RESULTS_DIR }}
+
 
         - name: Commit and push experiment results
           run: |
