@@ -236,6 +236,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Commit and push successful trial result
         run: |
           git config --local user.name "github-actions[bot]"
