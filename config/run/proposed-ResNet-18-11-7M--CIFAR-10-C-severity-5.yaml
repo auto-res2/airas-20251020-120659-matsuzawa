@@ -52,4 +52,4 @@ optuna:
 other:
   seed: 42
   device: cuda
-  num_workers: 8
+  num_workers: 4

@@ -4,18 +4,67 @@ import torch
 import torchvision.transforms as T
 from datasets import load_dataset
 from torch.utils.data import DataLoader, Dataset
+from PIL import Image, ImageFilter, ImageEnhance
+import numpy as np
 
 # CIFAR-10 statistics -----------------------------------------------------------------------------
 CIFAR_MEAN = (0.4914, 0.4822, 0.4465)
 CIFAR_STD = (0.2023, 0.1994, 0.2010)
 
 ########################################################################################################################
-# Dataset wrapper (CIFAR-10-C)
+# Synthetic corruption functions (simplified CIFAR-10-C alternatives)
+########################################################################################################################
+
+def apply_gaussian_noise(img: Image.Image, severity: int) -> Image.Image:
+    """Apply Gaussian noise to image."""
+    arr = np.array(img).astype(np.float32)
+    std = [0.04, 0.06, 0.08, 0.09, 0.10][severity - 1] * 255
+    noise = np.random.normal(0, std, arr.shape)
+    noisy = np.clip(arr + noise, 0, 255).astype(np.uint8)
+    return Image.fromarray(noisy)
+
+def apply_gaussian_blur(img: Image.Image, severity: int) -> Image.Image:
+    """Apply Gaussian blur to image."""
+    radius = [0.5, 0.75, 1.0, 1.25, 1.5][severity - 1]
+    return img.filter(ImageFilter.GaussianBlur(radius=radius))
+
+def apply_brightness(img: Image.Image, severity: int) -> Image.Image:
+    """Adjust image brightness."""
+    factor = [1.3, 1.5, 1.7, 1.9, 2.1][severity - 1]
+    enhancer = ImageEnhance.Brightness(img)
+    return enhancer.enhance(factor)
+
+def apply_contrast(img: Image.Image, severity: int) -> Image.Image:
+    """Adjust image contrast."""
+    factor = [0.5, 0.4, 0.3, 0.2, 0.1][severity - 1]
+    enhancer = ImageEnhance.Contrast(img)
+    return enhancer.enhance(factor)
+
+def apply_jpeg_compression(img: Image.Image, severity: int) -> Image.Image:
+    """Apply JPEG compression artifacts."""
+    import io
+    quality = [80, 65, 50, 35, 20][severity - 1]
+    buffer = io.BytesIO()
+    img.save(buffer, format='JPEG', quality=quality)
+    buffer.seek(0)
+    return Image.open(buffer)
+
+# Map of available corruption types
+CORRUPTION_FUNCTIONS = {
+    'gaussian_noise': apply_gaussian_noise,
+    'gaussian_blur': apply_gaussian_blur,
+    'brightness': apply_brightness,
+    'contrast': apply_contrast,
+    'jpeg_compression': apply_jpeg_compression,
+}
+
+########################################################################################################################
+# Dataset wrapper (CIFAR-10 with synthetic corruptions)
 ########################################################################################################################
 
 
 class CIFAR10C(Dataset):
-    """HuggingFace 'robro/cifar10-c-parquet' wrapper with corruption filtering."""
+    """CIFAR-10 test set with synthetic corruptions applied on-the-fly."""
 
     def __init__(
         self,
@@ -24,21 +73,41 @@ class CIFAR10C(Dataset):
         corruption_types: Union[List[str], str] = "all",
         cache_dir: str = ".cache/",
     ) -> None:
-        ds_all = load_dataset("robro/cifar10-c-parquet", split="train", cache_dir=cache_dir)
-        filter_fn = lambda e: e["corruption_level"] == severity
-        if corruption_types != "all":
-            allowed = set(corruption_types)
-            filter_fn = lambda e: e["corruption_level"] == severity and e["corruption_name"] in allowed
-        self.ds = ds_all.filter(filter_fn)
-        self.ds = self.ds.remove_columns([c for c in self.ds.column_names if c not in {"image", "label"}])
+        # Load standard CIFAR-10 test set
+        ds_all = load_dataset("cifar10", split="test", cache_dir=cache_dir)
+        self.ds = ds_all
+        self.severity = severity
+        
+        # Determine which corruptions to apply
+        if corruption_types == "all":
+            self.corruption_types = list(CORRUPTION_FUNCTIONS.keys())
+        else:
+            self.corruption_types = [c for c in corruption_types if c in CORRUPTION_FUNCTIONS]
+            if not self.corruption_types:
+                # Fallback to all if none are valid
+                self.corruption_types = list(CORRUPTION_FUNCTIONS.keys())
+        
         self.n_classes = 10
 
     def __len__(self) -> int:  # noqa: D401
-        return len(self.ds)
+        # Replicate dataset by number of corruption types
+        return len(self.ds) * len(self.corruption_types)
 
     def __getitem__(self, idx):
-        record = self.ds[idx]
-        return record["image"], int(record["label"])
+        # Determine which corruption type and base image to use
+        corruption_idx = idx % len(self.corruption_types)
+        base_idx = idx // len(self.corruption_types)
+        
+        record = self.ds[base_idx]
+        img = record["img"]
+        label = int(record["label"])
+        
+        # Apply the selected corruption
+        corruption_type = self.corruption_types[corruption_idx]
+        corruption_fn = CORRUPTION_FUNCTIONS[corruption_type]
+        corrupted_img = corruption_fn(img, self.severity)
+        
+        return corrupted_img, label
 
 ########################################################################################################################
 # Dataloader builder
