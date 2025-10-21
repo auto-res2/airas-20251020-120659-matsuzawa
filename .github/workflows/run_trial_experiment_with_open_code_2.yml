@@ -71,23 +71,6 @@ jobs:
       RESULTS_DIR: ".research/iteration${{ github.event.inputs.experiment_iteration }}"
       RUN_ID: ${{ needs.setup.outputs.current_run_id }}
 
-      SYNC_COMMAND: "uv sync"
-      TRIAL_RUN_COMMAND: |
-        set -o pipefail
-        (
-          echo "=== [UV SYNC] Start at $(date -u) ==="
-          uv sync
-          echo "=== [UV SYNC] Finished successfully at $(date -u) ==="
-        
-          echo "=== [TRIAL RUN] Start for $RUN_ID at $(date -u) ==="
-          uv run python -m src.main \
-            run=$RUN_ID \
-            results_dir="$RESULTS_DIR" \
-            wandb.mode=disabled \
-            trial_mode=true
-          echo -e "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===\n"
-        )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -103,7 +86,24 @@ jobs:
       - name: Run trial experiment
         id: run-exp
         continue-on-error: true
-        run: bash -c "$TRIAL_RUN_COMMAND"
+        run: |
+          trap 'sleep 1' EXIT
+          (
+            set -e
+            set -o pipefail
+
+            echo "=== [UV SYNC] Start at $(date -u) ==="
+            uv sync
+            echo "=== [UV SYNC] Finished successfully at $(date -u) ==="
+          
+            echo "=== [TRIAL RUN] Start for $RUN_ID at $(date -u) ==="
+            uv run python -u -m src.main \
+              run=$RUN_ID \
+              results_dir="$RESULTS_DIR" \
+              wandb.mode=disabled \
+              trial_mode=true
+            echo -e "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===\n"
+          )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
 
       - name: Check result
         run: |
@@ -116,6 +116,7 @@ jobs:
           fi
 
       - name: Upload results
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: trial-results-${{ github.run.id }}-${{ env.RUN_ID }}
