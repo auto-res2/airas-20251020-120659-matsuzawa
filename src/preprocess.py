@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Union
 
 import torch
 import torchvision.transforms as T
@@ -21,7 +21,7 @@ class CIFAR10C(Dataset):
         self,
         split: str,
         severity: int,
-        corruption_types: List[str] | str = "all",
+        corruption_types: Union[List[str], str] = "all",
         cache_dir: str = ".cache/",
     ) -> None:
         ds_all = load_dataset("robro/cifar10-c-parquet", split="train", cache_dir=cache_dir)
