@@ -47,7 +47,11 @@ def apply_jpeg_compression(img: Image.Image, severity: int) -> Image.Image:
     buffer = io.BytesIO()
     img.save(buffer, format='JPEG', quality=quality)
     buffer.seek(0)
-    return Image.open(buffer)
+    compressed_img = Image.open(buffer)
+    result = compressed_img.copy()
+    compressed_img.close()
+    buffer.close()
+    return result
 
 # Map of available corruption types
 CORRUPTION_FUNCTIONS = {
