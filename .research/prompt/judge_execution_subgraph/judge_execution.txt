@@ -20,5 +20,5 @@ Follow the rules below:
 
 Output:
 {
-    "is_experiment_successful": false
+    "is_experiment_successful": true
 }
