@@ -1,0 +1,6 @@
+{
+  "proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5_vs_comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5": {
+    "t_stat": -57.59184542822045,
+    "p_value": 4.3798223353674646e-80
+  }
+}

@@ -94,14 +94,13 @@ def plot_bar_comparison(df: pd.DataFrame, out_path: Path) -> None:
     plt.ylabel("Final Accuracy", fontsize=18, fontweight='bold')
     plt.xlabel("Run ID", fontsize=18, fontweight='bold')
     
-    y_max = float(df["final_accuracy"].max())
-    plt.ylim(0, min(1.0, y_max * 1.2))
+    plt.ylim(0, 1.0)
     plt.grid(axis='y', alpha=0.4, linewidth=0.8)
     plt.tick_params(axis='both', which='major', labelsize=15)
     
     for i in range(len(df)):
         height = float(df.iloc[i]["final_accuracy"])
-        offset = (y_max * 1.2) * 0.03
+        offset = 0.03
         ax.text(i, height + offset, f"{height:.3f}", 
                 ha="center", va='bottom', fontsize=14, fontweight='bold',
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='black', linewidth=1))
