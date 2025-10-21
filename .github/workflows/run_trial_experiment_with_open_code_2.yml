@@ -131,6 +131,7 @@ jobs:
     timeout-minutes: 60
 
     env:
+      RESULTS_DIR: ".research/iteration${{ github.event.inputs.experiment_iteration }}"
       SEARCH_HF_COMMAND: |
         curl -s -G \
           -H "Authorization: Bearer $HF_TOKEN" \
@@ -235,9 +236,18 @@ jobs:
     if: needs.setup.outputs.is_empty == 'false' && needs.run-trial-experiment.outputs.experiment_passed == 'true'
     runs-on: ubuntu-latest
 
+    env: 
+      RESULTS_DIR: ".research/iteration${{ github.event.inputs.experiment_iteration }}"
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Download experiment results
+        uses: actions/download-artifact@v4
+        with:
+          name: trial-results-${{ github.run.id }}-${{ needs.setup.outputs.current_run_id }}
+          path: ${{ env.RESULTS_DIR }}
 
       - name: Commit and push successful trial result
         run: |
@@ -247,7 +257,13 @@ jobs:
           git add .research/
           if ! git diff --staged --quiet; then
             git commit -m "[CI] Add successful trial results for run_id=${{ needs.setup.outputs.current_run_id }}"
-            git push
+            for i in {1..5}; do
+              git pull --rebase && git push && break
+              echo "Push failed on attempt $i. Retrying in $((2**i)) seconds..."
+              sleep $((2**i))
+            done
+          else
+            echo "No changes to commit"
           fi
 
       - name: Trigger workflow with remaining list
