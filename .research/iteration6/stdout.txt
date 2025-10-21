@@ -38,3 +38,13 @@ Launching: /home/toma/t-80-8-b-04/_work/airas-20251020-120659-matsuzawa/airas-20
 Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
 === [TRIAL RUN] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:53:48 PM UTC 2025 ===
 
+=== [UV SYNC] Start at Tue Oct 21 04:54:59 PM UTC 2025 ===
+=== [UV SYNC] Finished successfully at Tue Oct 21 04:55:04 PM UTC 2025 ===
+=== [TRIAL RUN] Start for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:55:04 PM UTC 2025 ===
+Launching: /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-a/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration6 trial_mode=true wandb.mode=disabled run.optuna.n_trials=0
+[2025-10-21 16:55:27,768][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 16:55:28,015][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 16:55:28,296][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.1250
+=== [TRIAL RUN] PASSED for comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 04:56:54 PM UTC 2025 ===
+
