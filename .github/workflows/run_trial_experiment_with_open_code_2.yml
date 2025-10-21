@@ -108,7 +108,7 @@ jobs:
       - name: Check result
         id: check-result
         run: |
-          if [[ "${{ steps.run-exp.outcome }}" == "success" && $(grep -q "=== \[TRIAL RUN\] PASSED" "$RESULTS_DIR/stdout.txt") ]]; then
+          if [[ "${{ steps.run-exp.outcome }}" == "success" ]] && grep -q "=== \[TRIAL RUN\] PASSED" "$RESULTS_DIR/stdout.txt"; then
             echo "✅ Trial passed for $RUN_ID"
             echo "passed=true" >> "$GITHUB_OUTPUT"
           else
