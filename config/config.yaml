@@ -12,4 +12,4 @@ trial_mode: false
 wandb:
   entity: gengaru617-personal
   project: 251020-test
-  mode: online  # automatically set to "disabled" in trial_mode
+  mode: disabled  # automatically set to "disabled" in trial_mode
