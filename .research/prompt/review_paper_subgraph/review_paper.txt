@@ -72,8 +72,8 @@ Provide your scores for each dimension, followed by an overall recommendation.
 
 Output:
 {
-    "novelty_score": 3,
-    "significance_score": 3,
-    "reproducibility_score": 8,
-    "experimental_quality_score": 4
+    "novelty_score": 4,
+    "significance_score": 5,
+    "reproducibility_score": 7,
+    "experimental_quality_score": 5
 }
