@@ -1,0 +1,4 @@
+wandb:
+  entity: gengaru617-personal
+  project: 251020-test
+  mode: online
