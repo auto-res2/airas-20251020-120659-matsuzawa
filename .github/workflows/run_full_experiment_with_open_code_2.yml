@@ -112,6 +112,9 @@ jobs:
         Any attempt to run the experiment code will fail and lead to incorrect conclusions. Your sole responsibility is to **modify the code to make it runnable**. 
         The actual experiment will be executed in a separate, GPU-enabled environment after your corrections.
         
+        Before you start your correction, FIRST, 
+        execute the command `git log --grep="\[CI\] Automated fix for run_id=${{ github.event.inputs.run_id }}" -n 1 -p` to review the specific commit that contains the previous failed attempt to fix the code.
+
         Guiding Principles:
         - Scope: Do not perform any Git operations like commit or push. Your only task is to fix the code to make it executable.
         - Method: When fixing errors, you MUST only modify existing files; do not create or delete any files.
