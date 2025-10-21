@@ -102,7 +102,7 @@ class CIFAR10C(Dataset):
         base_idx = idx // len(self.corruption_types)
         
         record = self.ds[base_idx]
-        img = record["image"]
+        img = record["img"]
         label = int(record["label"])
         
         # Apply the selected corruption
