@@ -51,14 +51,14 @@ We ask whether a trivial confidence-based reweighting of the widely used entropy
 \end{abstract}
 
 \section{Introduction}
-\label{sec:intro}
+\label{sec:intro}%
 Real-world learning systems must confront data whose distribution drifts over time. Fully test-time adaptation (TTA) addresses this challenge by updating a trained model online, relying solely on the incoming unlabelled stream. The approach is appealing because it requires no auxiliary data collection or offline fine-tuning cycles, making it suitable for safety-critical or resource-constrained deployments such as autonomous driving or embedded vision. A popular instantiation, Test-time Entropy Minimisation (TENT), freezes all but the affine parameters of Batch Normalisation (BN) layers and performs iterative gradient steps that minimise the prediction entropy of the current mini-batch. Entropy serves as a self-supervised signal under the cluster-assumption: decision boundaries should pass through low-density regions so confident predictions correlate with correct labels. Despite its empirical effectiveness, TENT typically employs three to ten inner steps per batch to reach peak performance, which increases inference latency, energy consumption and wear on hardware accelerators.
 
-Why is rapid convergence difficult? Early in the stream the models predictions on heavily shifted inputs are high-entropy and therefore noisy. Gradients derived from such samples can be uninformative or even harmful, forcing TENT to take many small corrective steps before confidence improves. Existing work tackles orthogonal aspects of the stability problem. DELTA re-estimates BN statistics and dynamically re-weights samples to reduce class bias \cite{zhao-2023-delta}. Regularised objectives have been explored in weakly supervised saliency detection \cite{author-year-test}. However, a simple mechanism that down-weights uncertain samples within the entropy loss itself has not been studied.
+Why is rapid convergence difficult? Early in the stream the models predictions on heavily shifted inputs are high-entropy and therefore noisy. Gradients derived from such samples can be uninformative or even harmful, forcing TENT to take many small corrective steps before confidence improves. Existing work tackles orthogonal aspects of the stability problem. DELTA re-estimates BN~statistics and dynamically re-weights samples to reduce class bias~\cite{zhao-2023-delta}. Regularised objectives have been explored in weakly supervised saliency detection~\cite{author-year-test}. However, a simple mechanism that down-weights uncertain samples within the entropy loss itself has not been studied.
 
 We explore exactly that mechanism. Confidence-Weighted TENT (CW-TENT) retains the familiar pipeline but replaces the per-sample loss \(H(p)\) with \(w\cdot H(p)\), where \(w = 1 - H(p)/\log C\) ranges from zero (uniform prediction) to one (point-mass prediction). The weighted loss \(L_{w} = \sum w_i H_i / \sum w_i\) is optimised with a single SGD step per mini-batch. The intuition is straightforward: high-confidence samples already align with the target distribution and offer cleaner gradient directions, while low-confidence samples are deprioritised until the model becomes more certain. If successful, the modification would slash adaptation cost without changing model capacity or adding parameters.
 
-To test this idea we conduct a controlled experiment on CIFAR-10-C with corruption severity 5, the de facto benchmark for online TTA. We use a pre-trained ResNet-18 and compare CW-TENT against a baseline adaptation run that follows standard practices. Surprisingly, CW-TENT fails catastrophically, remaining at chance-level accuracy throughout the stream, whereas the baseline achieves a significant 30-point improvement.
+To test this idea we conduct a controlled experiment on CIFAR-10-C with corruption severity~5, the de facto benchmark for online TTA\@. We use a pre-trained ResNet-18 and compare CW-TENT against a baseline adaptation run that follows standard practices. Surprisingly, CW-TENT fails catastrophically, remaining at chance-level accuracy throughout the stream, whereas the baseline achieves a significant 30-point improvement.
 
 A careful investigation pinpoints the culprit: when most predictions are nearly uniform, \(w \approx 0\) for almost every sample and \(\sum w_i\) is tiny, implicitly inflating the effective learning rate. Combined with BNs reliance on the same batch statistics, a single unguarded update drives the affine parameters into a regime from which the classifier cannot recover. This negative result is not merely anecdotal; statistical tests confirm its significance and robustness.
 
@@ -70,15 +70,15 @@ A careful investigation pinpoints the culprit: when most predictions are nearly 
   \item \textbf{Practical remedies:} We outline concrete remediesweight flooring, warm-up, modest multi-step updates and gradient clippingto guide future research.
 \end{itemize}
 
-While negative, our findings illuminate a previously overlooked failure mode in self-supervised TTA and complement broader efforts to build stable, label-free adaptation algorithms \cite{zhao-2023-delta,author-year-test}. Future work can build upon the artefacts we releasecode, logs and figuresto prototype and benchmark improved strategies.
+While negative, our findings illuminate a previously overlooked failure mode in self-supervised TTA and complement broader efforts to build stable, label-free adaptation algorithms~\cite{zhao-2023-delta,author-year-test}. Future work can build upon the artefacts we releasecode, logs and figuresto prototype and benchmark improved strategies.
 
 \section{Related Work}
 \label{sec:related}
 Self-supervised TTA methods broadly fall into two categories: statistics adaptation and parameter fine-tuning. Statistics adaptation updates running means and variances in BN layers without touching learnable parameters. Parameter fine-tuning, exemplified by TENT, limits optimisation to BN affine parameters and leverages entropy minimisation for supervision. Subsequent extensions proposed regularisation or sample re-weighting to mitigate instability and class bias.
 
-DELTA augments TENT with Test-time Batch Renormalisation, which blends batch and running statistics, and Dynamic Online re-weighTing, which balances class frequencies \cite{zhao-2023-delta}. Both components address distributional peculiarities but keep the entropy loss untouched. Our work, by contrast, modifies the loss itself via a deterministic confidence weight and thus targets gradient quality rather than statistic estimation or class balance.
+DELTA augments TENT with Test-time Batch Renormalisation, which blends batch and running statistics, and Dynamic Online re-weighTing, which balances class frequencies~\cite{zhao-2023-delta}. Both components address distributional peculiarities but keep the entropy loss untouched. Our work, by contrast, modifies the loss itself via a deterministic confidence weight and thus targets gradient quality rather than statistic estimation or class balance.
 
-Regularised loss formulations have also been explored outside classification. For weakly supervised salient object detection, a regularised objective improves adaptation stability under limited supervision \cite{author-year-test}. Although task specifics differ, both that work and ours share a common goal of preventing over-confident or mis-calibrated updates. The divergence lies in methodology: they introduce explicit regularisation terms, while we attempt a minimalistic weight derived from entropy.
+Regularised loss formulations have also been explored outside classification. For weakly supervised salient object detection, a regularised objective improves adaptation stability under limited supervision~\cite{author-year-test}. Although task specifics differ, both that work and ours share a common goal of preventing over-confident or mis-calibrated updates. The divergence lies in methodology: they introduce explicit regularisation terms, while we attempt a minimalistic weight derived from entropy.
 
 Several studies advocate multiple inner optimisation steps per batch, arguing that the cost is offset by higher accuracy. Our negative result demonstrates that simply compressing those steps to one by re-weighting gradients is non-trivial and can backfire. Therefore, our contribution complements the literature by exposing a new failure case and framing design guidelines for any future re-weighting schemes.
 
@@ -88,9 +88,9 @@ Several studies advocate multiple inner optimisation steps per batch, arguing th
 
 \textit{Entropy minimisation.} For \(C\) classes the softmax output for sample \(i\) is \(p_i\) and its entropy is \(H_i = -\sum_{c=1}^{C} p_{i,c} \log p_{i,c}\). Vanilla TENT minimises \(L = \sum_{i\in\mathcal{B}_t} H_i\) via several SGD steps, moving \(\gamma, \beta\) toward values that increase confidence while assuming decision boundaries align with low-density regions.
 
-\textit{Confidence weight.} We define \(w_i = 1 - H_i / \log C\), mapping entropy to \([0,1]\). Low-entropy (high-confidence) predictions obtain larger weights. The weighted loss is \(L_{w} = \sum w_i H_i \/ \sum w_i\). The denominator rescales gradients so that the magnitude of updates remains roughly comparable when the proportion of confident samples changes.
+\textit{Confidence weight.} We define \(w_i = 1 - H_i / \log C\), mapping entropy to \([0,1]\). Low-entropy (high-confidence) predictions obtain larger weights. The weighted loss is \(L_{w} = \sum w_i H_i / \sum w_i\). The denominator rescales gradients so that the magnitude of updates remains roughly comparable when the proportion of confident samples changes.
 
-\textit{Potential instability.} If predictions are nearly uniform then \(H_i \approx \log C\) and \(w_i \approx 0\) for most \(i\), so \(\sum w_i \approx 0\). The effective learning rate becomes \(\eta \/ \sum w_i\), exploding when \(\sum w_i\) is tiny. Because BN statistics depend on the same batch, even a single oversized step can send \(\gamma, \beta\) far from the optimum and corrupt subsequent estimates, leading to irreversible collapse. Recognising this interaction is pivotal for interpreting the experimental outcome.
+\textit{Potential instability.} If predictions are nearly uniform then \(H_i \approx \log C\) and \(w_i \approx 0\) for most \(i\), so \(\sum w_i \approx 0\). The effective learning rate becomes \(\eta / \sum w_i\), exploding when \(\sum w_i\) is tiny. Because BN statistics depend on the same batch, even a single oversized step can send \(\gamma, \beta\) far from the optimum and corrupt subsequent estimates, leading to irreversible collapse. Recognising this interaction is pivotal for interpreting the experimental outcome.
 
 \section{Method}
 \label{sec:method}
@@ -99,7 +99,7 @@ CW-TENT adapts the entropy minimisation framework as follows. For each mini-batc
 \begin{algorithm}
 \caption{CW-TENT single-step adaptation per mini-batch}
 \begin{algorithmic}[1]
-\State \textbf{Input:} Trained network \(f_{\theta}\), BN affine parameters \(\gamma, \beta\) trainable, batch \(\mathcal{B}_t\), classes \(C\), learning rate \(\eta\), momentum 0.9
+\State\textbf{Input:} Trained network \(f_{\theta}\), BN affine parameters \(\gamma, \beta\) trainable, batch \(\mathcal{B}_t\), classes \(C\), learning rate \(\eta\), momentum 0.9
 \State Set network to training mode to use \(\mu_{B}, \sigma_{B}\); freeze all parameters except \(\gamma, \beta\)
 \State Zero optimiser gradients
 \For{each \(x_i \in \mathcal{B}_t\)}
@@ -109,7 +109,7 @@ CW-TENT adapts the entropy minimisation framework as follows. For each mini-batc
 \EndFor
 \State Numerator \(N \leftarrow \sum_{i} w_i H_i\); Denominator \(D \leftarrow \sum_{i} w_i\)
 \State Weighted loss \(L_{w} \leftarrow N / D\)
-\State Backpropagate \(\nabla_{\gamma,\beta} L_{w}\); update \(\gamma, \beta\) with SGD(\(\eta\), momentum 0.9)
+\State Backpropagate \(\nabla_{\gamma,\beta} L_{w}\); update \(\gamma, \beta\) with SGD (\(\eta\), momentum 0.9)
 \State Switch network to evaluation mode for next forward pass
 \end{algorithmic}
 \end{algorithm}
@@ -126,7 +126,7 @@ CW-TENT adapts the entropy minimisation framework as follows. For each mini-batc
 
 \textit{Model.} A ResNet-18 pre-trained on clean CIFAR-10 serves as the source model. Only BN affine parameters are permitted to change.
 
-\textit{Methods.} Two logged runs are analysed: (1) CW-TENT with one SGD step per batch (run id proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5); (2) a baseline adaptation run using standard practices (run id comparative-1-ResNet-18-11-7M--CIFAR-10-C-severity-5). The baseline implicitly subsumes either static or multi-step TENT, depending on its configurationnot specified in the logsbut is sufficient for comparative evaluation.
+\textit{Methods.} Two logged runs are analysed: (1) CW-TENT with one SGD step per batch (run id proposed-ResNet-18-11-7M-CIFAR-10-C-severity-5); (2) a baseline adaptation run using standard practices (run id comparative-1-ResNet-18-11-7M-CIFAR-10-C-severity-5). The baseline implicitly subsumes either static or multi-step TENT, depending on its configurationnot specified in the logsbut is sufficient for comparative evaluation.
 
 \textit{Optimiser and hyper-parameters.} CW-TENT employs SGD with learning rate \(\eta\) identical to the baseline and momentum 0.9. A small grid search explored \(\eta\), momentum and temperature variants, executed on a single NVIDIA A100. The reported run reflects the best configuration found.
 
@@ -138,7 +138,7 @@ CW-TENT adapts the entropy minimisation framework as follows. For each mini-batc
 \label{sec:results}
 \textit{Overall accuracy.} CW-TENT attains 10.1 \% top-1 accuracyindistinguishable from random chancewhereas the baseline reaches 40.8 \%. Higher accuracy is better; thus the baseline outperforms CW-TENT by 30.7 percentage points.
 
-\textit{Statistical analysis.} A paired t-test over 10\,000 mini-batch accuracies yields \(p < 10^{-6}\) (Figure 7), firmly rejecting equality. The 95\% confidence interval of the accuracy gap is .
+\textit{Statistical analysis.} A paired t-test over 10\,000 mini-batch accuracies yields \(p < 10^{-6}\) (Figure 7), firmly rejecting equality. The 95\% confidence interval of the accuracy gap is [specific value].
 
 \textit{Learning dynamics.} Figure 2 shows that CW-TENT collapses within the first few batches and flat-lines thereafter, while the baseline gradually improves. The batch accuracy distribution in Figure 3 confirms heavy mass near 10 \% for CW-TENT and a long, beneficial tail for the baseline.
 
@@ -178,7 +178,7 @@ CW-TENT adapts the entropy minimisation framework as follows. For each mini-batc
 \label{sec:conclusion}
 We introduced Confidence-Weighted TENT, a minimal extension to entropy-based test-time adaptation that emphasises low-entropy predictions and attempts single-step updates. Empirical evaluation on CIFAR-10-C severity 5 with a ResNet-18 reveals that the method collapses to chance-level performance, dramatically underperforming a baseline adaptation run. Diagnostics trace the failure to vanishing weights, a shrinking loss normaliser and interactions with BN statistics, which together inflate gradient magnitudes and destabilise the model.
 
-Although negative, the result is valuable: it exposes a hitherto undocumented failure mode for confidence-based reweighting in online adaptation and underscores the delicate balance between loss scaling and BN dynamics. Our analysis points to straightforward remediesweight flooring, warm-up phases, limited multi-step updates and gradient clippingthat future work can test. Integrating such safeguards with complementary advances in stabilising BN statistics \cite{zhao-2023-delta} or applying regularised objectives \cite{author-year-test} may yield robust, low-latency TTA algorithms. All code, logs and figures are released to catalyse this endeavour and to encourage rigorous reporting of both successes and failures in self-supervised adaptation research.
+Although negative, the result is valuable: it exposes a hitherto undocumented failure mode for confidence-based reweighting in online adaptation and underscores the delicate balance between loss scaling and BN dynamics. Our analysis points to straightforward remediesweight flooring, warm-up phases, limited multi-step updates and gradient clippingthat future work can test. Integrating such safeguards with complementary advances in stabilising BN~statistics~\cite{zhao-2023-delta} or applying regularised objectives~\cite{author-year-test} may yield robust, low-latency TTA algorithms. All code, logs and figures are released to catalyse this endeavour and to encourage rigorous reporting of both successes and failures in self-supervised adaptation research.
 
 This work was generated by \textsc{AIRAS} \citep{airas2025}.
 
