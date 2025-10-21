@@ -186,3 +186,173 @@ Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0876
 [2025-10-21 18:03:54,135][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
 [2025-10-21 18:03:54,318][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
 [2025-10-21 18:03:54,522][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+=== [UV SYNC] Start at Tue Oct 21 06:06:20 PM UTC 2025 ===
+=== [UV SYNC] Finished successfully at Tue Oct 21 06:06:26 PM UTC 2025 ===
+=== [FULL EXPERIMENT] Start for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 06:06:26 PM UTC 2025 ===
+Launching: /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/.venv/bin/python3 -u /home/toma/t-80-8-b-03/_work/airas-20251020-120659-matsuzawa/airas-20251020-120659-matsuzawa/src/train.py run=proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 results_dir=.research/iteration7
+[2025-10-21 18:06:47,862][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:06:48,215][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:06:48,471][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0880
+[2025-10-21 18:07:20,440][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:07:20,625][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:07:20,850][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0877
+[2025-10-21 18:07:54,285][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:07:54,493][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:07:54,713][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0880
+[2025-10-21 18:08:21,195][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:08:21,390][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:08:21,548][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0871
+[2025-10-21 18:08:53,931][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:08:54,120][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:08:54,143][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0898
+[2025-10-21 18:09:21,090][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:09:21,278][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:09:21,331][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0921
+[2025-10-21 18:09:48,602][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:09:48,831][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:09:48,847][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0873
+[2025-10-21 18:10:18,740][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:10:18,926][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:10:19,009][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0879
+[2025-10-21 18:10:49,146][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:10:49,328][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:10:49,372][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0878
+[2025-10-21 18:11:15,894][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:11:16,076][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:11:16,092][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0874
+[2025-10-21 18:11:44,992][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:11:45,185][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:11:45,213][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0878
+[2025-10-21 18:12:11,656][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:12:11,840][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:12:11,856][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0891
+[2025-10-21 18:12:38,778][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:12:38,965][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:12:38,998][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0932
+[2025-10-21 18:13:05,907][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:13:06,092][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:13:06,163][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0932
+[2025-10-21 18:13:32,485][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:13:32,671][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:13:32,814][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0909
+[2025-10-21 18:13:59,365][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:13:59,552][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:13:59,635][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0876
+[2025-10-21 18:14:26,191][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:14:26,379][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:14:26,396][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0926
+[2025-10-21 18:14:52,775][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:14:52,964][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:14:53,188][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0878
+[2025-10-21 18:15:19,766][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:15:19,950][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:15:19,968][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0880
+[2025-10-21 18:15:50,229][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:15:50,416][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:15:50,433][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0874
+[2025-10-21 18:16:19,708][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:16:19,896][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:16:20,114][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0875
+[2025-10-21 18:16:46,145][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:16:46,334][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:16:46,431][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0923
+[2025-10-21 18:17:12,615][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:17:12,806][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:17:13,024][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0918
+[2025-10-21 18:17:39,426][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:17:39,611][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:17:39,715][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0889
+[2025-10-21 18:18:06,217][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:18:06,717][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:18:06,732][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0942
+[2025-10-21 18:18:33,339][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:18:33,529][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:18:33,664][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0922
+[2025-10-21 18:19:00,073][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:19:00,262][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:19:00,481][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0880
+[2025-10-21 18:19:27,113][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:19:27,301][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:19:27,464][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0900
+[2025-10-21 18:19:53,933][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:19:54,118][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:19:54,333][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0879
+[2025-10-21 18:20:22,508][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:20:22,699][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:20:22,850][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0873
+[2025-10-21 18:20:53,281][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:20:53,476][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:20:53,501][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0902
+[2025-10-21 18:21:20,073][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:21:20,269][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:21:20,349][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0936
+[2025-10-21 18:21:47,611][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:21:47,801][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:21:47,937][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0919
+[2025-10-21 18:22:14,472][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:22:14,657][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:22:14,676][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0901
+[2025-10-21 18:22:42,223][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:22:42,723][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:22:42,743][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0916
+[2025-10-21 18:23:09,503][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:23:09,717][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:23:09,919][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0880
+[2025-10-21 18:23:36,541][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:23:36,737][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:23:36,813][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0904
+[2025-10-21 18:24:03,351][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:24:03,539][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:24:03,561][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0925
+[2025-10-21 18:24:30,394][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:24:30,581][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:24:30,596][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0876
+[2025-10-21 18:24:59,657][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:24:59,845][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:24:59,859][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0873
+[Optuna] Best parameters: {'learning_rate': 0.009316728115771914, 'momentum': 0.9, 'batch_size': 64, 'weight_temperature': 1.0756581721204128}
+[2025-10-21 18:25:26,534][timm.models._builder][INFO] - Loading pretrained weights from Hugging Face hub (timm/resnet18.a1_in1k)
+[2025-10-21 18:25:26,721][timm.models._hub][INFO] - [timm/resnet18.a1_in1k] Safe alternative available for 'pytorch_model.bin' (as 'model.safetensors'). Loading weights using safetensors.
+[2025-10-21 18:25:26,943][timm.models._builder][INFO] - Missing keys (fc.weight, fc.bias) discovered while loading pretrained weights. This is expected if model is being adapted.
+Final accuracy (proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5) = 0.0942
+=== [FULL EXPERIMENT] PASSED for proposed-ResNet-18-11-7M--CIFAR-10-C-severity-5 at Tue Oct 21 06:25:58 PM UTC 2025 ===
