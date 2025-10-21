@@ -105,6 +105,18 @@ def plot_bar_comparison(df: pd.DataFrame, out_path: Path) -> None:
                 ha="center", va='bottom', fontsize=14, fontweight='bold',
                 bbox=dict(boxstyle='round,pad=0.3', facecolor='white', alpha=0.8, edgecolor='black', linewidth=1))
     
+    if len(df) == 2:
+        val0 = float(df.iloc[0]["final_accuracy"])
+        val1 = float(df.iloc[1]["final_accuracy"])
+        acc_diff = abs(val0 - val1)
+        max_height = max(val0, val1)
+        y_pos = max_height + 0.10
+        ax.annotate('', xy=(0, y_pos), xytext=(1, y_pos),
+                    arrowprops=dict(arrowstyle='<->', lw=2, color='black'))
+        ax.text(0.5, y_pos + 0.02, f'Δ = {acc_diff:.3f}', 
+                ha='center', va='bottom', fontsize=15, fontweight='bold',
+                bbox=dict(boxstyle='round,pad=0.4', facecolor='yellow', alpha=0.7, edgecolor='black', linewidth=1.5))
+    
     plt.xticks(rotation=45, ha="right", fontsize=14)
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches='tight')
@@ -189,17 +201,6 @@ def aggregated_analysis(all_metrics: List[Dict], batch_dict: Dict[str, List[floa
     df = pd.DataFrame(all_metrics)
     save_json(df.to_dict(orient="records"), comparison_dir / "aggregated_metrics.json")
 
-    bar_path = comparison_dir / "final_accuracy_comparison.pdf"
-    plot_bar_comparison(df, bar_path)
-    if bar_path.exists():
-        print(str(bar_path))
-
-    box_path = comparison_dir / "batch_acc_distribution.pdf"
-    plot_batch_acc_distribution(batch_dict, box_path)
-    if box_path.exists():
-        print(str(box_path))
-
-    # Statistical significance (Welch’s t-test)
     sig_results = {}
     run_ids = list(batch_dict.keys())
     for i in range(len(run_ids)):
@@ -213,6 +214,16 @@ def aggregated_analysis(all_metrics: List[Dict], batch_dict: Dict[str, List[floa
                 sig_results[f"{r1}_vs_{r2}"] = {"t_stat": t_stat_val, "p_value": p_val_val}
     save_json(sig_results, comparison_dir / "significance_tests.json")
     print(str(comparison_dir / "significance_tests.json"))
+
+    bar_path = comparison_dir / "final_accuracy_comparison.pdf"
+    plot_bar_comparison(df, bar_path)
+    if bar_path.exists():
+        print(str(bar_path))
+
+    box_path = comparison_dir / "batch_acc_distribution.pdf"
+    plot_batch_acc_distribution(batch_dict, box_path)
+    if box_path.exists():
+        print(str(box_path))
 
 ########################################################################################################################
 # Entry point
