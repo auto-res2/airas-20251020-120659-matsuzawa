@@ -159,6 +159,6 @@ def build_dataloader(run_cfg):  # expects run_cfg containing dataset.*, training
         batch_size=run_cfg.training.batch_size,
         shuffle=run_cfg.training.shuffle_stream,
         num_workers=run_cfg.other.num_workers,
-        pin_memory=True,
+        pin_memory=torch.cuda.is_available(),
     )
     return loader
