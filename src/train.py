@@ -167,14 +167,18 @@ def run_single(cfg: DictConfig) -> Dict[str, Any]:
     # WandB initialisation (skipped if disabled)
     # ------------------------------------------------------------------
     if cfg.wandb.mode != "disabled":
-        run = wandb.init(
-            entity=cfg.wandb.entity,
-            project=cfg.wandb.project,
-            id=run_cfg.run_id,
-            resume="allow",
-            config=OmegaConf.to_container(cfg, resolve=True),
-        )
-        print(f"[WandB] {run.url}")
+        try:
+            run = wandb.init(
+                entity=cfg.wandb.entity,
+                project=cfg.wandb.project,
+                id=run_cfg.run_id,
+                resume="allow",
+                config=OmegaConf.to_container(cfg, resolve=True),
+            )
+            print(f"[WandB] {run.url}")
+        except Exception as e:
+            print(f"[WandB] Failed to initialize WandB ({e.__class__.__name__}), running without WandB logging")
+            run = None
     else:
         run = None
 
