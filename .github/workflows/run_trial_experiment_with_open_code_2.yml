@@ -177,18 +177,6 @@ jobs:
       - name: Install bun
         run: npm install -g bun
 
-      - name: Setup Node.js Environment
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
-      - name: Install opencode
-        run: |
-          curl -fsSL https://opencode.ai/install | bash
-
-      - name: Install bun
-        run: npm install -g bun
-
       - name: Run OpenCode Fix
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
