@@ -123,11 +123,16 @@ def build_transform(image_size: int, normalization: str):
         mean, std = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
     return T.Compose(
         [
-            T.Resize(image_size, interpolation=T.InterpolationMode.BICUBIC),
+            T.Resize((image_size, image_size), interpolation=T.InterpolationMode.BICUBIC),
             T.ToTensor(),
             T.Normalize(mean, std),
         ]
     )
+
+
+def worker_init_fn(worker_id):
+    worker_seed = torch.initial_seed() % 2**32
+    np.random.seed(worker_seed)
 
 
 def build_dataloader(run_cfg):  # expects run_cfg containing dataset.*, training.*, other.*
@@ -159,5 +164,6 @@ def build_dataloader(run_cfg):  # expects run_cfg containing dataset.*, training
         shuffle=run_cfg.training.shuffle_stream,
         num_workers=run_cfg.other.num_workers,
         pin_memory=torch.cuda.is_available(),
+        worker_init_fn=worker_init_fn,
     )
     return loader

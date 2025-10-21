@@ -14,8 +14,8 @@ dataset:
   corruption_severity: 5
   corruption_types: all
   split: test
-  image_size: 32
-  normalization: cifar
+  image_size: 224
+  normalization: imagenet
 
 training:
   adaptation_algorithm: tent
