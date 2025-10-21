@@ -153,6 +153,10 @@ jobs:
         Before you start your correction, FIRST, 
         execute the command `git log --grep="\[CI\] Automated fix for run_id=${{ needs.setup.outputs.current_run_id }}" -n 1 -p` to review the specific commit that contains the previous failed attempt to fix the code.
 
+        ERROR INFORMATION:
+        The error logs are available in the file: $RESULTS_DIR/error_summary.txt
+        Read this file to understand what went wrong. DO NOT read stdout.txt or stderr.txt as they contain verbose training logs.
+
         Guiding Principles:
         - Scope: Do not perform any Git operations like commit or push. Your only task is to fix the code to make it executable.
         - Method: When fixing errors, you MUST only modify existing files; do not create or delete any files.
@@ -171,6 +175,20 @@ jobs:
         with:
           name: trial-results-${{ github.run.id }}-${{ needs.setup.outputs.current_run_id }}
           path: ${{ env.RESULTS_DIR }}
+
+      - name: Extract error summary
+        run: |
+          if [ -f "$RESULTS_DIR/stderr.txt" ]; then
+            echo "=== ERROR SUMMARY (Last 100 lines of stderr) ===" > "$RESULTS_DIR/error_summary.txt"
+            tail -n 100 "$RESULTS_DIR/stderr.txt" >> "$RESULTS_DIR/error_summary.txt"
+          fi
+
+          if [ -f "$RESULTS_DIR/stdout.txt" ]; then
+            echo -e "\n=== RELEVANT STDOUT (Error/Exception lines) ===" >> "$RESULTS_DIR/error_summary.txt"
+            grep -i -E "(error|exception|traceback|failed|fatal)" "$RESULTS_DIR/stdout.txt" | tail -n 50 >> "$RESULTS_DIR/error_summary.txt" || echo "No error patterns found in stdout" >> "$RESULTS_DIR/error_summary.txt"
+          fi
+          
+          cat "$RESULTS_DIR/error_summary.txt"
 
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
