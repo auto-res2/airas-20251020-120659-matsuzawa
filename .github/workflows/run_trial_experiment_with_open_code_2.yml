@@ -105,13 +105,6 @@ jobs:
             echo -e "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===\n"
           )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
 
-      - name: Check for log files
-        if: always()
-        run: |
-          echo "--- Checking contents of .research/ directory ---"
-          ls -lR .research/
-          echo "--- Finished checking contents ---"
-
       - name: Check result
         run: |
           if [[ "${{ steps.run-exp.outcome }}" == "success" && $(grep -q "=== \[TRIAL RUN\] PASSED" "$RESULTS_DIR/stdout.txt") ]]; then
@@ -127,7 +120,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: trial-results-${{ github.run.id }}-${{ env.RUN_ID }}
-          path: .research/
+          path: ${{ env.RESULTS_DIR }}
 
   fix-and-rerun:
     name: Fix and Re-run Trial
@@ -169,7 +162,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: trial-results-${{ github.run.id }}-${{ needs.setup.outputs.current_run_id }}
-          path: .research/
+          path: ${{ env.RESULTS_DIR }}
 
       - name: Setup Node.js Environment
         uses: actions/setup-node@v4
