@@ -13,7 +13,8 @@ os.environ.setdefault("TORCH_HOME", ".cache/")  # timm & torch-hub cache
 def build_model(model_cfg):
     """Instantiate a timm model according to the provided cfg."""
     pretrained = bool(getattr(model_cfg, "pretrained", True))
-    model = timm.create_model(model_cfg.name, pretrained=pretrained)
+    num_classes = getattr(model_cfg, "num_classes", 10)
+    model = timm.create_model(model_cfg.name, pretrained=pretrained, num_classes=num_classes)
     model.eval()
     return model
 

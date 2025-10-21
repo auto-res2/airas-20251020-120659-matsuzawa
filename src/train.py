@@ -104,8 +104,12 @@ class CWTentAdapter(BaseAdapter):
         probs = logits.softmax(1)
         H = entropy(probs)
         num_classes = probs.size(1)
-        weights = (1.0 - H / math.log(num_classes)).pow(self.temp)
-        loss = (weights * H).sum() / weights.sum()
+        weights = (1.0 - H / math.log(num_classes)).clamp(min=0.0).pow(self.temp)
+        weight_sum = weights.sum()
+        if weight_sum > 1e-6:
+            loss = (weights * H).sum() / weight_sum
+        else:
+            loss = H.mean()
         loss.backward()
         self.opt.step()
         self.model.eval()

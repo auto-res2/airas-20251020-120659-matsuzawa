@@ -7,6 +7,7 @@ model:
   pretrained: true
   checkpoint: timm/resnet18.a1_in1k
   trainable_parameters: batchnorm_affine
+  num_classes: 10
 
 dataset:
   name: cifar10-c
