@@ -105,6 +105,13 @@ jobs:
             echo -e "=== [TRIAL RUN] PASSED for $RUN_ID at $(date -u) ===\n"
           )> >(tee -a "$RESULTS_DIR/stdout.txt") 2> >(tee -a "$RESULTS_DIR/stderr.txt" >&2)
 
+      - name: Check for log files
+        if: always()
+        run: |
+          echo "--- Checking contents of .research/ directory ---"
+          ls -lR .research/
+          echo "--- Finished checking contents ---"
+
       - name: Check result
         run: |
           if [[ "${{ steps.run-exp.outcome }}" == "success" && $(grep -q "=== \[TRIAL RUN\] PASSED" "$RESULTS_DIR/stdout.txt") ]]; then
