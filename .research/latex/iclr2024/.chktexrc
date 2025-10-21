@@ -1,0 +1,8 @@
+# Suppress Warning 8 (wrong dash length) - filenames often have double dashes
+CmdLine { -n8 }
+
+# Suppress Warning 24 (space before reference) - false positives
+CmdLine { -n24 }
+
+# Suppress Warning 12 (interword spacing)
+CmdLine { -n12 }
