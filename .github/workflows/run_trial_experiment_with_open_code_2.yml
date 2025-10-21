@@ -48,7 +48,7 @@ jobs:
           else
             echo "is_empty=false" >> "$GITHUB_OUTPUT"
             CURRENT_ID=$(echo "$RUN_IDS" | jq -r '.[0]')
-            REMAINING_IDS=$(echo "$RUN_IDS" | jq -c'.[1:]')
+            REMAINING_IDS=$(echo "$RUN_IDS" | jq -c '.[1:]')
             echo "current_run_id=$CURRENT_ID" >> "$GITHUB_OUTPUT"
             echo "remaining_run_ids=$REMAINING_IDS" >> "$GITHUB_OUTPUT"
 
